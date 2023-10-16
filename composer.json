@@ -1,0 +1,18 @@
+{
+  "require": {
+    "andreyryabin/sprint.migration": "dev-master"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "0.12.*"
+  },
+  "extra": {
+    "installer-paths": {
+      "local/modules/{$name}/": ["type:bitrix-module"]
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
+}

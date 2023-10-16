@@ -1,0 +1,13 @@
+.btn:focus{
+  box-shadow: 0 0 0 0;
+}
+
+.white-fon {
+	border-radius: 0.3rem;
+}
+
+.card{
+	border-radius: 0.3rem;
+	border:0;
+	box-shadow:  0em 0 .5em #ADADAD;
+}
