@@ -10,6 +10,7 @@ test.php
 *.xml
 *.dt
 *.log.old
+*.json
 
 .php-cs-fixer.cache
 .idea
