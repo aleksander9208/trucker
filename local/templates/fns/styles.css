@@ -458,6 +458,7 @@ ul.subnav-content.uk-switcher.uk-margin {
 
 a.status-link_file {
     color: #0066FF !important;
+    min-width: 117px;
 }
 
 a.status-link_file span {
