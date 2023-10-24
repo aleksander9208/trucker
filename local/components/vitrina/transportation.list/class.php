@@ -185,7 +185,7 @@ class TransportationList extends CBitrixComponent
             $vitrinaList[] = [
                 'data' => [
                     "ID" => $item['ID'],
-                    "ID_TRANSPORTATION" => '<a href="">' . $item['NAME'] . '</a>',
+                    "ID_TRANSPORTATION" => '<a href="#info-bar" uk-toggle>' . $item['NAME'] . '</a>',
                     "DATE_SHIIPMENT"  => $item['DATE_SHIPMENT_VALUE'],
                     "CARGO_OWNER" => $item['CARGO_OWNER_VALUE'] . '<span>' . $item['CARGO_OWNER_INN_VALUE'] . '</span>',
                     "FORWARDER" => $item['FORWARDER_VALUE'] . '<span>' . $item['FORWARDER_INN_VALUE'] . '</span>',

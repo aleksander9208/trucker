@@ -264,6 +264,135 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     );
     ?>
 
+    <div id="info-bar" uk-offcanvas="mode: slide; flip: true; overlay: true">
+        <div class="canvas-bar_content uk-offcanvas-bar">
+
+            <div class="bar-content_title">
+                <div class="bar-title">
+                    Перевозка <span>№98-B21</span>
+                </div>
+                <div class="bar-status">
+                    Проверка не пройдена
+                </div>
+            </div>
+
+            <div class="bar-content_date">
+                Дата погрузки <span>24.01.2023</span>
+            </div>
+
+            <div class="bar-content_deviation_price">
+                Отклонение от рыночной цены
+                <span class="deviation-price_percent">
+                    <span uk-icon="icon: arrow-down"></span> 3,37%
+                </span>
+            </div>
+
+            <div class="bar-content_members">
+                Грузовладелец
+                <span>ИП Соломин Петр Эдуардович</span>
+                456789012345
+            </div>
+
+            <div class="bar-content_members">
+                Перевозчик
+                <span>ООО "СкладСервис"</span>
+                456789012345
+            </div>
+
+            <div class="bar-content_link_archiv">
+                <span uk-icon="icon: download"></span>
+                Скачать архив документов
+            </div>
+
+            <div class="bar-detail">
+                <div class="bar-detail_title">
+                    Детали чек-листа
+                </div>
+
+                <ul class="subnav-title uk-subnav uk-subnav-pill" uk-switcher>
+                    <li><a href="#">С перевозчиком</a></li>
+                    <li><a href="#">С заказчиком</a></li>
+                </ul>
+
+                <ul class="subnav-content uk-switcher uk-margin">
+                    <li>
+                        <div class="detail-content">
+                            <div class="detail-content_confirmation">
+                                <div class="detail-content_title">
+                                    Подписанные договоры <span class="detail-status_good">1/1</span>
+                                </div>
+
+                                <div class="status-info_confirmation">
+                                    <span class="status-info_confirmation_title">Договор перевозки</span>
+                                    <a href="" class="status-link_file">
+                                        Посмотреть <span uk-icon="icon: check;"></span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="detail-content_confirmation">
+                                <div class="detail-content_title">
+                                    Оформление перевозки <span class="detail-status_error">Выполнено 4/5</span>
+                                </div>
+
+                                <div class="status-info_confirmation">
+                                    <span class="status-info_confirmation_title">Заявка на перевозку</span>
+                                    <a href="" class="status-link_file">
+                                        Посмотреть <span uk-icon="icon: check;"></span>
+                                    </a>
+                                </div>
+                                <div class="status-info_confirmation">
+                                    <span class="status-info_confirmation_title">Подписанная ЭТрН</span>
+                                    <a href="" class="status-link_file">
+                                        Посмотреть <span uk-icon="icon: check;"></span>
+                                    </a>
+                                </div>
+                                <div class="status-info_confirmation">
+                                    <span class="status-info_confirmation_title">Стоимость перевозки соответствует рыночным ценам</span>
+                                    <a href="" class="status-link_file">
+                                        Посмотреть <span uk-icon="icon: check;"></span>
+                                    </a>
+                                </div>
+                                <div class="status-info_confirmation status-info_confirmation_error">
+                                    <span class="status-info_confirmation_title">Подтверждения перевозки через геомониторинг</span>
+                                </div>
+                                <div class="status-info_confirmation">
+                                    <span class="status-info_confirmation_title">Подтверждения договорных отношений с водителем</span>
+                                    <a href="" class="status-link_file">
+                                        Посмотреть <span uk-icon="icon: check;"></span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="detail-content_confirmation">
+                                <div class="detail-content_title">
+                                    Подтверждения владения ТС <span class="detail-content_auto">Р601ТТ58</span>
+                                    <span class="detail-status_good">2/2</span>
+                                </div>
+
+                                <div class="status-info_confirmation">
+                                    <span class="status-info_confirmation_title">Договор аренды</span>
+                                    <a href="" class="status-link_file">
+                                        Посмотреть <span uk-icon="icon: check;"></span>
+                                    </a>
+                                </div>
+                                <div class="status-info_confirmation">
+                                    <span class="status-info_confirmation_title">СТС</span>
+                                    <a href="" class="status-link_file">
+                                        Посмотреть <span uk-icon="icon: check;"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
 <!--    <table class="uk-table">-->
 <!--        <thead class="vitrina_table-title">-->
 <!--            <tr>-->
@@ -697,13 +826,5 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 <!--            </div>-->
 <!--        </div>-->
 <!--    </div>-->
-
-    <!--<div id="offcanvas-push" uk-offcanvas="mode: push; overlay: true">-->
-    <!--    <div class="uk-offcanvas-bar">-->
-    <!--        <button class="uk-offcanvas-close" type="button" uk-close></button>-->
-    <!--        <h3>Заголовок</h3>-->
-    <!--        <p>Работает машина, заменяющая сто человек, а вокруг стоят сто человек и смотрят, как она работает.</p>-->
-    <!--    </div>-->
-    <!--</div>-->
 
 </div>

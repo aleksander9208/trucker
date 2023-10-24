@@ -311,6 +311,173 @@ body {
     background: #eff7d7;
 }
 
+.canvas-bar_content {
+    width: 474px !important;
+    padding: 20px !important;
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.05);
+    border: 1px solid #D9D9D9;
+    background: #FFF !important;
+}
+
+.bar-content_title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px;
+}
+
+.bar-title {
+    color: #262626;
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+.bar-status {
+    padding: 2px 9px 2px 28px;
+    color: #F5222D;
+    line-height: 1.4;
+    border-radius: 4px;
+    background: #FFF1F0 url('images/iconStatusError.svg') no-repeat;
+    background-position-x: 7px;
+    background-position-y: 3px;
+}
+
+.bar-content_date {
+    color: #595959;
+    margin-bottom: 15px;
+}
+
+.bar-content_deviation_price {
+    color: #595959;
+    margin-bottom: 15px;
+}
+
+span.deviation-price_percent {
+    display: block;
+    color: #A8071A;
+    font-size: 16px;
+}
+
+.bar-content_members {
+    color: #595959;
+    margin-bottom: 4px;
+}
+
+.bar-content_members span {
+    display: block;
+    color: #262626;
+    margin: 1px 0;
+    font-size: 16px;
+}
+
+.bar-content_link_archiv {
+    border-radius: 2px;
+    border: 1px solid #D9D9D9;
+    color: #262626;
+    max-width: 205px;
+    padding: 4px 9px;
+    margin-top: 15px;
+    margin-bottom: 18px;
+}
+
+.bar-detail_title {
+    color: #262626;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+ul.subnav-title.uk-subnav.uk-subnav-pill a {
+    color: #595959;
+    padding: 0px 24px 7px 0;
+    text-transform: unset;
+    background: url('images/doubleCheckNoACtive.svg');
+    background-position-x: 116px;
+    background-position-y: 2px;
+    background-repeat: no-repeat;
+    min-width: 108px;
+}
+
+ul.subnav-title.uk-subnav.uk-subnav-pill .uk-active a {
+    color: #0066FF;
+    border-bottom: 2px solid #0066FF;
+    background: url('images/doubleCheck.svg');
+    background-repeat: no-repeat;
+    background-position-x: 116px;
+    background-position-y: 2px;
+}
+
+ul.subnav-title.uk-subnav.uk-subnav-pill {
+    margin-top: 17px;
+    border-bottom: 1px solid #595959;
+    margin-bottom: 15px;
+}
+
+.detail-content_title {
+    color: #262626;
+    margin-bottom: 7px;
+}
+
+ul.subnav-content.uk-switcher.uk-margin {
+    margin-top: 0 !important;
+}
+
+.detail-status_good {
+    background: #52C41A;
+    color: #fff;
+    display: inline-block;
+    margin-left: 1px;
+    line-height: 1;
+    font-size: 12px;
+    padding: 2px;
+}
+
+.detail-status_error {
+    background: #F5222D;
+    color: #fff;
+    font-size: 12px;
+    padding: 0 3px;
+    line-height: 1;
+}
+
+.status-info_confirmation {
+    color: #262626;
+    border: 1px solid #EAEAEA;
+    border-radius: 4px;
+    padding: 8px 11px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-info_confirmation_error {
+    border-color: #F5222D;
+    background: #fef1f0 url('images/error.svg') no-repeat;
+    background-position-x: 98.5%;
+    background-position-y: 54.5%;
+}
+
+a.status-link_file {
+    color: #0066FF !important;
+}
+
+a.status-link_file span {
+    color: #389E0D;
+    background: #F6FFED;
+    padding: 2px;
+    border-radius: 50%;
+    margin-left: 9px;
+}
+
+span.status-info_confirmation_title {
+    max-width: 275px;
+    display: inline-block;
+    line-height: 20px;
+}
+
+.detail-content_confirmation {
+    margin-bottom: 15px;
+}
+
 /**
 Удалить после окончание верстке
  */
