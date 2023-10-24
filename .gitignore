@@ -1,4 +1,4 @@
-bitrix
+/bitrix
 upload
 local/modules/sprint.migration
 vendor
@@ -10,6 +10,7 @@ test.php
 *.xml
 *.dt
 *.log.old
+*.json
 
 .php-cs-fixer.cache
 .idea
