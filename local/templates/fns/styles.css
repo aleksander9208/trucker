@@ -25,7 +25,7 @@ body {
 
 .form_cvartal {
     display: grid;
-    grid-template-columns: 141px 130px 130px 130px;
+    grid-template-columns: 24% 24% 24% 24%;
     gap: 8px;
 }
 
@@ -102,8 +102,11 @@ body {
 
 .filter-search {
     display: flex;
-    justify-content: end;
-    align-items: end;
+    margin-bottom: 0;
+    max-width: 280px;
+    min-width: unset;
+    justify-self: end;
+    width: 100%;
 }
 
 .filter-search input {
@@ -113,6 +116,10 @@ body {
     border-radius: 4px;
     height: 34px;
     padding: 0 11px;
+}
+
+.filter-search input:focus-visible {
+    outline: none;
 }
 
 .filter-search .uk-search {
@@ -221,6 +228,8 @@ body {
 
 .filter_list-type-organizations {
     display: none;
+    background: #F0F0F0;
+    margin-left: 24px;
 }
 
 .filter_list-top-error-organizations {
@@ -233,6 +242,39 @@ body {
     border-radius: 4px;
     padding: 4px 12px;
 }
+
+.filter_list-label input {
+    display: none;
+}
+
+.filter_list-label input [type=checkbox]:checked + span {
+    background: #fff;
+    display: block;
+}
+
+.filter_list-label:hover {
+    color: #666;
+}
+
+.filter_list-label input[type=checkbox]:active:not(:disabled) + span {
+    background: #d2c5ac;
+    color: #000;
+}
+
+.filter_list-label input[type=checkbox]:disabled + span {
+    background: #efefef;
+    color: #666;
+    cursor: default;
+}
+
+.filter_list-label input[type=checkbox]:checked:disabled + span {
+    background: #f7efdc;
+}
+
+.focused_type span {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
 
 .filter_top-organizations input {
     margin-right: 3px;
@@ -362,7 +404,7 @@ span.deviation-price_percent {
     margin-bottom: 4px;
 }
 
-.bar-content_members span {
+.carriage_name {
     display: block;
     color: #262626;
     margin: 1px 0;

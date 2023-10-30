@@ -17,8 +17,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 ?>
 <div class="uk-container uk-container-large">
 
-    <form class="form_filter">
-        <div class="form_filter-date">
+    <div class="form_filter">
+        <form class="form_filter-date">
             <div class="form_cvartal">
                 <div class="filter_date-cvartal">
                     <div class="filter_cvartal-main">
@@ -146,15 +146,22 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
                     </label>
                 </div>
             </div>
-        </div>
+        </form>
 
-        <div class="filter-search">
-            <div class="uk-search">
-                <input class="uk-search-input" type="search" placeholder="Поиск по организации или ИНН">
-                <a href="" class="uk-search-icon-flip" uk-search-icon></a>
-            </div>
-        </div>
-    </form>
+        <?php
+        $APPLICATION->IncludeComponent(
+            'bitrix:main.ui.filter',
+            '',
+        [
+            'FILTER_ID' => $arResult["GRID_CODE"],
+            'GRID_ID' => $arResult["GRID_CODE"],
+            'FILTER' => [],
+            'ENABLE_LIVE_SEARCH' => false,
+            'ENABLE_LABEL' => false,
+            'VALUE_REQUIRED_MODE' => false
+        ]);
+        ?>
+    </div>
 
     <div class="statistics">
         <div class="statistics_result">
@@ -205,15 +212,15 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
                     <span>Топ проблемных организаций</span>
                 </label>
                 <div class="filter_list-type-organizations">
-                    <label>
+                    <label class="filter_list-label">
                         <input class="uk-checkbox" type="checkbox">
                         <span>Грузовладельцы</span>
                     </label>
-                    <label>
+                    <label class="filter_list-label">
                         <input class="uk-checkbox" type="checkbox">
                         <span>Перевозчики</span>
                     </label>
-                    <label>
+                    <label class="filter_list-label">
                         <input class="uk-checkbox" type="checkbox">
                         <span>Экспедиторы</span>
                     </label>
@@ -223,7 +230,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
                 <span>Отображать проблемные перевозки</span>
                 <select class="uk-select">
                     <option>Все</option>
-                    <option>Вредные</option>
                 </select>
             </div>
         </div>
@@ -238,7 +244,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
         'bitrix:main.ui.grid',
         '',
         [
-            'GRID_ID' => $arResult['GRID_ID'],
+            'GRID_ID' => $arResult['GRID_CODE'],
             'COLUMNS' => $arResult['COLUMNS'],
             'ROWS' => $arResult['ROWS'],
             "NAV_OBJECT" => $arResult["NAV"],
@@ -269,7 +275,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 
             <div class="bar-content_title">
                 <div class="bar-title">
-                    Перевозка <span>№98-B21</span>
+                    Перевозка <span id="carriage_id"></span>
                 </div>
                 <div class="bar-status">
                     Проверка не пройдена
@@ -277,27 +283,19 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
             </div>
 
             <div class="bar-content_date">
-                Дата погрузки <span>24.01.2023</span>
+                Дата погрузки <span id="carriage_date"></span>
             </div>
 
             <div class="bar-content_deviation_price">
                 Отклонение от рыночной цены
-                <span class="deviation-price_percent">
-                    <span uk-icon="icon: arrow-down"></span> 3,37%
-                </span>
+                <span class="deviation-price_percent" id="carriage_deviation-price"></span>
             </div>
 
-            <div class="bar-content_members">
-                Грузовладелец
-                <span>ИП Соломин Петр Эдуардович</span>
-                456789012345
-            </div>
+            <div class="bar-content_members" id="carriage_owner"></div>
 
-            <div class="bar-content_members">
-                Перевозчик
-                <span>ООО "СкладСервис"</span>
-                456789012345
-            </div>
+            <div class="bar-content_members" id="carriage_carrier"></div>
+
+            <div class="bar-content_members" id="carriage_forwarder"></div>
 
             <div class="bar-content_link_archiv">
                 <span uk-icon="icon: download"></span>

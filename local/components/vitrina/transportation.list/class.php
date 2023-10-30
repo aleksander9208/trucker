@@ -45,10 +45,6 @@ class TransportationList extends CBitrixComponent
     {
         $this->errors = new ErrorCollection();
 
-//        if (!Bitrix\Main\Loader::includeModule('edidata.main')) {
-//            $this->errors->setError(new Error('Главный Модуль "ЭПЛ" не установлен'));
-//        }
-
         if ($this->errors->count() <= 0) {
             $this->prepareResult();
         } else {
@@ -73,7 +69,7 @@ class TransportationList extends CBitrixComponent
                 "class" => "row-item1"
             ],
             [
-                "id" => "DATE_SHIIPMENT",
+                "id" => "DATE_SHIPMENT",
                 "name" => "Дата погрузки",
                 "default" => true,
                 "class" => "row-item1"
@@ -127,7 +123,7 @@ class TransportationList extends CBitrixComponent
     {
         Loader::includeModule('iblock');
 
-        $this->arResult["GRID_ID"] = 'VITRINA_GRID';
+        $this->arResult["GRID_CODE"] = 'vitrina_grid';
 
         $gridOptions = new Options($this->arResult["GRID_CODE"]);
         $sort = $gridOptions->GetSorting([
@@ -146,10 +142,11 @@ class TransportationList extends CBitrixComponent
 
         if ($filterData["FILTER_APPLIED"]) {
             $this->arResult["FILTER"][] = [
-//                'LOGIC' => "OR",
-//                'NAME' => '%' . $filterData["FIND"] . '%',
-//                'ID' => $filterData["FIND"],
-//                'INN_VALUE' => '%' . $filterData["FIND"] . '%',
+                'LOGIC' => "OR",
+                'NAME' => '%' . $filterData["FIND"] . '%',
+                'CARGO_OWNER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
+                'FORWARDER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
+                'CARRIER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
             ];
         }
 
@@ -177,20 +174,21 @@ class TransportationList extends CBitrixComponent
         ]);
 
         $nav->setRecordCount($vitrina->getCount());
-
         /**
          * TODO Удалить хардкод перед публикацией
          */
         foreach ($vitrina->fetchAll() as $item) {
+            $date = explode('-', $item['DATE_SHIPMENT_VALUE']);
+
             $vitrinaList[] = [
                 'data' => [
                     "ID" => $item['ID'],
-                    "ID_TRANSPORTATION" => '<a href="#info-bar" uk-toggle>' . $item['NAME'] . '</a>',
-                    "DATE_SHIIPMENT"  => $item['DATE_SHIPMENT_VALUE'],
+                    "ID_TRANSPORTATION" => '<a href="#info-bar" class="info_bar-content" uk-toggle>' . $item['NAME'] . '</a>',
+                    "DATE_SHIPMENT"  => $date[2] . '.' . $date[1] . '.' . $date[0],
                     "CARGO_OWNER" => $item['CARGO_OWNER_VALUE'] . '<span>' . $item['CARGO_OWNER_INN_VALUE'] . '</span>',
                     "FORWARDER" => $item['FORWARDER_VALUE'] . '<span>' . $item['FORWARDER_INN_VALUE'] . '</span>',
-                    "CARRIER" => $item['CARRIER_VALUE'] . '<span>' . $item['CARGO_INN_VALUE'] . '</span>',
-                    "DEVIATION_FROM_PRICE" => '<span class="icon-deviation_up"><span uk-icon="icon: arrow-up"></span>' . $item['DEVIATION_MARKET_PRICE_VALUE'] . '</span>',
+                    "CARRIER" => $item['CARRIER_VALUE'] . '<span>' . $item['CARRIER_INN_VALUE'] . '</span>',
+                    "DEVIATION_FROM_PRICE" => $item['DEVIATION_MARKET_PRICE_VALUE'],
 //                    "CHECKLIST_CARRIER" => $item['CHECKLIST_CARRIER_VALUE'],
                     "CHECKLIST_CARRIER" => '<span class="transit-good"></span>',
 //                    "CHECKLIST_FORWARDER" => $item['CHECKLIST_FORWARDER_VALUE'],

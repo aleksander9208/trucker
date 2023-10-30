@@ -44,7 +44,6 @@ html {
 }
 
 body {
-	background: #2fc6f7;
 	box-sizing: border-box;
 	height: 100%;
 	font-family: var(--intranet-pub-font-family-primary);
@@ -81,7 +80,6 @@ body {
 	height: 100%;
 	overflow: hidden;
 	width: 100%;
-	background: url(images/bg_clouds_3.png) no-repeat center 69px;
 }
 
 .log-bottom-cell,

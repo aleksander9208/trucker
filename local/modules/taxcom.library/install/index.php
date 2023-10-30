@@ -1,9 +1,11 @@
 <?php
 
+use Bitrix\Main\Application;
+
 IncludeModuleLangFile(__FILE__);
 
 /**
- * Библиотека для витирины ФНС
+ * Библиотека для витрины ФНС
  */
 Class taxcom_library extends CModule
 {
@@ -23,51 +25,32 @@ Class taxcom_library extends CModule
         $this->MODULE_DESCRIPTION = "Библиотека методов для ФНС";
     }
 
-    public function DoInstall(): bool
+    public function DoInstall(): void
     {
-        $this->InstallDB();
-        $this->InstallEvents();
         $this->InstallFiles();
         RegisterModule($this->MODULE_ID);
-        return true;
     }
 
-    public function DoUninstall(): bool
+    public function DoUninstall(): void
     {
-        $this->UnInstallDB();
-        $this->UnInstallEvents();
         $this->UnInstallFiles();
         UnRegisterModule($this->MODULE_ID);
-        return true;
     }
 
-    public function InstallDB(): bool
-    {
 
+    public function InstallFiles(): void
+    {
+        /** Копируем раздел для отдачи настроек */
+        CopyDirFiles(
+            __DIR__ .'/local/',
+            Application::getDocumentRoot() .'/local',
+            true,
+            true
+        );
     }
 
-    public function UnInstallDB(): bool
+    public function UnInstallFiles(): void
     {
-
-    }
-
-    public function InstallEvents(): bool
-    {
-        return true;
-    }
-
-    public function UnInstallEvents(): bool
-    {
-        return true;
-    }
-
-    public function InstallFiles(): bool
-    {
-        return true;
-    }
-
-    public function UnInstallFiles(): bool
-    {
-        return true;
+        DeleteDirFilesEx(Application::getDocumentRoot().'/local/routes');
     }
 }
