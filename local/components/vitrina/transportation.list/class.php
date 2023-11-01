@@ -25,6 +25,7 @@ class TransportationList extends CBitrixComponent
     {
         $this->arResult['COLUMNS'] = self::getColumns();
         $this->getRows();
+        $this->arResult['YEAR'] = date("Y");
     }
 
     /**
@@ -173,12 +174,26 @@ class TransportationList extends CBitrixComponent
             "count_total" => true,
         ]);
 
+        $this->arResult['COUNT'] = $vitrina->getCount();
+
         $nav->setRecordCount($vitrina->getCount());
         /**
          * TODO Удалить хардкод перед публикацией
          */
+        $good = $error = 0;
         foreach ($vitrina->fetchAll() as $item) {
             $date = explode('-', $item['DATE_SHIPMENT_VALUE']);
+            $goodStatus = $errorStatus = '';
+
+            if ($item['CHECKLIST_CARRIER_VALUE'] === '1') {
+                $this->arResult['COUNT_GOOD'] = $good;
+                $goodStatus = '<span class="transit-good"></span>';
+            }
+
+            if ($item['CHECKLIST_FORWARDER_VALUE'] === '0') {
+                $this->arResult['COUNT_ERROR'] = $error;
+                $errorStatus = '<span class="transit-error"></span>';
+            }
 
             $vitrinaList[] = [
                 'data' => [
@@ -189,13 +204,17 @@ class TransportationList extends CBitrixComponent
                     "FORWARDER" => $item['FORWARDER_VALUE'] . '<span>' . $item['FORWARDER_INN_VALUE'] . '</span>',
                     "CARRIER" => $item['CARRIER_VALUE'] . '<span>' . $item['CARRIER_INN_VALUE'] . '</span>',
                     "DEVIATION_FROM_PRICE" => $item['DEVIATION_MARKET_PRICE_VALUE'],
-//                    "CHECKLIST_CARRIER" => $item['CHECKLIST_CARRIER_VALUE'],
-                    "CHECKLIST_CARRIER" => '<span class="transit-good"></span>',
-//                    "CHECKLIST_FORWARDER" => $item['CHECKLIST_FORWARDER_VALUE'],
-                    "CHECKLIST_FORWARDER" => '<span class="transit-error"></span>',
+                    "CHECKLIST_CARRIER" => $goodStatus,
+                    "CHECKLIST_FORWARDER" => $errorStatus,
                 ],
             ];
+
+            $good++;
+            $error++;
         }
+
+        $this->arResult['COUNT_GOOD_PERCENT'] = round($this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100, 2);
+        $this->arResult['COUNT_ERROR_PERCENT'] = round($this->arResult['COUNT_ERROR']/$this->arResult['COUNT'] * 100 , 2);
 
         $this->arResult["ROWS"] = $vitrinaList;
         $this->arResult["NAV"] = $nav;
