@@ -166,7 +166,6 @@ class TransportationList extends CBitrixComponent
                 'DEVIATION_MARKET_PRICE_' => 'AUTOMATIC_PRICES',
                 'CHECKLIST_CARRIER_' => 'CHECKLIST_CARRIER',
                 'CHECKLIST_FORWARDER_' => 'CHECKLIST_FORWARDER',
-                'LINK_DOCUMENT_' => 'LINK_DOCUMENT',
             ],
             "offset" => $nav->getOffset(),
             "limit" => $nav->getLimit(),
