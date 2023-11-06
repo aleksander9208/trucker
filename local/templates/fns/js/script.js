@@ -67,30 +67,33 @@ $(document).ready(function() {
                     $('#carriage_deviation-price').html(carriage.DEVIATION_MARKET_PRICE_VALUE + '%');
                     /** Грузовладелец */
                     if (carriage.CARGO_OWNER_VALUE != null) {
-                        $('#carriage_owner').html(
+                        let cargo = carriage.CARGO_OWNER_INN_VALUE ? carriage.CARGO_OWNER_INN_VALUE : '';
+                         $('#carriage_owner').html(
                             'Грузовладелец <span class="carriage_name">' +
-                            carriage.CARGO_OWNER_VALUE + '</span><span id="carriage_owner_inn">' +
-                            carriage.CARGO_OWNER_INN_VALUE + '</span>'
+                             carriage.CARGO_OWNER_VALUE + '</span><span id="carriage_owner_inn">' +
+                             cargo + '</span>'
                         )
                     } else {
                         $('#carriage_owner').html('');
                     }
                     /** Перевозчик */
                     if (carriage.CARRIER_VALUE != null) {
+                        let carrier = carriage.CARRIER_INN_VALUE ? carriage.CARRIER_INN_VALUE : '';
                         $('#carriage_carrier').html(
                             'Перевозчик <span class="carriage_name">' +
                             carriage.CARRIER_VALUE + '</span><span id="carriage_owner_inn">' +
-                            carriage.CARRIER_INN_VALUE + '</span>'
+                            carrier + '</span>'
                         )
                     } else {
                         $('#carriage_carrier').html('');
                     }
                     /** Экспедитор */
                     if (carriage.FORWARDER_VALUE != null) {
+                        let forwarder = carriage.FORWARDER_INN_VALUE ? carriage.FORWARDER_INN_VALUE : '';
                         $('#carriage_forwarder').html(
                             'Экспедитор <span class="carriage_name">' +
                             carriage.FORWARDER_VALUE + '</span><span id="carriage_owner_inn">' +
-                            carriage.FORWARDER_INN_VALUE + '</span>'
+                            forwarder + '</span>'
                         )
                     } else {
                         $('#carriage_forwarder').html('');

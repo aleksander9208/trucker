@@ -163,7 +163,7 @@ class TransportationList extends CBitrixComponent
                 'FORWARDER_INN_' => 'FORWARDER_INN',
                 'CARRIER_' => 'CARRIER',
                 'CARRIER_INN_' => 'CARRIER_INN',
-                'DEVIATION_MARKET_PRICE_' => 'DEVIATION_MARKET_PRICE',
+                'DEVIATION_MARKET_PRICE_' => 'AUTOMATIC_PRICES',
                 'CHECKLIST_CARRIER_' => 'CHECKLIST_CARRIER',
                 'CHECKLIST_FORWARDER_' => 'CHECKLIST_FORWARDER',
                 'LINK_DOCUMENT_' => 'LINK_DOCUMENT',
@@ -213,8 +213,10 @@ class TransportationList extends CBitrixComponent
             $error++;
         }
 
-        $this->arResult['COUNT_GOOD_PERCENT'] = round($this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100, 2);
-        $this->arResult['COUNT_ERROR_PERCENT'] = round($this->arResult['COUNT_ERROR']/$this->arResult['COUNT'] * 100 , 2);
+        if ($this->arResult['COUNT'] > 0) {
+            $this->arResult['COUNT_GOOD_PERCENT'] = round($this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100, 2);
+            $this->arResult['COUNT_ERROR_PERCENT'] = round($this->arResult['COUNT_ERROR']/$this->arResult['COUNT'] * 100 , 2);
+        }
 
         $this->arResult["ROWS"] = $vitrinaList;
         $this->arResult["NAV"] = $nav;

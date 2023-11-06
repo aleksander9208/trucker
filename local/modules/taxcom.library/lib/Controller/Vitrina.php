@@ -140,4 +140,15 @@ class Vitrina extends BaseController
             return null;
         }
     }
+
+    /**
+     * Возвращаем архив документов
+     *
+     * @param int $id
+     * @return void
+     */
+    public function getFileArchivAction(int $id)
+    {
+
+    }
 }

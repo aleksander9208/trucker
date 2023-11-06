@@ -18,6 +18,7 @@ return function (RoutingConfigurator $routes) {
                         ->where('id', '\d+')
                         ->group(function (RoutingConfigurator $routes) {
                             $routes->post('{id}', [Vitrina::class, 'getAction']);
+                            $routes->post('archiv/{id}', [Vitrina::class, 'getFileArchivAction']);
                         });
                 });
         });

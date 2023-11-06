@@ -1,6 +1,8 @@
 {
   "require": {
-    "andreyryabin/sprint.migration": "dev-master"
+    "andreyryabin/sprint.migration": "dev-master",
+    "ext-rdkafka": "*",
+    "arnaud-lb/php-rdkafka": "6.0.3"
   },
   "require-dev": {
     "phpstan/phpstan": "0.12.*"
@@ -10,6 +12,20 @@
       "local/modules/{$name}/": ["type:bitrix-module"]
     }
   },
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name" : "arnaud-lb/php-rdkafka",
+        "version": "6.0.3",
+        "source": {
+          "type": "git",
+          "url": "https://github.com/arnaud-lb/php-rdkafka.git",
+          "reference": "6.x"
+        }
+      }
+    }
+  ],
   "config": {
     "allow-plugins": {
       "composer/installers": true
