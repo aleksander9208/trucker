@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Taxcom\Library\Agents;
 
-use Bitrix\Main\IO\FileNotFoundException;
-use Edidata\Epl\Service\File\ExportMessageKafkaConsumer;
+use JsonException;
+use Taxcom\Library\Service\ExportMessageKafkaConsumer;
 
 /**
  * Агент запуска парсера соообщений
@@ -14,7 +14,7 @@ class MessageKafkaConsurmeAgents extends AbstractAgent
 {
     /**
      * @return void
-     * @throws FileNotFoundException
+     * @throws JsonException
      */
     protected function execute(): void
     {

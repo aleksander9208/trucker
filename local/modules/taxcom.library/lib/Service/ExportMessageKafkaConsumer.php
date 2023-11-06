@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Edidata\Epl\Service\File;
+namespace Taxcom\Library\Service;
 
 use Bitrix\Iblock\IblockTable;
 use CIBlockElement;
@@ -21,11 +21,6 @@ class ExportMessageKafkaConsumer
 
     /** @var string Топик с сообщениями */
     public const TOPIC = 'tracker';
-
-    public function __construct(
-
-    ) {
-    }
 
     /**
      * Экспорт писем
@@ -68,7 +63,7 @@ class ExportMessageKafkaConsumer
                 break;
             }
 
-            $carrier = json_decode($msg->payload, true, 512, JSON_THROW_ON_ERROR);
+            $carrier = json_decode($msg->payload, true,);
 
             if (is_array($carrier)) {
 
