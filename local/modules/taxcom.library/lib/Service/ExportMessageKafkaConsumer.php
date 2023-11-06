@@ -22,6 +22,9 @@ class ExportMessageKafkaConsumer
     /** @var string Топик с сообщениями */
     public const TOPIC = 'tracker';
 
+    /** @var string */
+    public const NO_MESSAGE = 'Новых сообщений нет';
+
     /**
      * Экспорт писем
      *
@@ -63,25 +66,26 @@ class ExportMessageKafkaConsumer
                 break;
             }
 
-            $carrier = json_decode($msg->payload, true,);
+            if($msg !== null) {
+                $carrier = json_decode($msg->payload, true,);
 
-            if (is_array($carrier)) {
+                if (is_array($carrier)) {
+                    $element = new CIBlockElement;
+                    $idIblock = self::getIblockId();
+                    $id = self::getIdCarrier($carrier['execution_request_uid']);
 
-                $element = new CIBlockElement;
-
-                $idIblock = self::getIblockId();
-                $id = self::getIdCarrier($carrier['execution_request_uid']);
-
-                if ($id === null) {
-                    $id = $element->Add(self::getFields($carrier, $idIblock));
-                } else {
-                    $element->update($id, self::getFields($carrier, $idIblock));
+                        if ($id === null) {
+                            $id = $element->Add(self::getFields($carrier, $idIblock));
+                        } else {
+                            $element->update($id, self::getFields($carrier, $idIblock));
+                        }
+                        $element::SetPropertyValuesEx($id, $idIblock, self::getPropertyList($carrier, $msg->payload));
                 }
-
-                $element::SetPropertyValuesEx($id, $idIblock, self::getPropertyList($carrier, $msg->payload));
+                $topic->offsetStore($msg->partition, ($msg->offset+1) );
+            } else {
+                var_dump(self::NO_MESSAGE);
+                break;
             }
-
-            $topic->offsetStore($msg->partition, ($msg->offset+1) );
         }
     }
 
