@@ -165,14 +165,17 @@ class ExportMessageKafkaConsumer
                     if ($checks['name'] === 'transport_expedition_contract') {
                         $properties['CONTRACT_EXPEDITION_STATUS'] = $checks['status'];
                         $properties['CONTRACT_EXPEDITION_LINK'] = $checks['edm_attachments'][0]['original_file'];
+                        $properties['CONTRACT_EXPEDITION_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
                     }
                     if ($checks['name'] === 'transportation_contract') {
                         $properties['CONTRACT_TRANSPORTATION_STATUS'] = $checks['status'];
                         $properties['CONTRACT_TRANSPORTATION_LINK'] = $checks['edm_attachments'][0]['original_file'];
+                        $properties['CONTRACT_TRANSPORTATION_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
                     }
-                    if ($checks['name'] === 'application_for_transportation') {
+                    if ($checks['name'] === 'order_one_time_contract') {
                         $properties['CONTRACT_ORDER_ONE_TIME_STATUS'] = $checks['status'];
-                        $properties['CONTRACT_ORDER_ONE_TIME_LINK'] = $checks['edm_attachments'][0]['original_file'];
+                        $properties['CONTRACT_ORDER_ONE_TIME_LINK'] = $checks['attachments'][0]['original_file'];
+                        $properties['CONTRACT_ORDER_ONE_TIME_FORWARDER_LINK'] = $checks['attachments'][1]['original_file'];
                     }
                 }
 
@@ -182,22 +185,27 @@ class ExportMessageKafkaConsumer
                     if ($checks['name'] === 'epd') {
                         $properties['DOCUMENTS_EPD_STATUS'] = $checks['status'];
                         $properties['DOCUMENTS_EPD_LINK'] = $checks['edm_attachments'][0]['original_file'];
+                        $properties['DOCUMENTS_EPD_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
                     }
                     if ($checks['name'] === 'expeditor_order') {
                         $properties['DOCUMENTS_EXPEDITOR_STATUS'] = $checks['status'];
                         $properties['DOCUMENTS_EXPEDITOR_LINK'] = $checks['edm_attachments'][0]['original_file'];
+                        $properties['DOCUMENTS_EXPEDITOR_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
                     }
                     if ($checks['name'] === 'expeditor_agent_receipt') {
                         $properties['DOCUMENTS_EXPEDITOR_RECEIPT_STATUS'] = $checks['status'];
                         $properties['DOCUMENTS_EXPEDITOR_RECEIPT_LINK'] = $checks['edm_attachments'][0]['original_file'];
+                        $properties['DOCUMENTS_EXPEDITOR_RECEIPT_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
                     }
                     if ($checks['name'] === 'driver_approvals') {
                         $properties['DOCUMENTS_DRIVER_APPROVALS_STATUS'] = $checks['status'];
                         $properties['DOCUMENTS_DRIVER_APPROVALS_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['DOCUMENTS_DRIVER_APPROVALS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'application_for_transportation') {
                         $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS'] = $checks['status'];
                         $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                 }
 
@@ -220,26 +228,32 @@ class ExportMessageKafkaConsumer
                     if ($checks['name'] === 'invoice') {
                         $properties['ACCOUNTING_INVOICE_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_INVOICE_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['ACCOUNTING_INVOICE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'act_of_service_acceptance') {
                         $properties['ACCOUNTING_ACT_ACCEPTANCE_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_ACT_ACCEPTANCE_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['ACCOUNTING_ACT_ACCEPTANCE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'act_of_service_acceptance_multiple_transportations') {
                         $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'transportation_registry') {
                         $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'tax_invoice') {
                         $properties['ACCOUNTING_TAX_INVOICE_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_TAX_INVOICE_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['ACCOUNTING_TAX_INVOICE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'universal_transfer_document') {
                         $properties['ACCOUNTING_UPD_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_UPD_LINK'] = $checks['edm_attachments'][0]['original_file'];
+                        $properties['ACCOUNTING_UPD_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
                     }
                 }
 
@@ -250,6 +264,7 @@ class ExportMessageKafkaConsumer
                     if ($checks['name'] === 'sts') {
                         $properties['DONKEY_STS_STATUS'] = $checks['status'];
                         $properties['DONKEY_STS_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['DONKEY_STS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                 }
 
@@ -260,10 +275,12 @@ class ExportMessageKafkaConsumer
                     if ($checks['name'] === 'sts') {
                         $properties['TRAILER_STS_STATUS'] = $checks['status'];
                         $properties['TRAILER_STS_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRAILER_STS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'rent_agreement') {
                         $properties['TRAILER_RENT_AGREEMENT_STATUS'] = $checks['status'];
                         $properties['TRAILER_RENT_AGREEMENT_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRAILER_RENT_AGREEMENT_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                 }
 
@@ -274,22 +291,27 @@ class ExportMessageKafkaConsumer
                     if ($checks['name'] === 'sts') {
                         $properties['TRAILER_SECONDARY_STS_STATUS'] = $checks['status'];
                         $properties['TRAILER_SECONDARY_STS_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRAILER_SECONDARY_STS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'rent_agreement') {
                         $properties['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS'] = $checks['status'];
                         $properties['TRAILER_SECONDARY_RENT_AGREEMENT_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRAILER_SECONDARY_RENT_AGREEMENT_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'agreement_withLeasingCompany') {
                         $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS'] = $checks['status'];
                         $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'marriage_certificate') {
                         $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS'] = $checks['status'];
                         $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'free_usage_agreement') {
                         $properties['TRAILER_SECONDARY_FREE_USAGE_STATUS'] = $checks['status'];
                         $properties['TRAILER_SECONDARY_FREE_USAGE_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRAILER_SECONDARY_FREE_USAGE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                 }
 
@@ -301,22 +323,27 @@ class ExportMessageKafkaConsumer
                     if ($checks['name'] === 'sts') {
                         $properties['TRUCK_STS_STATUS'] = $checks['status'];
                         $properties['TRUCK_STS_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRUCK_STS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'rent_agreement') {
                         $properties['TRUCK_RENT_AGREEMENT_STATUS'] = $checks['status'];
                         $properties['TRUCK_RENT_AGREEMENT_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRUCK_RENT_AGREEMENT_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'agreement_withLeasingCompany') {
                         $properties['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS'] = $checks['status'];
                         $properties['TRUCK_AGREEMENT_LEASING_COMPANY_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRUCK_AGREEMENT_LEASING_COMPANY_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'marriage_certificate') {
                         $properties['TRUCK_MARRIAGE_CERTIFICATE_STATUS'] = $checks['status'];
                         $properties['TRUCK_MARRIAGE_CERTIFICATE_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRUCK_MARRIAGE_CERTIFICATE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                     if ($checks['name'] === 'free_usage_agreement') {
                         $properties['TRUCK_FREE_USAGE_STATUS'] = $checks['status'];
                         $properties['TRUCK_FREE_USAGE_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['TRUCK_FREE_USAGE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                 }
             }
