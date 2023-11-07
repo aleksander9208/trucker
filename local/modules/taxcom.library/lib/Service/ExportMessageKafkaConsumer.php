@@ -230,7 +230,7 @@ class ExportMessageKafkaConsumer
                     }
                     if ($checks['name'] === 'universal_transfer_document') {
                         // universal_transfer_document - неизвестно урл
-                        $properties['ACCOUNTING_UPD_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['ACCOUNTING_UPD_LINK'] = $checks['edm_attachments'][0]['original_file'];
                     }
                 }
 
