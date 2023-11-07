@@ -11,6 +11,7 @@ test.php
 *.dt
 *.log.old
 *.json
+*.offset
 
 .php-cs-fixer.cache
 .idea

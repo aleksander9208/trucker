@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Taxcom\Library\Controller;
 
-use Bitrix\Main\Context;
 use Bitrix\Main\Engine\AutoWire\Parameter;
 use Bitrix\Main\Error;
 use Bitrix\Main\UI\PageNavigation;
@@ -161,21 +160,8 @@ class Vitrina extends BaseController
                 ],
             ])->fetch();
 
-            $errorCont = false;
-//            $contCheck = null;
-            $contCheck = $shipping['CONTRACT_CHECK_VALUE'];
-
-//            if (str_contains('/', $shipping['CONTRACT_CHECK_VALUE'])) {
-//                $errorCont = true;
-//                $contCheck = $shipping['CONTRACT_CHECK_VALUE'];
-//            } else {
-//                $count = round((int)$shipping['CONTRACT_CHECK_VALUE']);
-//                if($count != 0) {
-//                    $contCheck = $count . '/' . $count;
-//                }
-//            }
-
             return [
+                'ID' => $id,
                 'NAME' => $shipping['NAME'],
                 'DATE' => $shipping['DATE_SHIPMENT_VALUE'],
                 'CARGO' => $shipping['CARGO_OWNER_VALUE'],
@@ -186,23 +172,23 @@ class Vitrina extends BaseController
                 'FORWARDER_INN' => $shipping['FORWARDER_INN_VALUE'],
                 //С заказчиком
                 'CONT_CHECK' => $shipping['CONTRACT_CHECK_VALUE'],
-                'CONT_CHECK_ERROR' => $errorCont,
+                'CONT_CHECK_ERROR' => self::isError($shipping['CONTRACT_CHECK_VALUE']),
                 'CONT_TRANSPORT_LINK' => $shipping['CONTRACT_TRANSPORTATION_LINK_VALUE'],
                 'CONT_EXP_LINK' => $shipping['CONTRACT_EXPEDITION_LINK_VALUE'],
                 'CONT_ORDER_ONE_TIME' => $shipping['CONTRACT_ORDER_ONE_TIME_LINK_VALUE'],
                 'DOC_CHECK' => $shipping['DOCUMENTS_CHECK_VALUE'],
-                'DOC_CHECK_ERROR' => $errorCont,
+                'DOC_CHECK_ERROR' => self::isError($shipping['DOCUMENTS_CHECK_VALUE']),
                 'DOC_APP_TRANSPORT_LINK' => $shipping['DOCUMENTS_APPLICATION_TRANSPORTATION_LINK_VALUE'],
                 'DOC_EPD_LINK' => $shipping['DOCUMENTS_EPD_LINK_VALUE'],
                 'DOC_DRIVER_APP_LINK' => $shipping['DOCUMENTS_DRIVER_APPROVALS_LINK_VALUE'],
                 'DOC_EXP_LINK' => $shipping['DOCUMENTS_EXPEDITOR_LINK_VALUE'],
                 'DOC_EXP_RECEIPT_LINK' => $shipping['DOCUMENTS_EXPEDITOR_RECEIPT_LINK_VALUE'],
                 'AUTO_CHECKS' => $shipping['AUTOMATIC_CHECKS_VALUE'],
-                'AUTO_CHECK_ERROR' => $errorCont,
+                'AUTO_CHECK_ERROR' => self::isError($shipping['AUTOMATIC_CHECKS_VALUE']),
                 'AUTO_PRICES' => $shipping['AUTOMATIC_PRICES_VALUE'],
                 'AUTO_GEO' => $shipping['AUTOMATIC_GEO_MONITORING_VALUE'],
                 'ACC_CHECKS' => $shipping['ACCOUNTING_CHECKS_VALUE'],
-                'ACC_CHECKS_ERROR' => $errorCont,
+                'ACC_CHECKS_ERROR' => self::isError($shipping['ACCOUNTING_CHECKS_VALUE']),
                 'ACC_INVOICE_LINK' => $shipping['ACCOUNTING_INVOICE_LINK_VALUE'],
                 'ACC_ACT_ACC_LINK' => $shipping['ACCOUNTING_ACT_ACCEPTANCE_LINK_VALUE'],
                 'ACC_ACT_MULTI_TRANSPORT_LINK_VALUE' => $shipping['ACCOUNTING_ACT_MULTI_TRANSPORT_LINK_VALUE'],
@@ -210,16 +196,16 @@ class Vitrina extends BaseController
                 'ACC_TAX_INVOICE_LINK' => $shipping['ACCOUNTING_TAX_INVOICE_LINK_VALUE'],
                 'ACC_UPD_LINK' => $shipping['ACCOUNTING_UPD_LINK_VALUE'],
                 'DONKEY_CHECKS' => $shipping['DONKEY_CHECKS_VALUE'],
-                'DONKEY_CHECKS_ERROR' => $errorCont,
+                'DONKEY_CHECKS_ERROR' => self::isError($shipping['DONKEY_CHECKS_VALUE']),
                 'DONKEY_LIC_PLATE' => $shipping['DONKEY_LICENSE_PLATE_VALUE'],
                 'DONKEY_STS_LINK' => $shipping['DONKEY_STS_LINK_VALUE'],
                 'TRAILER_CHECKS' => $shipping['TRAILER_CHECKS_VALUE'],
-                'TRAILER_CHECKS_ERROR' => $errorCont,
+                'TRAILER_CHECKS_ERROR' => self::isError($shipping['TRAILER_CHECKS_VALUE']),
                 'TRAILER_LIC_PLATE' => $shipping['TRAILER_LICENSE_PLATE_VALUE'],
                 'TRAILER_STS_LINK' => $shipping['TRAILER_STS_LINK_VALUE'],
                 'TRAILER_RENT_AGR_LINK' => $shipping['TRAILER_RENT_AGREEMENT_LINK_VALUE'],
                 'TRAILER_SEC_CHECKS' => $shipping['TRAILER_SECONDARY_CHECKS_VALUE'],
-                'TRAILER_SEC_CHECKS_ERROR' => $errorCont,
+                'TRAILER_SEC_CHECKS_ERROR' => self::isError($shipping['TRAILER_SECONDARY_CHECKS_VALUE']),
                 'TRAILER_SEC_LIC_PLATE' => $shipping['TRAILER_SECONDARY_LICENSE_PLATE_VALUE'],
                 'TRAILER_SEC_STS_LINK' => $shipping['TRAILER_SECONDARY_STS_LINK_VALUE'],
                 'TRAILER_SEC_RENT_LINK' => $shipping['TRAILER_SECONDARY_RENT_AGREEMENT_LINK_VALUE'],
@@ -227,7 +213,7 @@ class Vitrina extends BaseController
                 'TRAILER_SEC_CERTIFICATE_LINK' => $shipping['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK_VALUE'],
                 'TRAILER_SEC_FREE_USAGE_LINK' => $shipping['TRAILER_SECONDARY_FREE_USAGE_LINK_VALUE'],
                 'TRUCK_CHECKS' => $shipping['TRUCK_CHECKS_VALUE'],
-                'TRUCK_CHECKS_ERROR' => $errorCont,
+                'TRUCK_CHECKS_ERROR' => self::isError($shipping['TRUCK_CHECKS_VALUE']),
                 'TRUCK_LIC_PLATE' => $shipping['TRUCK_LICENSE_PLATE_VALUE'],
                 'TRUCK_STS_LINK' => $shipping['TRUCK_STS_LINK_VALUE'],
                 'TRUCK_RENT_LINK' => $shipping['TRUCK_RENT_AGREEMENT_LINK_VALUE'],
@@ -237,63 +223,63 @@ class Vitrina extends BaseController
                 'CHECKLIST_CARRIER' => $shipping['CHECKLIST_CARRIER_VALUE'],
                 'CHECKLIST_FORWARDER' => $shipping['CHECKLIST_FORWARDER_VALUE'],
                 //Статусы
-                'CONT_EXP_STATUS' => 'CONTRACT_EXPEDITION_STATUS_VALUE',
-                'CONT_TRANSPORT_STATUS' => 'CONTRACT_TRANSPORTATION_STATUS_VALUE',
-                'CONT_ORDER_ONE_TIME_STATUS' => 'CONTRACT_ORDER_ONE_TIME_STATUS_VALUE',
-                'DOC_EPD_STATUS' => 'DOCUMENTS_EPD_STATUS_VALUE',
-                'DOC_EXP_STATUS' => 'DOCUMENTS_EXPEDITOR_STATUS_VALUE',
-                'DOC_EXP_RECEIPT_STATUS' => 'DOCUMENTS_EXPEDITOR_RECEIPT_STATUS_VALUE',
-                'DOC_DRIVER_APP_STATUS' => 'DOCUMENTS_DRIVER_APPROVALS_STATUS_VALUE',
-                'DOC_APP_TRANSPORT_STATUS' => 'DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS_VALUE',
-                'AUTO_PRICES_STATUS' => 'AUTOMATIC_PRICES_STATUS_VALUE',
-                'AUTO_GEO_STATUS' => 'AUTOMATIC_GEO_MONITORING_STATUS_VALUE',
-                'ACC_INVOICE_STATUS' => 'ACCOUNTING_INVOICE_STATUS_VALUE',
-                'ACC_ACT_ACCEPTANCE_STATUS' => 'ACCOUNTING_ACT_ACCEPTANCE_STATUS_VALUE',
-                'ACC_ACT_MULTIPLE_TRANSPORTATIONS_STATUS' => 'ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS_VALUE',
-                'ACC_TRANSPORTATION_REGISTRY_STATUS' => 'ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS_VALUE',
-                'ACC_TAX_INVOICE_STATUS' => 'ACCOUNTING_TAX_INVOICE_STATUS_VALUE',
-                'ACC_UPD_STATUS' => 'ACCOUNTING_UPD_STATUS_VALUE',
-                'DONKEY_STS_STATUS' => 'DONKEY_STS_STATUS_VALUE',
-                'TRAILER_STS_STATUS' => 'TRAILER_STS_STATUS_VALUE',
-                'TRAILER_RENT_AGR_STATUS' => 'TRAILER_RENT_AGREEMENT_STATUS_VALUE',
-                'TRAILER_SEC_STS_STATUS' => 'TRAILER_SECONDARY_STS_STATUS_VALUE',
-                'TRAILER_SEC_RENT_AGREEMENT_STATUS' => 'TRAILER_SECONDARY_RENT_AGREEMENT_STATUS_VALUE',
-                'TRAILER_SEC_AGR_LEASING_COMPANY_STATUS' => 'TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS_VALUE',
-                'TRAILER_SEC_CERTIFICATE_STATUS' => 'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS_VALUE',
-                'TRAILER_SEC_FREE_USAGE_STATUS' => 'TRAILER_SECONDARY_FREE_USAGE_STATUS_VALUE',
-                'TRUCK_STS_STATUS' => 'TRUCK_STS_STATUS_VALUE',
-                'TRUCK_RENT_AGREEMENT_STATUS' => 'TRUCK_RENT_AGREEMENT_STATUS_VALUE',
-                'TRUCK_AGREEMENT_LEASING_COMPANY_STATUS' => 'TRUCK_AGREEMENT_LEASING_COMPANY_STATUS_VALUE',
-                'TRUCK_CERTIFICATE_STATUS' => 'TRUCK_MARRIAGE_CERTIFICATE_STATUS_VALUE',
-                'TRUCK_FREE_USAGE_STATUS' => 'TRUCK_FREE_USAGE_STATUS_VALUE',
+                'CONT_EXP_STATUS' => $shipping['CONTRACT_EXPEDITION_STATUS_VALUE'],
+                'CONT_TRANSPORT_STATUS' => $shipping['CONTRACT_TRANSPORTATION_STATUS_VALUE'],
+                'CONT_ORDER_ONE_TIME_STATUS' => $shipping['CONTRACT_ORDER_ONE_TIME_STATUS_VALUE'],
+                'DOC_APP_TRANSPORT_STATUS' => $shipping['DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS_VALUE'],
+                'DOC_EPD_STATUS' => $shipping['DOCUMENTS_EPD_STATUS_VALUE'],
+                'DOC_DRIVER_APP_STATUS' => $shipping['DOCUMENTS_DRIVER_APPROVALS_STATUS_VALUE'],
+                'DOC_EXP_STATUS' => $shipping['DOCUMENTS_EXPEDITOR_STATUS_VALUE'],
+                'DOC_EXP_RECEIPT_STATUS' => $shipping['DOCUMENTS_EXPEDITOR_RECEIPT_STATUS_VALUE'],
+                'AUTO_PRICES_STATUS' => $shipping['AUTOMATIC_PRICES_STATUS_VALUE'],
+                'AUTO_GEO_STATUS' => $shipping['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'],
+                'ACC_INVOICE_STATUS' => $shipping['ACCOUNTING_INVOICE_STATUS_VALUE'],
+                'ACC_ACT_ACC_STATUS' => $shipping['ACCOUNTING_ACT_ACCEPTANCE_STATUS_VALUE'],
+                'ACC_ACT_MULTI_TRANSPORT_STATUS' => $shipping['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS_VALUE'],
+                'ACC_TRANSPORT_REG_STATUS' => $shipping['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS_VALUE'],
+                'ACC_TAX_INVOICE_STATUS' => $shipping['ACCOUNTING_TAX_INVOICE_STATUS_VALUE'],
+                'ACC_UPD_STATUS' => $shipping['ACCOUNTING_UPD_STATUS_VALUE'],
+                'DONKEY_STS_STATUS' => $shipping['DONKEY_STS_STATUS_VALUE'],
+                'TRAILER_STS_STATUS' => $shipping['TRAILER_STS_STATUS_VALUE'],
+                'TRAILER_RENT_AGR_STATUS' => $shipping['TRAILER_RENT_AGREEMENT_STATUS_VALUE'],
+                'TRAILER_SEC_STS_STATUS' => $shipping['TRAILER_SECONDARY_STS_STATUS_VALUE'],
+                'TRAILER_SEC_RENT_STATUS' => $shipping['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS_VALUE'],
+                'TRAILER_SEC_LEASING_COMPANY_STATUS' => $shipping['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS_VALUE'],
+                'TRAILER_SEC_CERTIFICATE_STATUS' => $shipping['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS_VALUE'],
+                'TRAILER_SEC_FREE_USAGE_STATUS' => $shipping['TRAILER_SECONDARY_FREE_USAGE_STATUS_VALUE'],
+                'TRUCK_STS_STATUS' => $shipping['TRUCK_STS_STATUS_VALUE'],
+                'TRUCK_RENT_STATUS' => $shipping['TRUCK_RENT_AGREEMENT_STATUS_VALUE'],
+                'TRUCK_LEASING_COMPANY_STATUS' => $shipping['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS_VALUE'],
+                'TRUCK_CERTIFICATE_STATUS' => $shipping['TRUCK_MARRIAGE_CERTIFICATE_STATUS_VALUE'],
+                'TRUCK_FREE_USAGE_STATUS' => $shipping['TRUCK_FREE_USAGE_STATUS_VALUE'],
                 //С экспедитором
-                'CONT_EXP_FOR_LINK' => 'CONTRACT_EXPEDITION_FORWARDER_LINK',
-                'CONT_TRANSPORT_FOR_LINK' => 'CONTRACT_TRANSPORTATION_FORWARDER_LINK',
-                'CONT_ORDER_ONE_TIME_FOR_LINK' => 'CONTRACT_ORDER_ONE_TIME_FORWARDER_LINK',
-                'DOC_EPD_FOR_LINK' => 'DOCUMENTS_EPD_FORWARDER_LINK',
-                'DOC_EXP_FOR_LINK' => 'DOCUMENTS_EXPEDITOR_FORWARDER_LINK',
-                'DOC_EXP_RECEIPT_FOR_LINK' => 'DOCUMENTS_EXPEDITOR_RECEIPT_FORWARDER_LINK',
-                'DOC_DRIVER_APP_FOR_LINK' => 'DOCUMENTS_DRIVER_APPROVALS_FORWARDER_LINK',
-                'DOC_APP_TRANSPORT_FOR_LINK' => 'DOCUMENTS_APPLICATION_TRANSPORTATION_FORWARDER_LINK',
-                'ACC_INVOICE_FOR_LINK' => 'ACCOUNTING_INVOICE_FORWARDER_LINK',
-                'ACC_ACT_ACC_FOR_LINK' => 'ACCOUNTING_ACT_ACCEPTANCE_FORWARDER_LINK',
-                'ACC_ACT_MULTI_TRANSPORT_FOR_LINK' => 'ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_FORWARDER_LINK',
-                'ACC_TRANSPORT_REG_FOR_LINK' => 'ACCOUNTING_TRANSPORTATION_REGISTRY_FORWARDER_LINK',
-                'ACC_TAX_INVOICE_FOR_LINK' => 'ACCOUNTING_TAX_INVOICE_FORWARDER_LINK',
-                'ACC_UPD_FOR_LINK' => 'ACCOUNTING_UPD_FORWARDER_LINK',
-                'DONKEY_STS_FOR_LINK' => 'DONKEY_STS_FORWARDER_LINK',
-                'TRAILER_STS_FOR_LINK' => 'TRAILER_STS_FORWARDER_LINK',
-                'TRAILER_RENT_AGR_FOR_LINK' => 'TRAILER_RENT_AGREEMENT_FORWARDER_LINK',
-                'TRAILER_SEC_STS_FOR_LINK' => 'TRAILER_SECONDARY_STS_FORWARDER_LINK',
-                'TRAILER_SEC_RENT_AGREEMENT_FOR_LINK' => 'TRAILER_SECONDARY_RENT_AGREEMENT_FORWARDER_LINK',
-                'TRAILER_SEC_AGR_LEASING_COMPANY_FOR_LINK' => 'TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_FORWARDER_LINK',
-                'TRAILER_SEC_CERTIFICATE_FOR_LINK' => 'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FORWARDER_LINK',
-                'TRAILER_SEC_FREE_USAGE_FOR_LINK' => 'TRAILER_SECONDARY_FREE_USAGE_FORWARDER_LINK',
-                'TRUCK_STS_FOR_LINK' => 'TRUCK_STS_FORWARDER_LINK',
-                'TRUCK_RENT_AGREEMENT_FOR_LINK' => 'TRUCK_RENT_AGREEMENT_FORWARDER_LINK',
-                'TRUCK_AGR_LEASING_COMPANY_FOR_LINK' => 'TRUCK_AGREEMENT_LEASING_COMPANY_FORWARDER_LINK',
-                'TRUCK_CERTIFICATE_FOR_LINK' => 'TRUCK_MARRIAGE_CERTIFICATE_FORWARDER_LINK',
-                'TRUCK_FREE_USAGE_FOR_LINK' => 'TRUCK_FREE_USAGE_FORWARDER_LINK',
+                'CONT_EXP_FOR_LINK' => $shipping['CONTRACT_EXPEDITION_FORWARDER_LINK'],
+                'CONT_TRANSPORT_FOR_LINK' => $shipping['CONTRACT_TRANSPORTATION_FORWARDER_LINK'],
+                'CONT_ORDER_ONE_TIME_FOR_LINK' => $shipping['CONTRACT_ORDER_ONE_TIME_FORWARDER_LINK'],
+                'DOC_EPD_FOR_LINK' => $shipping['DOCUMENTS_EPD_FORWARDER_LINK'],
+                'DOC_EXP_FOR_LINK' => $shipping['DOCUMENTS_EXPEDITOR_FORWARDER_LINK'],
+                'DOC_EXP_RECEIPT_FOR_LINK' => $shipping['DOCUMENTS_EXPEDITOR_RECEIPT_FORWARDER_LINK'],
+                'DOC_DRIVER_APP_FOR_LINK' => $shipping['DOCUMENTS_DRIVER_APPROVALS_FORWARDER_LINK'],
+                'DOC_APP_TRANSPORT_FOR_LINK' => $shipping['DOCUMENTS_APPLICATION_TRANSPORTATION_FORWARDER_LINK'],
+                'ACC_INVOICE_FOR_LINK' => $shipping['ACCOUNTING_INVOICE_FORWARDER_LINK'],
+                'ACC_ACT_ACC_FOR_LINK' => $shipping['ACCOUNTING_ACT_ACCEPTANCE_FORWARDER_LINK'],
+                'ACC_ACT_MULTI_TRANSPORT_FOR_LINK' => $shipping['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_FORWARDER_LINK'],
+                'ACC_TRANSPORT_REG_FOR_LINK' => $shipping['ACCOUNTING_TRANSPORTATION_REGISTRY_FORWARDER_LINK'],
+                'ACC_TAX_INVOICE_FOR_LINK' => $shipping['ACCOUNTING_TAX_INVOICE_FORWARDER_LINK'],
+                'ACC_UPD_FOR_LINK' => $shipping['ACCOUNTING_UPD_FORWARDER_LINK'],
+                'DONKEY_STS_FOR_LINK' => $shipping['DONKEY_STS_FORWARDER_LINK'],
+                'TRAILER_STS_FOR_LINK' => $shipping['TRAILER_STS_FORWARDER_LINK'],
+                'TRAILER_RENT_AGR_FOR_LINK' => $shipping['TRAILER_RENT_AGREEMENT_FORWARDER_LINK'],
+                'TRAILER_SEC_STS_FOR_LINK' => $shipping['TRAILER_SECONDARY_STS_FORWARDER_LINK'],
+                'TRAILER_SEC_RENT_AGREEMENT_FOR_LINK' => $shipping['TRAILER_SECONDARY_RENT_AGREEMENT_FORWARDER_LINK'],
+                'TRAILER_SEC_AGR_LEASING_COMPANY_FOR_LINK' => $shipping['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_FORWARDER_LINK'],
+                'TRAILER_SEC_CERTIFICATE_FOR_LINK' => $shipping['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FORWARDER_LINK'],
+                'TRAILER_SEC_FREE_USAGE_FOR_LINK' => $shipping['TRAILER_SECONDARY_FREE_USAGE_FORWARDER_LINK'],
+                'TRUCK_STS_FOR_LINK' => $shipping['TRUCK_STS_FORWARDER_LINK'],
+                'TRUCK_RENT_AGREEMENT_FOR_LINK' => $shipping['TRUCK_RENT_AGREEMENT_FORWARDER_LINK'],
+                'TRUCK_AGR_LEASING_COMPANY_FOR_LINK' => $shipping['TRUCK_AGREEMENT_LEASING_COMPANY_FORWARDER_LINK'],
+                'TRUCK_CERTIFICATE_FOR_LINK' => $shipping['TRUCK_MARRIAGE_CERTIFICATE_FORWARDER_LINK'],
+                'TRUCK_FREE_USAGE_FOR_LINK' => $shipping['TRUCK_FREE_USAGE_FORWARDER_LINK'],
             ];
         } catch (\Exception $e) {
             $this->addError(new Error($e->getMessage(), $e->getCode()));
@@ -310,6 +296,99 @@ class Vitrina extends BaseController
      */
     public function getFileArchivAction(int $id)
     {
+        try {
+            $shipping = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
+                'filter' => ['ID' => $id],
+                'select' => [
+                    'CONT_EXP_LINK' => 'CONTRACT_EXPEDITION_LINK.VALUE',
+                    'CONT_TRANSPORT_LINK' => 'CONTRACT_TRANSPORTATION_LINK.VALUE',
+                    'CONT_ORDER_ONE_TIME_LINK' => 'CONTRACT_ORDER_ONE_TIME_LINK.VALUE',
+                    'DOC_EPD_LINK' => 'DOCUMENTS_EPD_LINK.VALUE',
+                    'DOC_EXP_LINK' => 'DOCUMENTS_EXPEDITOR_LINK.VALUE',
+                    'DOC_EXP_REC_LINK' => 'DOCUMENTS_EXPEDITOR_RECEIPT_LINK.VALUE',
+                    'DOC_DRIVER_APP_LINK' => 'DOCUMENTS_DRIVER_APPROVALS_LINK.VALUE',
+                    'DOC_APP_TRANSPORT_LINK' => 'DOCUMENTS_APPLICATION_TRANSPORTATION_LINK.VALUE',
+                    'ACC_INVOICE_LINK' => 'ACCOUNTING_INVOICE_LINK.VALUE',
+                    'ACC_ACT_ACC_LINK' => 'ACCOUNTING_ACT_ACCEPTANCE_LINK.VALUE',
+                    'ACC_ACT_MULTI_TRANSPORT_LINK' => 'ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK.VALUE',
+                    'ACC_TRANSPORT_REG_LINK' => 'ACCOUNTING_TRANSPORTATION_REGISTRY_LINK.VALUE',
+                    'ACC_TAX_INVOICE_LINK' => 'ACCOUNTING_TAX_INVOICE_LINK.VALUE',
+                    'ACC_UPD_LINK' => 'ACCOUNTING_UPD_LINK.VALUE',
+                    'DONKEY_STS' => 'DONKEY_STS_LINK.VALUE',
+                    'TRAILER_STS' => 'TRAILER_STS_LINK.VALUE',
+                    'TRAILER_RENT_LINK' => 'TRAILER_RENT_AGREEMENT_LINK.VALUE',
+                    'TRAILER_SEC_STS_LINK' => 'TRAILER_SECONDARY_STS_LINK.VALUE',
+                    'TRAILER_SEC_RENT_LINK' => 'TRAILER_SECONDARY_RENT_AGREEMENT_LINK.VALUE',
+                    'TRAILER_SEC_LEASING_COMPANY_LINK' => 'TRAILER_SEC_AGR_LEASING_COMPANY_FOR_LINK.VALUE',
+                    'TRAILER_SEC_CERTIFICATE_LINK' => 'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK.VALUE',
+                    'TRAILER_SEC_FREE_USAGE_LINK' => 'TRAILER_SECONDARY_FREE_USAGE_LINK.VALUE',
+                    'TRUCK_STS' => 'TRUCK_STS_LINK.VALUE',
+                    'TRUCK_RENT_LINK' => 'TRUCK_RENT_AGREEMENT_LINK.VALUE',
+                    'TRUCK_LEASING_COMPANY_LINK' => 'TRUCK_AGREEMENT_LEASING_COMPANY_LINK.VALUE',
+                    'TRUCK_CERTIFICATE_LINK' => 'TRUCK_MARRIAGE_CERTIFICATE_LINK.VALUE',
+                    'TRUCK_FREE_USAGE' => 'TRUCK_FREE_USAGE_LINK.VALUE',
+                    //С экспедитором
+                    'CONT_EXP_FOR' => 'CONTRACT_EXPEDITION_FOR_LINK.VALUE',
+                    'CONT_TRANSPORT_FOR' => 'CONTRACT_TRANSPORTATION_FOR_LINK.VALUE',
+                    'CONT_ORDER_ONE_TIME_FOR' => 'CONTRACT_ORDER_ONE_TIME_FOR_LINK.VALUE',
+                    'DOC_EPD_FOR' => 'DOCUMENTS_EPD_FOR_LINK.VALUE',
+                    'DOC_EXP_FOR' => 'DOCUMENTS_EXPEDITOR_FOR_LINK.VALUE',
+                    'DOC_EXP_REC_FOR' => 'DOCUMENTS_EXPEDITOR_RECEIPT_FOR_LINK.VALUE',
+                    'DOC_DRIVER_APP_FOR' => 'DOCUMENTS_DRIVER_APPROVALS_FOR_LINK.VALUE',
+                    'DOC_APP_TRANSPORT_FOR' => 'DOCUMENTS_APPLICATION_TRANSPORTATION_FOR_LINK.VALUE',
+                    'ACC_INVOICE_FOR' => 'ACCOUNTING_INVOICE_FOR_LINK.VALUE',
+                    'ACC_ACT_ACC_FOR' => 'ACCOUNTING_ACT_ACCEPTANCE_FOR_LINK.VALUE',
+                    'ACC_ACT_MULTIPLE_TRANSPORT_FOR' => 'ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_FOR_LINK.VALUE',
+                    'ACC_TRANSPORT_REG_FOR' => 'ACCOUNTING_TRANSPORTATION_REGISTRY_FOR_LINK.VALUE',
+                    'ACC_TAX_INVOICE_FOR' => 'ACCOUNTING_TAX_INVOICE_FOR_LINK.VALUE',
+                    'ACC_UPD_FOR' => 'ACCOUNTING_UPD_FOR_LINK.VALUE',
+                    'DONKEY_STS_FOR' => 'DONKEY_STS_FOR_LINK.VALUE',
+                    'TRAILER_STS_FOR' => 'TRAILER_STS_FOR_LINK.VALUE',
+                    'TRAILER_RENT_FOR' => 'TRAILER_RENT_AGREEMENT_FOR_LINK.VALUE',
+                    'TRAILER_SEC_STS_FOR' => 'TRAILER_SECONDARY_STS_FOR_LINK.VALUE',
+                    'TRAILER_SEC_RENT_FOR' => 'TRAILER_SECONDARY_RENT_AGREEMENT_FOR_LINK.VALUE',
+                    'TRAILER_SEC_LEASING_COMPANY_FOR' => 'TRAILER_SEC_AGR_LEASING_COMPANY_FOR_LINK.VALUE',
+                    'TRAILER_SEC_CERTIFICATE_FOR' => 'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FOR_LINK.VALUE',
+                    'TRAILER_SEC_FREE_USAGE_FOR' => 'TRAILER_SECONDARY_FREE_USAGE_FOR_LINK.VALUE',
+                    'TRUCK_STS_FOR' => 'TRUCK_STS_FOR_LINK.VALUE',
+                    'TRUCK_RENT_FOR' => 'TRUCK_RENT_AGREEMENT_FOR_LINK.VALUE',
+                    'TRUCK_LEASING_COMPANY_FOR' => 'TRUCK_AGREEMENT_LEASING_COMPANY_FOR_LINK.VALUE',
+                    'TRUCK_CERTIFICATE_FOR' => 'TRUCK_MARRIAGE_CERTIFICATE_FOR_LINK.VALUE',
+                    'TRUCK_FREE_USAGE_FOR' => 'TRUCK_FREE_USAGE_FOR_LINK.VALUE',
+                ],
+            ])->fetch();
+            $links = [];
 
+            foreach ($shipping as $link) {
+                if($link !== null) {
+                    $links[] = $link;
+                }
+            }
+
+            var_dump($links);
+
+            die('324');
+
+            return ;
+        } catch (\Exception $e) {
+            $this->addError(new Error($e->getMessage(), $e->getCode()));
+
+            return null;
+        }    }
+
+    /**
+     * Проверяем на количество не
+     * выполненных шагов
+     *
+     * @param string|null $checks
+     * @return bool|void
+     */
+    protected static function isError(?string $checks)
+    {
+        if ($checks) {
+            $step =  explode("/", $checks);
+
+            return $step[0] === $step[1];
+        }
     }
 }

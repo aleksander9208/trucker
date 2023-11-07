@@ -169,13 +169,13 @@ class ExportMessageKafkaConsumer
                     }
                     if ($checks['name'] === 'transportation_contract') {
                         $properties['CONTRACT_TRANSPORTATION_STATUS'] = $checks['status'];
-                        $properties['CONTRACT_TRANSPORTATION_LINK'] = $checks['edm_attachments'][0]['original_file'];
-                        $properties['CONTRACT_TRANSPORTATION_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
+                        $properties['CONTRACT_TRANSPORTATION_LINK'] = $checks['attachments'][0]['original_file'];
+                        $properties['CONTRACT_TRANSPORTATION_FORWARDER_LINK'] = $checks['attachments'][1]['original_file'];
                     }
                     if ($checks['name'] === 'order_one_time_contract') {
                         $properties['CONTRACT_ORDER_ONE_TIME_STATUS'] = $checks['status'];
-                        $properties['CONTRACT_ORDER_ONE_TIME_LINK'] = $checks['attachments'][0]['original_file'];
-                        $properties['CONTRACT_ORDER_ONE_TIME_FORWARDER_LINK'] = $checks['attachments'][1]['original_file'];
+                        $properties['CONTRACT_ORDER_ONE_TIME_LINK'] = $checks['attachments'][0]['url'];
+                        $properties['CONTRACT_ORDER_ONE_TIME_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
                     }
                 }
 

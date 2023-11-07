@@ -435,6 +435,12 @@ span.deviation-price_percent {
     margin-top: 15px;
     margin-bottom: 18px;
     display: block;
+    cursor: pointer;
+}
+
+.bar-content_link_archiv:hover {
+    border-color: #7ac531;
+    background: #7ac531;
 }
 
 .bar-detail_title {

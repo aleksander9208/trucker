@@ -301,10 +301,10 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 
             <div class="bar-content_members" id="carriage_forwarder"></div>
 
-            <a href="" class="bar-content_link_archiv" id="link_archiv">
+            <span href="" class="bar-content_link_archiv" id="link_archiv" data-id="">
                 <span uk-icon="icon: download"></span>
                 Скачать архив документов
-            </a>
+            </span>
 
             <div class="bar-detail">
                 <div class="bar-detail_title">
@@ -408,7 +408,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
                             <div class="detail-content_confirmation" id="accounting">
                                 <div class="detail-content_title">
                                     Бухгалтерские документы <span class="detail-content_auto"></span>
-                                    <span id="auto_check"></span>
+                                    <span id="accounting_check"></span>
                                 </div>
 
                                 <div class="status-info_confirmation" id="invoice_link">
