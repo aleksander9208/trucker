@@ -163,12 +163,15 @@ class ExportMessageKafkaConsumer
                 if ($check_group['name'] === 'contract') {
                     $properties['CONTRACT_CHECK'] = $checksTrue . '/' .$countChecks;
                     if ($checks['name'] === 'transport_expedition_contract') {
+                        $properties['CONTRACT_EXPEDITION_STATUS'] = $checks['status'];
                         $properties['CONTRACT_EXPEDITION_LINK'] = $checks['edm_attachments'][0]['original_file'];
                     }
                     if ($checks['name'] === 'transportation_contract') {
+                        $properties['CONTRACT_TRANSPORTATION_STATUS'] = $checks['status'];
                         $properties['CONTRACT_TRANSPORTATION_LINK'] = $checks['edm_attachments'][0]['original_file'];
                     }
                     if ($checks['name'] === 'application_for_transportation') {
+                        $properties['CONTRACT_ORDER_ONE_TIME_STATUS'] = $checks['status'];
                         $properties['CONTRACT_ORDER_ONE_TIME_LINK'] = $checks['edm_attachments'][0]['original_file'];
                     }
                 }
@@ -177,19 +180,23 @@ class ExportMessageKafkaConsumer
                 if ($check_group['name'] === 'execution_documents') {
                     $properties['DOCUMENTS_CHECK'] = $checksTrue . '/' .$countChecks;
                     if ($checks['name'] === 'epd') {
-                        // может быть многомерным массивом
+                        $properties['DOCUMENTS_EPD_STATUS'] = $checks['status'];
                         $properties['DOCUMENTS_EPD_LINK'] = $checks['edm_attachments'][0]['original_file'];
                     }
                     if ($checks['name'] === 'expeditor_order') {
+                        $properties['DOCUMENTS_EXPEDITOR_STATUS'] = $checks['status'];
                         $properties['DOCUMENTS_EXPEDITOR_LINK'] = $checks['edm_attachments'][0]['original_file'];
                     }
                     if ($checks['name'] === 'expeditor_agent_receipt') {
+                        $properties['DOCUMENTS_EXPEDITOR_RECEIPT_STATUS'] = $checks['status'];
                         $properties['DOCUMENTS_EXPEDITOR_RECEIPT_LINK'] = $checks['edm_attachments'][0]['original_file'];
                     }
                     if ($checks['name'] === 'driver_approvals') {
+                        $properties['DOCUMENTS_DRIVER_APPROVALS_STATUS'] = $checks['status'];
                         $properties['DOCUMENTS_DRIVER_APPROVALS_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'application_for_transportation') {
+                        $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS'] = $checks['status'];
                         $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_LINK'] = $checks['attachments'][0]['url'];
                     }
                 }
@@ -198,10 +205,11 @@ class ExportMessageKafkaConsumer
                 if ($check_group['name'] === 'automatic_checks') {
                     $properties['AUTOMATIC_CHECKS'] = $checksTrue . '/' .$countChecks;
                     if ($checks['name'] === 'prices') {
+                        $properties['AUTOMATIC_PRICES_STATUS'] = $checks['status'];
                         $properties['AUTOMATIC_PRICES'] = $checks['results']['diff_percentage'];
                     }
                     if ($checks['name'] === 'geo_monitoring') {
-                        // geo_monitoring не известно данные
+                        $properties['AUTOMATIC_GEO_MONITORING_STATUS'] = $checks['status'];
                         $properties['AUTOMATIC_GEO_MONITORING'] = $checks['results']['не известно'];
                     }
                 }
@@ -210,26 +218,27 @@ class ExportMessageKafkaConsumer
                 if ($check_group['name'] === 'accounting') {
                     $properties['ACCOUNTING_CHECKS'] = $checksTrue . '/' .$countChecks;
                     if ($checks['name'] === 'invoice') {
+                        $properties['ACCOUNTING_INVOICE_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_INVOICE_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'act_of_service_acceptance') {
-                        // act_of_service_acceptance - неизвестен урл
+                        $properties['ACCOUNTING_ACT_ACCEPTANCE_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_ACT_ACCEPTANCE_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'act_of_service_acceptance_multiple_transportations') {
-                        // act_of_service_acceptance_multiple_transportations - неизвестно урл
+                        $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'transportation_registry') {
-                        // transportation_registry - неизвестно урл
+                        $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'tax_invoice') {
-                        // tax_invoice - неизвестно урл
+                        $properties['ACCOUNTING_TAX_INVOICE_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_TAX_INVOICE_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'universal_transfer_document') {
-                        // universal_transfer_document - неизвестно урл
+                        $properties['ACCOUNTING_UPD_STATUS'] = $checks['status'];
                         $properties['ACCOUNTING_UPD_LINK'] = $checks['edm_attachments'][0]['original_file'];
                     }
                 }
@@ -239,6 +248,7 @@ class ExportMessageKafkaConsumer
                     $properties['DONKEY_CHECKS'] = $checksTrue . '/' .$countChecks;
                     $properties['DONKEY_LICENSE_PLATE'] = $check_group['meta']['license_plate'];
                     if ($checks['name'] === 'sts') {
+                        $properties['DONKEY_STS_STATUS'] = $checks['status'];
                         $properties['DONKEY_STS_LINK'] = $checks['attachments'][0]['url'];
                     }
                 }
@@ -248,9 +258,11 @@ class ExportMessageKafkaConsumer
                     $properties['TRAILER_CHECKS'] = $checksTrue . '/' .$countChecks;
                     $properties['TRAILER_LICENSE_PLATE'] = $check_group['meta']['license_plate'];
                     if ($checks['name'] === 'sts') {
+                        $properties['TRAILER_STS_STATUS'] = $checks['status'];
                         $properties['TRAILER_STS_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'rent_agreement') {
+                        $properties['TRAILER_RENT_AGREEMENT_STATUS'] = $checks['status'];
                         $properties['TRAILER_RENT_AGREEMENT_LINK'] = $checks['attachments'][0]['url'];
                     }
                 }
@@ -258,21 +270,25 @@ class ExportMessageKafkaConsumer
                 // Подтверждение владения второго (прицеп)
                 if ($check_group['name']=== 'vehicle_secondary_trailer') {
                     $properties['TRAILER_SECONDARY_CHECKS'] = $checksTrue . '/' .$countChecks;
-                    // Номерной знак
                     $properties['TRAILER_SECONDARY_LICENSE_PLATE'] = $check_group['meta']['license_plate'];
                     if ($checks['name'] === 'sts') {
+                        $properties['TRAILER_SECONDARY_STS_STATUS'] = $checks['status'];
                         $properties['TRAILER_SECONDARY_STS_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'rent_agreement') {
+                        $properties['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS'] = $checks['status'];
                         $properties['TRAILER_SECONDARY_RENT_AGREEMENT_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'agreement_withLeasingCompany') {
+                        $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS'] = $checks['status'];
                         $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'marriage_certificate') {
+                        $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS'] = $checks['status'];
                         $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'free_usage_agreement') {
+                        $properties['TRAILER_SECONDARY_FREE_USAGE_STATUS'] = $checks['status'];
                         $properties['TRAILER_SECONDARY_FREE_USAGE_LINK'] = $checks['attachments'][0]['url'];
                     }
                 }
@@ -283,18 +299,23 @@ class ExportMessageKafkaConsumer
                     // Номерной знак
                     $properties['TRUCK_LICENSE_PLATE'] = $check_group['meta']['license_plate'];
                     if ($checks['name'] === 'sts') {
+                        $properties['TRUCK_STS_STATUS'] = $checks['status'];
                         $properties['TRUCK_STS_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'rent_agreement') {
+                        $properties['TRUCK_RENT_AGREEMENT_STATUS'] = $checks['status'];
                         $properties['TRUCK_RENT_AGREEMENT_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'agreement_withLeasingCompany') {
+                        $properties['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS'] = $checks['status'];
                         $properties['TRUCK_AGREEMENT_LEASING_COMPANY_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'marriage_certificate') {
+                        $properties['TRUCK_MARRIAGE_CERTIFICATE_STATUS'] = $checks['status'];
                         $properties['TRUCK_MARRIAGE_CERTIFICATE_LINK'] = $checks['attachments'][0]['url'];
                     }
                     if ($checks['name'] === 'free_usage_agreement') {
+                        $properties['TRUCK_FREE_USAGE_STATUS'] = $checks['status'];
                         $properties['TRUCK_FREE_USAGE_LINK'] = $checks['attachments'][0]['url'];
                     }
                 }
