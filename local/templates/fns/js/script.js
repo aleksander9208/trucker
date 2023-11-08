@@ -219,7 +219,9 @@ $(document).ready(function() {
             $('#detail_status-transportation').html('').removeClass();
         }
         /** Договор перевозки */
-        if (carriage.CONT_TRANSPORT_STATUS === 'passed') {
+        if (carriage.CONT_TRANSPORT_STATUS === 'passed' ||
+            carriage.CONT_TRANSPORT_STATUS === 'in_progress'
+        ) {
             $('#transport_link').show();
         }
         if (carriage.CONT_TRANSPORT_LINK != null) {
@@ -238,7 +240,9 @@ $(document).ready(function() {
             $("#list_file_transport_link").html('');
         }
         /** Договор транспортной экспедиции */
-        if (carriage.CONT_EXP_STATUS === 'passed') {
+        if (carriage.CONT_EXP_STATUS === 'passed' ||
+            carriage.CONT_EXP_STATUS === 'in_progress'
+        ) {
             $('#contract_link').show();
         }
         if (carriage.CONT_EXP_LINK != null) {
@@ -257,7 +261,9 @@ $(document).ready(function() {
             $("#list_file_contract_link").html();
         }
         /** Заказ (разовая договор-заявка) */
-        if (carriage.CONT_ORDER_ONE_TIME_STATUS === 'passed') {
+        if (carriage.CONT_ORDER_ONE_TIME_STATUS === 'passed' ||
+            carriage.CONT_ORDER_ONE_TIME_STATUS === 'in_progress'
+        ) {
             $('#one_time_link').show();
         }
         if (carriage.CONT_ORDER_ONE_TIME != null) {
@@ -291,7 +297,9 @@ $(document).ready(function() {
             $('#documents_check').html('').removeClass();
         }
         /** Заявка на перевозку */
-        if (carriage.DOC_APP_TRANSPORT_STATUS === 'passed') {
+        if (carriage.DOC_APP_TRANSPORT_STATUS === 'passed' ||
+            carriage.DOC_APP_TRANSPORT_STATUS === 'in_progress'
+        ) {
             $('#documents_link').show();
         }
         if (carriage.DOC_APP_TRANSPORT_LINK != null) {
@@ -310,7 +318,9 @@ $(document).ready(function() {
             $("#list_file_one_time_link").html();
         }
         /** Подписанная ЭТрН */
-        if (carriage.DOC_EPD_STATUS === 'passed') {
+        if (carriage.DOC_EPD_STATUS === 'passed' ||
+            carriage.DOC_EPD_STATUS === 'in_progress'
+        ) {
             $('#epd_link').show();
         }
         if (carriage.DOC_EPD_LINK != null) {
@@ -329,7 +339,9 @@ $(document).ready(function() {
             $("#list_file_epd_link").html();
         }
         /** Подтверждение договорных отношений с водителем */
-        if (carriage.DOC_DRIVER_APP_STATUS === 'passed') {
+        if (carriage.DOC_DRIVER_APP_STATUS === 'passed' ||
+            carriage.DOC_DRIVER_APP_STATUS === 'in_progress'
+        ) {
             $('#driver_link').show();
         }
         if (carriage.DOC_DRIVER_APP_LINK != null) {
@@ -348,7 +360,9 @@ $(document).ready(function() {
             $("#list_file_driver_link").html('');
         }
         /** Поручение экспедитору */
-        if (carriage.DOC_EXP_STATUS === 'passed') {
+        if (carriage.DOC_EXP_STATUS === 'passed' ||
+            carriage.DOC_EXP_STATUS === 'in_progress'
+        ) {
             $('#exp_link').show();
         }
         if (carriage.DOC_EXP_LINK != null) {
@@ -367,7 +381,9 @@ $(document).ready(function() {
             $("#list_file_exp_link").html('');
         }
         /** Экспедиторская расписка */
-        if (carriage.DOC_EXP_RECEIPT_STATUS === 'passed') {
+        if (carriage.DOC_EXP_RECEIPT_STATUS === 'passed' ||
+            carriage.DOC_EXP_RECEIPT_STATUS === 'in_progress'
+        ) {
             $('#receipt_link').show();
         }
         if (carriage.DOC_EXP_RECEIPT_LINK != null) {
@@ -401,7 +417,9 @@ $(document).ready(function() {
             $('#auto_check').html('').removeClass();
         }
         /** Стоимость перевозки соответствует рыночным ценам */
-        if (carriage.AUTO_PRICES_STATUS === 'passed') {
+        if (carriage.AUTO_PRICES_STATUS === 'passed' ||
+            carriage.AUTO_PRICES_STATUS === 'in_progress'
+        ) {
             $('#prices_link').show();
         }
         if (carriage.AUTO_PRICES !== false) {
@@ -412,7 +430,9 @@ $(document).ready(function() {
             $('#prices_file').hide();
         }
         /** Подтверждения перевозки через геомониторинг */
-        if (carriage.AUTO_GEO_STATUS === 'passed') {
+        if (carriage.AUTO_GEO_STATUS === 'passed' ||
+            carriage.AUTO_GEO_STATUS === 'in_progress'
+        ) {
             $('#geo_link').show();
         }
         if (carriage.AUTO_GEO != null) {
@@ -446,7 +466,9 @@ $(document).ready(function() {
             $('#accounting_check').html('').removeClass();
         }
         /** Счёт */
-        if (carriage.ACC_INVOICE_STATUS === 'passed') {
+        if (carriage.ACC_INVOICE_STATUS === 'passed' ||
+            carriage.ACC_INVOICE_STATUS === 'in_progress'
+        ) {
             $('#invoice_link').show();
         }
         if (carriage.ACC_INVOICE_LINK != null) {
@@ -465,7 +487,9 @@ $(document).ready(function() {
             $("#list_file_invoice_link").html();
         }
         /** Акт о приемке выполненных работ по услуге */
-        if (carriage.ACC_ACT_ACC_STATUS === 'passed') {
+        if (carriage.ACC_ACT_ACC_STATUS === 'passed' ||
+            carriage.ACC_ACT_ACC_STATUS === 'in_progress'
+        ) {
             $('#act_link').show();
         }
         if (carriage.ACC_ACT_ACC_LINK != null) {
@@ -484,7 +508,9 @@ $(document).ready(function() {
             $("#list_file_act_link").html();
         }
         /** Акт о приемке выполненных работ, включающий несколько перевозок */
-        if (carriage.ACC_ACT_MULTI_TRANSPORT_STATUS === 'passed') {
+        if (carriage.ACC_ACT_MULTI_TRANSPORT_STATUS === 'passed' ||
+            carriage.ACC_ACT_MULTI_TRANSPORT_STATUS === 'in_progress'
+        ) {
             $('#multi_link').show();
         }
         if (carriage.ACC_ACT_MULTI_TRANSPORT_LINK_VALUE != null) {
@@ -503,7 +529,9 @@ $(document).ready(function() {
             $("#list_file_multi_link").html();
         }
         /** Реестр на перевозки */
-        if (carriage.ACC_TRANSPORT_REG_STATUS === 'passed') {
+        if (carriage.ACC_TRANSPORT_REG_STATUS === 'passed' ||
+            carriage.ACC_TRANSPORT_REG_STATUS === 'in_progress'
+        ) {
             $('#reg_link').show();
         }
         if (carriage.ACC_TRANSPORT_REG_LINK != null) {
@@ -522,7 +550,9 @@ $(document).ready(function() {
             $("#list_file_reg_link").html();
         }
         /** Счёт-фактура */
-        if (carriage.ACC_TAX_INVOICE_STATUS === 'passed') {
+        if (carriage.ACC_TAX_INVOICE_STATUS === 'passed' ||
+            carriage.ACC_TAX_INVOICE_STATUS === 'in_progress'
+        ) {
             $('#tax_link').show();
         }
         if (carriage.ACC_TAX_INVOICE_LINK != null) {
@@ -541,7 +571,9 @@ $(document).ready(function() {
             $("#list_file_tax_link").html();
         }
         /** УПД */
-        if (carriage.ACC_UPD_STATUS === 'passed') {
+        if (carriage.ACC_UPD_STATUS === 'passed' ||
+            carriage.ACC_UPD_STATUS === 'in_progress'
+        ) {
             $('#upd_link').show();
         }
         if (carriage.ACC_UPD_LINK != null) {
@@ -581,7 +613,9 @@ $(document).ready(function() {
             $('#donkey_plate').html('');
         }
         /** СТС тягач */
-        if (carriage.DONKEY_STS_STATUS === 'passed') {
+        if (carriage.DONKEY_STS_STATUS === 'passed' ||
+            carriage.DONKEY_STS_STATUS === 'in_progress'
+        ) {
             $('#donkey_link').show();
         }
         if (carriage.DONKEY_STS_LINK != null) {
@@ -621,7 +655,9 @@ $(document).ready(function() {
             $('#trailer_plate').html('');
         }
         /** СТС прицеп */
-        if (carriage.TRAILER_STS_STATUS === 'passed') {
+        if (carriage.TRAILER_STS_STATUS === 'passed' ||
+            carriage.TRAILER_STS_STATUS === 'in_progress'
+        ) {
             $('#trailer_ctc_link').show();
         }
         if (carriage.TRAILER_STS_LINK != null) {
@@ -640,7 +676,9 @@ $(document).ready(function() {
             $("#list_file_trailer_ctc_link").html();
         }
         /** Договор аренды прицеп */
-        if (carriage.TRAILER_RENT_AGR_STATUS === 'passed') {
+        if (carriage.TRAILER_RENT_AGR_STATUS === 'passed' ||
+            carriage.TRAILER_RENT_AGR_STATUS === 'in_progress'
+        ) {
             $('#trailer_rent_link').show();
         }
         if (carriage.TRAILER_RENT_AGR_LINK != null) {
@@ -680,7 +718,9 @@ $(document).ready(function() {
             $('#trailer_sec_plate').html('');
         }
         /** СТС второго прицеп */
-        if (carriage.TRAILER_SEC_STS_STATUS === 'passed') {
+        if (carriage.TRAILER_SEC_STS_STATUS === 'passed' ||
+            carriage.TRAILER_SEC_STS_STATUS === 'in_progress'
+        ) {
             $('#trailer_sec_ctc_link').show();
         }
         if (carriage.TRAILER_SEC_STS_LINK != null) {
@@ -699,7 +739,9 @@ $(document).ready(function() {
             $("#list_file_trailer_sec_ctc_link").html();
         }
         /** Договор аренды второго прицепа */
-        if (carriage.TRAILER_SEC_RENT_STATUS === 'passed') {
+        if (carriage.TRAILER_SEC_RENT_STATUS === 'passed' ||
+            carriage.TRAILER_SEC_RENT_STATUS === 'in_progress'
+        ) {
             $('#trailer_sec_rent_link').show();
         }
         if (carriage.TRAILER_SEC_RENT_LINK != null) {
@@ -718,7 +760,9 @@ $(document).ready(function() {
             $("#list_file_trailer_sec_rent_link").html();
         }
         /** Договор с лизинговой компанией второго (прицеп) */
-        if (carriage.TRAILER_SEC_LEASING_COMPANY_STATUS === 'passed') {
+        if (carriage.TRAILER_SEC_LEASING_COMPANY_STATUS === 'passed' ||
+            carriage.TRAILER_SEC_LEASING_COMPANY_STATUS === 'in_progress'
+        ) {
             $('#trailer_sec_lias_link').show();
         }
         if (carriage.TRAILER_SEC_LEASING_COMPANY_LINK != null) {
@@ -737,7 +781,9 @@ $(document).ready(function() {
             $("#list_file_trailer_sec_lias_link").html();
         }
         /** Свидетельство о браке второго (прицепа) */
-        if (carriage.TRAILER_SEC_CERTIFICATE_STATUS === 'passed') {
+        if (carriage.TRAILER_SEC_CERTIFICATE_STATUS === 'passed' ||
+            carriage.TRAILER_SEC_CERTIFICATE_STATUS === 'in_progress'
+        ) {
             $('#trailer_sec_cer_link').show();
         }
         if (carriage.TRAILER_SEC_CERTIFICATE_LINK != null) {
@@ -756,7 +802,9 @@ $(document).ready(function() {
             $("#list_file_trailer_sec_cer_link").html();
         }
         /** Договор безвозмездного использования второго (прицепа) */
-        if (carriage.TRAILER_SEC_FREE_USAGE_STATUS === 'passed') {
+        if (carriage.TRAILER_SEC_FREE_USAGE_STATUS === 'passed' ||
+            carriage.TRAILER_SEC_FREE_USAGE_STATUS === 'in_progress'
+        ) {
             $('#trailer_sec_usage_link').show();
         }
         if (carriage.TRAILER_SEC_FREE_USAGE_LINK != null) {
@@ -796,7 +844,9 @@ $(document).ready(function() {
             $('#truck_plate').html('');
         }
         /** СТС грузовик */
-        if (carriage.TRUCK_STS_STATUS === 'passed') {
+        if (carriage.TRUCK_STS_STATUS === 'passed' ||
+            carriage.TRUCK_STS_STATUS === 'in_progress'
+        ) {
             $('#truck_sts_link').show();
         }
         if (carriage.TRUCK_STS_LINK != null) {
@@ -815,7 +865,9 @@ $(document).ready(function() {
             $("#list_file_truck_sts_link").html();
         }
         /** Договор аренды грузовик */
-        if (carriage.TRUCK_RENT_STATUS === 'passed') {
+        if (carriage.TRUCK_RENT_STATUS === 'passed' ||
+            carriage.TRUCK_RENT_STATUS === 'in_progress'
+        ) {
             $('#truck_rent').show();
         }
         if (carriage.TRUCK_RENT_LINK != null) {
@@ -834,7 +886,9 @@ $(document).ready(function() {
             $("#list_file_truck_rent").html();
         }
         /** Договор с лизинговой компанией грузовик */
-        if (carriage.TRUCK_LEASING_COMPANY_STATUS === 'passed') {
+        if (carriage.TRUCK_LEASING_COMPANY_STATUS === 'passed' ||
+            carriage.TRUCK_LEASING_COMPANY_STATUS === 'in_progress'
+        ) {
             $('#truck_leas_link').show();
         }
         if (carriage.TRUCK_LEASING_COMPANY_LINK != null) {
@@ -853,7 +907,9 @@ $(document).ready(function() {
             $("#list_file_truck_leas_link").html();
         }
         /** Свидетельство о браке грузовик */
-        if (carriage.TRUCK_CERTIFICATE_STATUS === 'passed') {
+        if (carriage.TRUCK_CERTIFICATE_STATUS === 'passed' ||
+            carriage.TRUCK_CERTIFICATE_STATUS === 'in_progress'
+        ) {
             $('#truck_cert_link').show();
         }
         if (carriage.TRUCK_CERTIFICATE_LINK != null) {
@@ -872,7 +928,9 @@ $(document).ready(function() {
             $("#list_file_truck_cert_link").html();
         }
         /** Договор безвозмездного использования грузовик */
-        if (carriage.TRUCK_FREE_USAGE_STATUS === 'passed') {
+        if (carriage.TRUCK_FREE_USAGE_STATUS === 'passed' ||
+            carriage.TRUCK_FREE_USAGE_STATUS === 'in_progress'
+        ) {
             $('#truck_usage_link').show();
         }
         if (carriage.TRUCK_FREE_USAGE_LINK != null) {
