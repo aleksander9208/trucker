@@ -111,7 +111,7 @@ $(document).ready(function() {
                     // if (carriage.CHECKLIST_FORWARDER != null) {
                     //     $('#checklist_forwarder').show();
                     // } else {
-                    //     $('#checklist_forwarder').hide();
+                        $('#checklist_forwarder').hide();
                     // }
 
                     contract(carriage);
