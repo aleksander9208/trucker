@@ -235,7 +235,9 @@ $(document).ready(function() {
 
             $('#transport_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_transport_link").html(CONT_TRANSPORT_LINK);
+            $('#transport_file').show();
         } else {
+            $('#transport_file').hide();
             $('#transport_link').addClass('status-info_confirmation_error');
             $("#list_file_transport_link").html('');
         }
@@ -256,7 +258,9 @@ $(document).ready(function() {
 
             $('#contract_link').removeClass('status-info_confirmation_error');
             $("#list_file_contract_link").html(CONT_EXP_LINK);
+            $('#contract_file').show();
         } else {
+            $('#contract_file').hide();
             $('#contract_link').addClass('status-info_confirmation_error');
             $("#list_file_contract_link").html();
         }
@@ -277,7 +281,9 @@ $(document).ready(function() {
 
             $('#one_time_link').removeClass('status-info_confirmation_error');
             $("#list_file_one_time_link").html(CONT_ORDER_ONE_TIME);
+            $('#one_time_file').show();
         } else {
+            $('#one_time_file').hide();
             $('#one_time_link').addClass('status-info_confirmation_error');
             $("#list_file_one_time_link").html();
         }
@@ -313,7 +319,9 @@ $(document).ready(function() {
 
             $('#documents_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_documents_link").html(DOC_APP_TRANSPORT_LINK);
+            $('#documents_file').show();
         } else {
+            $('#documents_file').hide();
             $('#documents_link').addClass('status-info_confirmation_error');
             $("#list_file_one_time_link").html();
         }
@@ -334,7 +342,9 @@ $(document).ready(function() {
 
             $('#epd_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_epd_link").html(DOC_EPD_LINK);
+            $('#epd_file').show();
         } else {
+            $('#epd_file').hide();
             $('#epd_link').addClass('status-info_confirmation_error');
             $("#list_file_epd_link").html();
         }
@@ -355,7 +365,9 @@ $(document).ready(function() {
 
             $('#driver_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_driver_link").html(DOC_DRIVER_APP_LINK);
+            $('#driver_file').show();
         } else {
+            $('#driver_file').hide();
             $('#driver_link').addClass('status-info_confirmation_error');
             $("#list_file_driver_link").html('');
         }
@@ -376,7 +388,9 @@ $(document).ready(function() {
 
             $('#exp_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_exp_link").html(DOC_EXP_LINK);
+            $('#exp_file').show();
         } else {
+            $('#exp_file').hide();
             $('#exp_link').addClass('status-info_confirmation_error');
             $("#list_file_exp_link").html('');
         }
@@ -397,7 +411,9 @@ $(document).ready(function() {
 
             $('#receipt_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_receipt_link").html(DOC_EXP_RECEIPT_LINK);
+            $('#receipt_file').show();
         } else {
+            $('#receipt_file').hide();
             $('#receipt_link').addClass('status-info_confirmation_error');
             $("#list_file_receipt_link").html();
         }
@@ -446,7 +462,9 @@ $(document).ready(function() {
 
             $('#geo_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_geo_link").html(AUTO_GEO);
+            $('#geo_file').show();
         } else {
+            $('#geo_file').hide();
             $('#geo_link').addClass('status-info_confirmation_error');
             $("#list_file_geo_link").html();
         }
@@ -482,7 +500,9 @@ $(document).ready(function() {
 
             $('#invoice_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_invoice_link").html(ACC_INVOICE_LINK);
+            $('#invoice_file').show();
         } else {
+            $('#invoice_file').hide();
             $('#invoice_link').addClass('status-info_confirmation_error');
             $("#list_file_invoice_link").html();
         }
@@ -503,7 +523,9 @@ $(document).ready(function() {
 
             $('#act_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_act_link").html(ACC_ACT_ACC_LINK);
+            $('#act_file').show();
         } else {
+            $('#act_file').hide();
             $('#act_link').addClass('status-info_confirmation_error');
             $("#list_file_act_link").html();
         }
@@ -524,7 +546,9 @@ $(document).ready(function() {
 
             $('#multi_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_multi_link").html(ACC_ACT_MULTI_TRANSPORT_LINK_VALUE);
+            $('#multi_file').show();
         } else {
+            $('#multi_file').hide();
             $('#multi_link').addClass('status-info_confirmation_error');
             $("#list_file_multi_link").html();
         }
@@ -545,7 +569,9 @@ $(document).ready(function() {
 
             $('#reg_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_reg_link").html(ACC_TRANSPORT_REG_LINK);
+            $('#reg_file').show();
         } else {
+            $('#reg_file').hide();
             $('#reg_link').addClass('status-info_confirmation_error');
             $("#list_file_reg_link").html();
         }
@@ -566,7 +592,9 @@ $(document).ready(function() {
 
             $('#tax_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_tax_link").html(ACC_TAX_INVOICE_LINK);
+            $('#tax_file').show();
         } else {
+            $('#tax_file').hide();
             $('#tax_link').addClass('status-info_confirmation_error');
             $("#list_file_tax_link").html();
         }
@@ -587,7 +615,9 @@ $(document).ready(function() {
 
             $('#upd_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_upd_link").html(ACC_UPD_LINK);
+            $('#upd_file').show();
         } else {
+            $('#upd_file').hide();
             $('#upd_link').addClass('status-info_confirmation_error');
             $("#list_file_upd_link").html();
         }
@@ -629,7 +659,9 @@ $(document).ready(function() {
 
             $('#donkey_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_donkey_link").html(DONKEY_STS_LINK);
+            $('#donkey_file').show();
         } else {
+            $('#donkey_file').hide();
             $('#donkey_link').addClass('status-info_confirmation_error');
             $("#list_file_donkey_link").html();
         }
@@ -671,7 +703,9 @@ $(document).ready(function() {
 
             $('#trailer_ctc_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_trailer_ctc_link").html(TRAILER_STS_LINK);
+            $('#trailer_ctc_file').show();
         } else {
+            $('#trailer_ctc_file').hide();
             $('#trailer_ctc_link').addClass('status-info_confirmation_error');
             $("#list_file_trailer_ctc_link").html();
         }
@@ -692,7 +726,9 @@ $(document).ready(function() {
 
             $('#trailer_rent_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_trailer_rent_link").html(TRAILER_RENT_AGR_LINK);
+            $('#trailer_rent_file').show();
         } else {
+            $('#trailer_rent_file').hide();
             $('#trailer_rent_link').addClass('status-info_confirmation_error');
             $("#list_file_trailer_rent_link").html();
         }
@@ -734,7 +770,9 @@ $(document).ready(function() {
 
             $('#trailer_sec_ctc_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_trailer_sec_ctc_link").html(TRAILER_SEC_STS_LINK);
+            $('#trailer_sec_ctc_file').show();
         } else {
+            $('#trailer_sec_ctc_file').hide();
             $('#trailer_sec_ctc_link').addClass('status-info_confirmation_error');
             $("#list_file_trailer_sec_ctc_link").html();
         }
@@ -755,7 +793,9 @@ $(document).ready(function() {
 
             $('#trailer_sec_rent_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_trailer_sec_rent_link").html(TRAILER_SEC_RENT_LINK);
+            $('#trailer_sec_rent_file').show();
         } else {
+            $('#trailer_sec_rent_file').hide();
             $('#trailer_sec_rent_link').addClass('status-info_confirmation_error');
             $("#list_file_trailer_sec_rent_link").html();
         }
@@ -776,7 +816,9 @@ $(document).ready(function() {
 
             $('#trailer_sec_lias_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_trailer_sec_lias_link").html(TRAILER_SEC_LEASING_COMPANY_LINK);
+            $('#trailer_sec_lias_file').show();
         } else {
+            $('#trailer_sec_lias_file').hide();
             $('#trailer_sec_lias_link').addClass('status-info_confirmation_error');
             $("#list_file_trailer_sec_lias_link").html();
         }
@@ -818,7 +860,9 @@ $(document).ready(function() {
 
             $('#trailer_sec_usage_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_trailer_sec_usage_link").html(TRAILER_SEC_FREE_USAGE_LINK);
+            $('#trailer_sec_usage_file').show();
         } else {
+            $('#trailer_sec_usage_file').hide();
             $('#trailer_sec_usage_link').addClass('status-info_confirmation_error');
             $("#list_file_trailer_sec_usage_link").html();
         }
@@ -860,7 +904,9 @@ $(document).ready(function() {
 
             $('#truck_sts_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_truck_sts_link").html(TRUCK_STS_LINK);
+            $('#truck_sts_file').show();
         } else {
+            $('#truck_sts_file').hide();
             $('#truck_sts_link').addClass('status-info_confirmation_error');
             $("#list_file_truck_sts_link").html();
         }
@@ -881,7 +927,9 @@ $(document).ready(function() {
 
             $('#truck_rent').show().removeClass('status-info_confirmation_error');
             $("#list_file_truck_rent").html(TRUCK_RENT_LINK);
+            $('#truck_link').show();
         } else {
+            $('#truck_link').hide();
             $('#truck_rent').addClass('status-info_confirmation_error');
             $("#list_file_truck_rent").html();
         }
@@ -902,7 +950,9 @@ $(document).ready(function() {
 
             $('#truck_leas_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_truck_leas_link").html(TRUCK_LEASING_COMPANY_LINK);
+            $('#truck_leas_file').show();
         } else {
+            $('#truck_leas_file').hide();
             $('#truck_leas_link').addClass('status-info_confirmation_error');
             $("#list_file_truck_leas_link").html();
         }
@@ -923,7 +973,9 @@ $(document).ready(function() {
 
             $('#truck_cert_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_truck_cert_link").html(TRUCK_CERTIFICATE_LINK);
+            $('#truck_cert_file').show();
         } else {
+            $('#truck_cert_file').hide();
             $('#truck_cert_link').addClass('status-info_confirmation_error');
             $("#list_file_truck_cert_link").html();
         }
@@ -944,7 +996,9 @@ $(document).ready(function() {
 
             $('#truck_usage_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_truck_usage_link").html(TRUCK_FREE_USAGE_LINK);
+            $('#truck_usage_file').show();
         } else {
+            $('#truck_usage_file').hide();
             $('#truck_usage_link').addClass('status-info_confirmation_error');
             $("#list_file_truck_usage_link").html();
         }
