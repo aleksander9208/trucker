@@ -520,20 +520,27 @@ ul.subnav-content.uk-switcher.uk-margin {
     background-position-y: 54.5%;
 }
 
-a.status-link_file {
-    color: #0066FF !important;
+.status-link_file {
+    color: #0066FF;
     min-width: 117px;
     display: flex;
     align-items: center;
     justify-content: end;
+    cursor: pointer;
 }
 
-a.status-link_file span {
+.status-link_file span {
     color: #389E0D;
     background: #F6FFED;
     padding: 2px;
     border-radius: 50%;
     margin-left: 9px;
+}
+
+.list_file_link a {
+    display: block;
+    color: #000 !important;
+    margin-bottom: 10px;
 }
 
 span.status-info_confirmation_title {
