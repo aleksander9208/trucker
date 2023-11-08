@@ -226,7 +226,9 @@ $(document).ready(function() {
             let CONT_TRANSPORT_LINK = '';
 
             $.each(carriage.CONT_TRANSPORT_LINK.split(","),function(index,value){
-                CONT_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    CONT_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#transport_link').show().removeClass('status-info_confirmation_error');
@@ -243,7 +245,9 @@ $(document).ready(function() {
             let CONT_EXP_LINK = '';
 
             $.each(carriage.CONT_EXP_LINK.split(","),function(index,value){
-                CONT_EXP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    CONT_EXP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#contract_link').removeClass('status-info_confirmation_error');
@@ -260,7 +264,9 @@ $(document).ready(function() {
             let CONT_ORDER_ONE_TIME = '';
 
             $.each(carriage.CONT_ORDER_ONE_TIME.split(","),function(index,value){
-                CONT_ORDER_ONE_TIME += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    CONT_ORDER_ONE_TIME += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#one_time_link').removeClass('status-info_confirmation_error');
