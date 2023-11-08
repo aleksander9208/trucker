@@ -108,11 +108,11 @@ $(document).ready(function() {
                     /** Чек-лист с перевозчиком */
 
                     /** Чек-лист с экспедитором */
-                    if (carriage.CHECKLIST_FORWARDER != null) {
-                        $('#checklist_forwarder').show();
-                    } else {
-                        $('#checklist_forwarder').hide();
-                    }
+                    // if (carriage.CHECKLIST_FORWARDER != null) {
+                    //     $('#checklist_forwarder').show();
+                    // } else {
+                    //     $('#checklist_forwarder').hide();
+                    // }
 
                     contract(carriage);
                     executionDocuments(carriage);

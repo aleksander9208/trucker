@@ -320,260 +320,29 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
                     <li id="checklist_carrier">
                         <div class="detail-content">
 
-                            <div class="detail-content_confirmation" id="contract">
-                                <div class="detail-content_title">
-                                    Подписанные договоры <span id="detail_status-transportation"></span>
-                                </div>
+                            <?php foreach ($arResult['INFO_BAR_DOC'] as $docGroup) { ?>
+                                <div class="detail-content_confirmation" id="<?= $docGroup['ID'] ?>">
+                                    <div class="detail-content_title">
+                                        <?= $docGroup['NAME'] ?>
+                                        <?php if ($docGroup['ID_PLATE']) { ?>
+                                            <span class="detail-content_auto" id="<?= $docGroup['ID_PLATE'] ?>"></span>
+                                        <?php } ?>
+                                        <span id="<?= $docGroup['ID_CHECK'] ?>"></span>
+                                    </div>
 
-                                <div class="status-info_confirmation" id="transport_link">
-                                    <span class="status-info_confirmation_title">Договор перевозки</span>
-                                    <a href="" target="_blank" class="status-link_file" id="transport_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
+                                    <?php foreach ($docGroup['DOCUMENTS'] as $document) { ?>
+                                        <div class="status-info_confirmation" id="<?= $document['ID'] ?>">
+                                            <span class="status-info_confirmation_title"><?= $document['NAME'] ?></span>
+                                            <a href="" target="_blank" class="status-link_file" id="<?= $document['LINK_ID'] ?>">
+                                                <?php if($document['FILE']) { ?>
+                                                    Посмотреть
+                                                <?php } ?>
+                                                <span uk-icon="icon: check;"></span>
+                                            </a>
+                                        </div>
+                                    <?php } ?>
                                 </div>
-
-                                <div class="status-info_confirmation" id="contract_link">
-                                    <span class="status-info_confirmation_title">Договор транспортной экспедиции</span>
-                                    <a href="" target="_blank" class="status-link_file" id="contract_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="one_time_link">
-                                    <span class="status-info_confirmation_title">Заказ (разовая договор-заявка)</span>
-                                    <a href="" target="_blank" class="status-link_file" id="one_time_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="detail-content_confirmation" id="execution_documents">
-                                <div class="detail-content_title">
-                                    Оформление перевозки <span id="documents_check"></span>
-                                </div>
-
-                                <div class="status-info_confirmation" id="documents_link">
-                                    <span class="status-info_confirmation_title">Заявка на перевозку</span>
-                                    <a href="" target="_blank" class="status-link_file" id="documents_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="epd_link">
-                                    <span class="status-info_confirmation_title">Подписанная ЭТрН</span>
-                                    <a href="" target="_blank" class="status-link_file" id="epd_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="driver_link">
-                                    <span class="status-info_confirmation_title">Подтверждения договорных отношений с водителем</span>
-                                    <a href="" target="_blank" class="status-link_file" id="driver_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="exp_link">
-                                    <span class="status-info_confirmation_title">Поручение экспедитору</span>
-                                    <a href="" target="_blank" class="status-link_file" id="exp_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="receipt_link">
-                                    <span class="status-info_confirmation_title">Экспедиторская расписка</span>
-                                    <a href="" target="_blank" class="status-link_file" id="receipt_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="detail-content_confirmation" id="automatic">
-                                <div class="detail-content_title">
-                                    Автоматические проверки <span class="detail-content_auto"></span>
-                                    <span id="auto_check"></span>
-                                </div>
-
-                                <div class="status-info_confirmation" id="prices_link">
-                                    <span class="status-info_confirmation_title">Стоимость перевозки соответствует рыночным ценам</span>
-                                    <a href="" class="status-link_file" id="prices_file"><span uk-icon="icon: check;"></span></a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="geo_link">
-                                    <span class="status-info_confirmation_title">Подтверждения перевозки через геомониторинг</span>
-                                    <a href="" target="_blank" class="status-link_file" id="geo_file"><span uk-icon="icon: check;"></span></a>
-                                </div>
-                            </div>
-
-                            <div class="detail-content_confirmation" id="accounting">
-                                <div class="detail-content_title">
-                                    Бухгалтерские документы <span class="detail-content_auto"></span>
-                                    <span id="accounting_check"></span>
-                                </div>
-
-                                <div class="status-info_confirmation" id="invoice_link">
-                                    <span class="status-info_confirmation_title">Счёт</span>
-                                    <a href="" target="_blank" class="status-link_file" id="invoice_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="act_link">
-                                    <span class="status-info_confirmation_title">Акт о приемке выполненных работ по услуге</span>
-                                    <a href="" target="_blank" class="status-link_file" id="act_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="multi_link">
-                                    <span class="status-info_confirmation_title">
-                                        Акт о приемке выполненных работ, включающий несколько перевозок
-                                    </span>
-                                    <a href="" target="_blank" class="status-link_file" id="multi_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="reg_link">
-                                    <span class="status-info_confirmation_title">Реестр на перевозки</span>
-                                    <a href="" target="_blank" class="status-link_file" id="reg_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="tax_link">
-                                    <span class="status-info_confirmation_title">Счёт-фактура</span>
-                                    <a href="" target="_blank" class="status-link_file" id="tax_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="upd_link">
-                                    <span class="status-info_confirmation_title">УПД</span>
-                                    <a href="" target="_blank" class="status-link_file" id="upd_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="detail-content_confirmation" id="donkey">
-                                <div class="detail-content_title">
-                                    Подтверждения владения (тягач) <span class="detail-content_auto" id="donkey_plate"></span>
-                                    <span id="donkey_check"></span>
-                                </div>
-
-                                <div class="status-info_confirmation" id="donkey_link">
-                                    <span class="status-info_confirmation_title">СТС</span>
-                                    <a href="" target="_blank" class="status-link_file" id="donkey_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="detail-content_confirmation" id="trailer">
-                                <div class="detail-content_title">
-                                    Подтверждения владения (прицеп) <span class="detail-content_auto" id="trailer_plate"></span>
-                                    <span id="trailer_check"></span>
-                                </div>
-
-                                <div class="status-info_confirmation" id="trailer_ctc_link">
-                                    <span class="status-info_confirmation_title">СТС</span>
-                                    <a href="" target="_blank" class="status-link_file" id="trailer_ctc_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="trailer_rent_link">
-                                    <span class="status-info_confirmation_title">Договор аренды</span>
-                                    <a href="" class="status-link_file" id="trailer_rent_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="detail-content_confirmation" id="trailer_sec">
-                                <div class="detail-content_title">
-                                    Подтверждение владения второго (прицеп) <span class="detail-content_auto" id="trailer_sec_plate"></span>
-                                    <span id="trailer_sec_check"></span>
-                                </div>
-
-                                <div class="status-info_confirmation" id="trailer_sec_ctc_link">
-                                    <span class="status-info_confirmation_title">СТС</span>
-                                    <a href="" target="_blank" class="status-link_file" id="trailer_sec_ctc_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="trailer_sec_rent_link">
-                                    <span class="status-info_confirmation_title">Договор аренды</span>
-                                    <a href="" class="status-link_file" id="trailer_sec_rent_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="trailer_sec_lias_link">
-                                    <span class="status-info_confirmation_title">Договор с лизинговой компанией</span>
-                                    <a href="" class="status-link_file" id="trailer_sec_lias_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="trailer_sec_cer_link">
-                                    <span class="status-info_confirmation_title">Свидетельство о браке</span>
-                                    <a href="" class="status-link_file" id="trailer_sec_cer_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="trailer_sec_usage_link">
-                                    <span class="status-info_confirmation_title">Договор безвозмездного использования</span>
-                                    <a href="" class="status-link_file" id="trailer_sec_usage_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="detail-content_confirmation" id="truck">
-                                <div class="detail-content_title">
-                                    Подтверждение владения грузовик <span class="detail-content_auto" id="truck_plate"></span>
-                                    <span id="truck_check"></span>
-                                </div>
-
-                                <div class="status-info_confirmation" id="truck_sts_link">
-                                    <span class="status-info_confirmation_title">СТС</span>
-                                    <a href="" target="_blank" class="status-link_file" id="truck_sts_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="truck_rent">
-                                    <span class="status-info_confirmation_title">Договор аренды</span>
-                                    <a href="" target="_blank" class="status-link_file" id="truck_link">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="truck_leas_link">
-                                    <span class="status-info_confirmation_title">Договор с лизинговой компанией</span>
-                                    <a href="" target="_blank" class="status-link_file" id="truck_leas_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="truck_cert_link">
-                                    <span class="status-info_confirmation_title">Свидетельство о браке</span>
-                                    <a href="" target="_blank" class="status-link_file" id="truck_cert_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-
-                                <div class="status-info_confirmation" id="truck_usage_link">
-                                    <span class="status-info_confirmation_title">Договор безвозмездного использования</span>
-                                    <a href="" target="_blank" class="status-link_file" id="truck_usage_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                            </div>
+                            <?php } ?>
 
                         </div>
                     </li>

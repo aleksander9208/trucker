@@ -20,12 +20,14 @@ class TransportationList extends CBitrixComponent
 
     /**
      * @return void
+     * @throws LoaderException
      */
     protected function prepareResult(): void
     {
         $this->arResult['COLUMNS'] = self::getColumns();
         $this->getRows();
         $this->arResult['YEAR'] = date("Y");
+        $this->arResult['INFO_BAR_DOC'] = self::getDocuments();
     }
 
     /**
@@ -110,6 +112,252 @@ class TransportationList extends CBitrixComponent
                 "name" => "Чек-лист с экспедитором",
                 "default" => true,
                 "class" => "no-column"
+            ],
+        ];
+    }
+
+    /**
+     * Возвращаем список документов
+     * и групп
+     *
+     * @return array[]
+     */
+    public static function getDocuments(): array
+    {
+        return [
+            0 => [
+                'ID' => 'contract',
+                'NAME' => 'Подписанные договоры',
+                'ID_CHECK' => 'detail_status-transportation',
+                'DOCUMENTS' => [
+                    0 => [
+                        'ID' => 'transport_link',
+                        'NAME' => 'Договор перевозки',
+                        'LINK_ID' => 'transport_file',
+                        'FILE' => true,
+                    ],
+                    1 => [
+                        'ID' => 'contract_link',
+                        'NAME' => 'Договор транспортной экспедиции',
+                        'LINK_ID' => 'contract_file',
+                        'FILE' => true,
+                    ],
+                    2 => [
+                        'ID' => 'one_time_link',
+                        'NAME' => 'Заказ (разовая договор-заявка)',
+                        'LINK_ID' => 'one_time_file',
+                        'FILE' => true,
+                    ],
+                ],
+            ],
+            1 => [
+                'ID' => 'execution_documents',
+                'NAME' => 'Оформление перевозки',
+                'ID_CHECK' => 'documents_check',
+                'DOCUMENTS' => [
+                    0 => [
+                        'ID' => 'documents_link',
+                        'NAME' => 'Заявка на перевозку',
+                        'LINK_ID' => 'documents_file',
+                        'FILE' => true,
+                    ],
+                    1 => [
+                        'ID' => 'epd_link',
+                        'NAME' => 'Подписанная ЭТрН',
+                        'LINK_ID' => 'epd_file',
+                        'FILE' => true,
+                    ],
+                    2 => [
+                        'ID' => 'driver_link',
+                        'NAME' => 'Подтверждения договорных отношений с водителем',
+                        'LINK_ID' => 'driver_file',
+                        'FILE' => true,
+                    ],
+                    3 => [
+                        'ID' => 'exp_link',
+                        'NAME' => 'Поручение экспедитору',
+                        'LINK_ID' => 'exp_file',
+                        'FILE' => true,
+                    ],
+                    4 => [
+                        'ID' => 'receipt_link',
+                        'NAME' => 'Экспедиторская расписка',
+                        'LINK_ID' => 'receipt_file',
+                        'FILE' => true,
+                    ],
+                ],
+            ],
+            2 => [
+                'ID' => 'automatic',
+                'NAME' => 'Автоматические проверки',
+                'ID_CHECK' => 'auto_check',
+                'DOCUMENTS' => [
+                    0 => [
+                        'ID' => 'prices_link',
+                        'NAME' => 'Стоимость перевозки соответствует рыночным ценам',
+                        'LINK_ID' => 'prices_file',
+                        'FILE' => false,
+                    ],
+                    1 => [
+                        'ID' => 'geo_link',
+                        'NAME' => 'Подтверждения перевозки через геомониторинг',
+                        'LINK_ID' => 'geo_file',
+                        'FILE' => false,
+                    ],
+                ],
+            ],
+            3 => [
+                'ID' => 'accounting',
+                'NAME' => 'Бухгалтерские документы',
+                'ID_CHECK' => 'accounting_check',
+                'DOCUMENTS' => [
+                    0 => [
+                        'ID' => 'invoice_link',
+                        'NAME' => 'Счёт',
+                        'LINK_ID' => 'invoice_file',
+                        'FILE' => true,
+                    ],
+                    1 => [
+                        'ID' => 'act_link',
+                        'NAME' => 'Акт о приемке выполненных работ по услуге',
+                        'LINK_ID' => 'act_file',
+                        'FILE' => true,
+                    ],
+                    2 => [
+                        'ID' => 'multi_link',
+                        'NAME' => 'Акт о приемке выполненных работ, включающий несколько перевозок',
+                        'LINK_ID' => 'multi_file',
+                        'FILE' => true,
+                    ],
+                    3 => [
+                        'ID' => 'reg_link',
+                        'NAME' => 'Реестр на перевозки',
+                        'LINK_ID' => 'reg_file',
+                        'FILE' => true,
+                    ],
+                    4 => [
+                        'ID' => 'tax_link',
+                        'NAME' => 'Счёт-фактура',
+                        'LINK_ID' => 'tax_file',
+                        'FILE' => true,
+                    ],
+                    5 => [
+                        'ID' => 'upd_link',
+                        'NAME' => 'УПД',
+                        'LINK_ID' => 'upd_file',
+                        'FILE' => true,
+                    ],
+                ],
+            ],
+            4 => [
+                'ID' => 'donkey',
+                'NAME' => 'Подтверждения владения (тягач)',
+                'ID_CHECK' => 'donkey_check',
+                'ID_PLATE' => 'donkey_plate',
+                'DOCUMENTS' => [
+                    0 => [
+                        'ID' => 'donkey_link',
+                        'NAME' => 'СТС',
+                        'LINK_ID' => 'donkey_file',
+                        'FILE' => true,
+                    ],
+                ],
+            ],
+            5 => [
+                'ID' => 'trailer',
+                'NAME' => 'Подтверждения владения (прицеп)',
+                'ID_CHECK' => 'trailer_check',
+                'ID_PLATE' => 'trailer_plate',
+                'DOCUMENTS' => [
+                    0 => [
+                        'ID' => 'trailer_ctc_link',
+                        'NAME' => 'СТС',
+                        'LINK_ID' => 'trailer_ctc_file',
+                        'FILE' => true,
+                    ],
+                    1 => [
+                        'ID' => 'trailer_rent_link',
+                        'NAME' => 'Договор аренды',
+                        'LINK_ID' => 'trailer_rent_file',
+                        'FILE' => true,
+                    ],
+                ],
+            ],
+            6 => [
+                'ID' => 'trailer_sec',
+                'NAME' => 'Подтверждение владения второго (прицеп)',
+                'ID_CHECK' => 'trailer_sec_check',
+                'ID_PLATE' => 'trailer_sec_plate',
+                'DOCUMENTS' => [
+                    0 => [
+                        'ID' => 'trailer_sec_ctc_link',
+                        'NAME' => 'СТС',
+                        'LINK_ID' => 'trailer_sec_ctc_file',
+                        'FILE' => true,
+                    ],
+                    1 => [
+                        'ID' => 'trailer_sec_rent_link',
+                        'NAME' => 'Договор аренды',
+                        'LINK_ID' => 'trailer_sec_rent_file',
+                        'FILE' => true,
+                    ],
+                    2 => [
+                        'ID' => 'trailer_sec_lias_link',
+                        'NAME' => 'Договор с лизинговой компанией',
+                        'LINK_ID' => 'trailer_sec_lias_file',
+                        'FILE' => true,
+                    ],
+                    3 => [
+                        'ID' => 'trailer_sec_cer_link',
+                        'NAME' => 'Свидетельство о браке',
+                        'LINK_ID' => 'trailer_sec_cer_file',
+                        'FILE' => true,
+                    ],
+                    4 => [
+                        'ID' => 'trailer_sec_usage_link',
+                        'NAME' => 'Договор безвозмездного использования',
+                        'LINK_ID' => 'trailer_sec_usage_file',
+                        'FILE' => true,
+                    ],
+                ],
+            ],
+            7 => [
+                'ID' => 'truck',
+                'NAME' => 'Подтверждение владения грузовик',
+                'ID_CHECK' => 'truck_check',
+                'ID_PLATE' => 'truck_plate',
+                'DOCUMENTS' => [
+                    0 => [
+                        'ID' => 'truck_sts_link',
+                        'NAME' => 'СТС',
+                        'LINK_ID' => 'truck_sts_file',
+                        'FILE' => true,
+                    ],
+                    1 => [
+                        'ID' => 'truck_rent',
+                        'NAME' => 'Договор аренды',
+                        'LINK_ID' => 'truck_link',
+                        'FILE' => true,
+                    ],
+                    2 => [
+                        'ID' => 'truck_leas_link',
+                        'NAME' => 'Договор с лизинговой компанией',
+                        'LINK_ID' => 'truck_leas_file',
+                        'FILE' => true,
+                    ],
+                    3 => [
+                        'ID' => 'truck_cert_link',
+                        'NAME' => 'Свидетельство о браке',
+                        'LINK_ID' => 'truck_cert_file',
+                        'FILE' => true,
+                    ],
+                    4 => [
+                        'ID' => 'truck_usage_link',
+                        'NAME' => 'Договор безвозмездного использования',
+                        'LINK_ID' => 'truck_usage_file',
+                        'FILE' => true,
+                    ],
+                ],
             ],
         ];
     }

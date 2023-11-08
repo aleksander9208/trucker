@@ -159,193 +159,8 @@ class ExportMessageKafkaConsumer
                     $checksFalse++;
                 }
 
-                // Подписанные договоры
-                if ($check_group['name'] === 'contract') {
-                    $properties['CONTRACT_CHECK'] = $checksTrue . '/' .$countChecks;
-                    if ($checks['name'] === 'transport_expedition_contract') {
-                        $properties['CONTRACT_EXPEDITION_STATUS'] = $checks['status'];
-                        $properties['CONTRACT_EXPEDITION_LINK'] = $checks['edm_attachments'][0]['original_file'];
-                        $properties['CONTRACT_EXPEDITION_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
-                    }
-                    if ($checks['name'] === 'transportation_contract') {
-                        $properties['CONTRACT_TRANSPORTATION_STATUS'] = $checks['status'];
-                        $properties['CONTRACT_TRANSPORTATION_LINK'] = $checks['attachments'][0]['original_file'];
-                        $properties['CONTRACT_TRANSPORTATION_FORWARDER_LINK'] = $checks['attachments'][1]['original_file'];
-                    }
-                    if ($checks['name'] === 'order_one_time_contract') {
-                        $properties['CONTRACT_ORDER_ONE_TIME_STATUS'] = $checks['status'];
-                        $properties['CONTRACT_ORDER_ONE_TIME_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['CONTRACT_ORDER_ONE_TIME_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                }
-
-                // Оформление перевозки
-                if ($check_group['name'] === 'execution_documents') {
-                    $properties['DOCUMENTS_CHECK'] = $checksTrue . '/' .$countChecks;
-                    if ($checks['name'] === 'epd') {
-                        $properties['DOCUMENTS_EPD_STATUS'] = $checks['status'];
-                        $properties['DOCUMENTS_EPD_LINK'] = $checks['edm_attachments'][0]['original_file'];
-                        $properties['DOCUMENTS_EPD_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
-                    }
-                    if ($checks['name'] === 'expeditor_order') {
-                        $properties['DOCUMENTS_EXPEDITOR_STATUS'] = $checks['status'];
-                        $properties['DOCUMENTS_EXPEDITOR_LINK'] = $checks['edm_attachments'][0]['original_file'];
-                        $properties['DOCUMENTS_EXPEDITOR_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
-                    }
-                    if ($checks['name'] === 'expeditor_agent_receipt') {
-                        $properties['DOCUMENTS_EXPEDITOR_RECEIPT_STATUS'] = $checks['status'];
-                        $properties['DOCUMENTS_EXPEDITOR_RECEIPT_LINK'] = $checks['edm_attachments'][0]['original_file'];
-                        $properties['DOCUMENTS_EXPEDITOR_RECEIPT_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
-                    }
-                    if ($checks['name'] === 'driver_approvals') {
-                        $properties['DOCUMENTS_DRIVER_APPROVALS_STATUS'] = $checks['status'];
-                        $properties['DOCUMENTS_DRIVER_APPROVALS_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['DOCUMENTS_DRIVER_APPROVALS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'application_for_transportation') {
-                        $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS'] = $checks['status'];
-                        $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                }
-
-                // Автоматические проверки
-                if ($check_group['name'] === 'automatic_checks') {
-                    $properties['AUTOMATIC_CHECKS'] = $checksTrue . '/' .$countChecks;
-                    if ($checks['name'] === 'prices') {
-                        $properties['AUTOMATIC_PRICES_STATUS'] = $checks['status'];
-                        $properties['AUTOMATIC_PRICES'] = $checks['results']['diff_percentage'];
-                    }
-                    if ($checks['name'] === 'geo_monitoring') {
-                        $properties['AUTOMATIC_GEO_MONITORING_STATUS'] = $checks['status'];
-                        $properties['AUTOMATIC_GEO_MONITORING'] = $checks['results']['не известно'];
-                    }
-                }
-
-                // Бухгалтерские документы
-                if ($check_group['name'] === 'accounting') {
-                    $properties['ACCOUNTING_CHECKS'] = $checksTrue . '/' .$countChecks;
-                    if ($checks['name'] === 'invoice') {
-                        $properties['ACCOUNTING_INVOICE_STATUS'] = $checks['status'];
-                        $properties['ACCOUNTING_INVOICE_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['ACCOUNTING_INVOICE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'act_of_service_acceptance') {
-                        $properties['ACCOUNTING_ACT_ACCEPTANCE_STATUS'] = $checks['status'];
-                        $properties['ACCOUNTING_ACT_ACCEPTANCE_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['ACCOUNTING_ACT_ACCEPTANCE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'act_of_service_acceptance_multiple_transportations') {
-                        $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS'] = $checks['status'];
-                        $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'transportation_registry') {
-                        $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS'] = $checks['status'];
-                        $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'tax_invoice') {
-                        $properties['ACCOUNTING_TAX_INVOICE_STATUS'] = $checks['status'];
-                        $properties['ACCOUNTING_TAX_INVOICE_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['ACCOUNTING_TAX_INVOICE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'universal_transfer_document') {
-                        $properties['ACCOUNTING_UPD_STATUS'] = $checks['status'];
-                        $properties['ACCOUNTING_UPD_LINK'] = $checks['edm_attachments'][0]['original_file'];
-                        $properties['ACCOUNTING_UPD_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
-                    }
-                }
-
-                // Подтверждение владения (тягач)
-                if ($check_group['name'] === 'vehicle_donkey') {
-                    $properties['DONKEY_CHECKS'] = $checksTrue . '/' .$countChecks;
-                    $properties['DONKEY_LICENSE_PLATE'] = $check_group['meta']['license_plate'];
-                    if ($checks['name'] === 'sts') {
-                        $properties['DONKEY_STS_STATUS'] = $checks['status'];
-                        $properties['DONKEY_STS_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['DONKEY_STS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                }
-
-                // Подтверждение владения (прицеп)
-                if ($check_group['name'] === 'vehicle_main_trailer') {
-                    $properties['TRAILER_CHECKS'] = $checksTrue . '/' .$countChecks;
-                    $properties['TRAILER_LICENSE_PLATE'] = $check_group['meta']['license_plate'];
-                    if ($checks['name'] === 'sts') {
-                        $properties['TRAILER_STS_STATUS'] = $checks['status'];
-                        $properties['TRAILER_STS_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRAILER_STS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'rent_agreement') {
-                        $properties['TRAILER_RENT_AGREEMENT_STATUS'] = $checks['status'];
-                        $properties['TRAILER_RENT_AGREEMENT_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRAILER_RENT_AGREEMENT_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                }
-
-                // Подтверждение владения второго (прицеп)
-                if ($check_group['name']=== 'vehicle_secondary_trailer') {
-                    $properties['TRAILER_SECONDARY_CHECKS'] = $checksTrue . '/' .$countChecks;
-                    $properties['TRAILER_SECONDARY_LICENSE_PLATE'] = $check_group['meta']['license_plate'];
-                    if ($checks['name'] === 'sts') {
-                        $properties['TRAILER_SECONDARY_STS_STATUS'] = $checks['status'];
-                        $properties['TRAILER_SECONDARY_STS_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRAILER_SECONDARY_STS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'rent_agreement') {
-                        $properties['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS'] = $checks['status'];
-                        $properties['TRAILER_SECONDARY_RENT_AGREEMENT_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRAILER_SECONDARY_RENT_AGREEMENT_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'agreement_withLeasingCompany') {
-                        $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS'] = $checks['status'];
-                        $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'marriage_certificate') {
-                        $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS'] = $checks['status'];
-                        $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'free_usage_agreement') {
-                        $properties['TRAILER_SECONDARY_FREE_USAGE_STATUS'] = $checks['status'];
-                        $properties['TRAILER_SECONDARY_FREE_USAGE_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRAILER_SECONDARY_FREE_USAGE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                }
-
-                // Подтверждение владения (грузовик)
-                if ($check_group['name']=== 'vehicle_truck') {
-                    $properties['TRUCK_CHECKS'] = $checksTrue . '/' .$countChecks;
-                    // Номерной знак
-                    $properties['TRUCK_LICENSE_PLATE'] = $check_group['meta']['license_plate'];
-                    if ($checks['name'] === 'sts') {
-                        $properties['TRUCK_STS_STATUS'] = $checks['status'];
-                        $properties['TRUCK_STS_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRUCK_STS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'rent_agreement') {
-                        $properties['TRUCK_RENT_AGREEMENT_STATUS'] = $checks['status'];
-                        $properties['TRUCK_RENT_AGREEMENT_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRUCK_RENT_AGREEMENT_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'agreement_withLeasingCompany') {
-                        $properties['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS'] = $checks['status'];
-                        $properties['TRUCK_AGREEMENT_LEASING_COMPANY_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRUCK_AGREEMENT_LEASING_COMPANY_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'marriage_certificate') {
-                        $properties['TRUCK_MARRIAGE_CERTIFICATE_STATUS'] = $checks['status'];
-                        $properties['TRUCK_MARRIAGE_CERTIFICATE_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRUCK_MARRIAGE_CERTIFICATE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                    if ($checks['name'] === 'free_usage_agreement') {
-                        $properties['TRUCK_FREE_USAGE_STATUS'] = $checks['status'];
-                        $properties['TRUCK_FREE_USAGE_LINK'] = $checks['attachments'][0]['url'];
-                        $properties['TRUCK_FREE_USAGE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
-                    }
-                }
+                // Подготавливаем документы
+                $properties = self::setDocuments($check_group['name'], $checks, $properties, $checksTrue, $countChecks);
             }
         }
 
@@ -370,5 +185,245 @@ class ExportMessageKafkaConsumer
         ])->fetch();
 
         return $carrier['ID'];
+    }
+
+    protected static function setDocuments(
+        string $name,
+        array $group,
+        array $properties,
+        int $checksTrue,
+        int $countChecks
+    ): array
+    {
+        switch ($name) {
+            case 'contract':
+                $properties['CONTRACT_CHECK'] = $checksTrue . '/' .$countChecks;
+                if ($group['name'] === 'transport_expedition_contract') {
+                    $properties['CONTRACT_EXPEDITION_STATUS'] = $group['status'];
+                    //$properties['CONTRACT_EXPEDITION_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['CONTRACT_EXPEDITION_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'transportation_contract') {
+                    $properties['CONTRACT_TRANSPORTATION_STATUS'] = $group['status'];
+                    //$properties['CONTRACT_TRANSPORTATION_FORWARDER_LINK'] = $group['attachments'][1]['original_file'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['CONTRACT_TRANSPORTATION_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'order_one_time_contract') {
+                    $properties['CONTRACT_ORDER_ONE_TIME_STATUS'] = $group['status'];
+                    //$properties['CONTRACT_ORDER_ONE_TIME_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['CONTRACT_ORDER_ONE_TIME_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                break;
+            case 'execution_documents':
+                $properties['DOCUMENTS_CHECK'] = $checksTrue . '/' .$countChecks;
+                if ($group['name'] === 'epd') {
+                    $properties['DOCUMENTS_EPD_STATUS'] = $group['status'];
+                    //$properties['DOCUMENTS_EPD_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['DOCUMENTS_EPD_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'expeditor_order') {
+                    $properties['DOCUMENTS_EXPEDITOR_STATUS'] = $group['status'];
+                    //$properties['DOCUMENTS_EXPEDITOR_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['DOCUMENTS_EXPEDITOR_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'expeditor_agent_receipt') {
+                    $properties['DOCUMENTS_EXPEDITOR_RECEIPT_STATUS'] = $group['status'];
+                    //$properties['DOCUMENTS_EXPEDITOR_RECEIPT_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['DOCUMENTS_EXPEDITOR_RECEIPT_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'driver_approvals') {
+                    $properties['DOCUMENTS_DRIVER_APPROVALS_STATUS'] = $group['status'];
+                    //$properties['DOCUMENTS_DRIVER_APPROVALS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['DOCUMENTS_DRIVER_APPROVALS_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'application_for_transportation') {
+                    $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS'] = $group['status'];
+                    //$properties['DOCUMENTS_APPLICATION_TRANSPORTATION_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                break;
+            case 'automatic_checks':
+                $properties['AUTOMATIC_CHECKS'] = $checksTrue . '/' .$countChecks;
+                if ($group['name'] === 'prices') {
+                    $properties['AUTOMATIC_PRICES_STATUS'] = $group['status'];
+                    $properties['AUTOMATIC_PRICES'] = $group['results']['diff_percentage'];
+                }
+                if ($group['name'] === 'geo_monitoring') {
+                    $properties['AUTOMATIC_GEO_MONITORING_STATUS'] = $group['status'];
+                    $properties['AUTOMATIC_GEO_MONITORING'] = $group['results']['не известно'];
+                }
+                break;
+            case 'accounting':
+                $properties['ACCOUNTING_CHECKS'] = $checksTrue . '/' .$countChecks;
+                if ($group['name'] === 'invoice') {
+                    $properties['ACCOUNTING_INVOICE_STATUS'] = $group['status'];
+                    //$properties['ACCOUNTING_INVOICE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['ACCOUNTING_INVOICE_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'act_of_service_acceptance') {
+                    $properties['ACCOUNTING_ACT_ACCEPTANCE_STATUS'] = $group['status'];
+                    //$properties['ACCOUNTING_ACT_ACCEPTANCE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['ACCOUNTING_ACT_ACCEPTANCE_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'act_of_service_acceptance_multiple_transportations') {
+                    $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS'] = $group['status'];
+                    //$properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'transportation_registry') {
+                    $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS'] = $group['status'];
+                    //$properties['ACCOUNTING_TRANSPORTATION_REGISTRY_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'tax_invoice') {
+                    $properties['ACCOUNTING_TAX_INVOICE_STATUS'] = $group['status'];
+                    //$properties['ACCOUNTING_TAX_INVOICE_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['ACCOUNTING_TAX_INVOICE_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'universal_transfer_document') {
+                    $properties['ACCOUNTING_UPD_STATUS'] = $group['status'];
+                    //$properties['ACCOUNTING_UPD_FORWARDER_LINK'] = $checks['edm_attachments'][1]['original_file'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['ACCOUNTING_UPD_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                break;
+            case 'vehicle_donkey':
+                $properties['DONKEY_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['DONKEY_LICENSE_PLATE'] = $group['meta']['license_plate'];
+                if ($group['name'] === 'sts') {
+                    $properties['DONKEY_STS_STATUS'] = $group['status'];
+                    //$properties['DONKEY_STS_FORWARDER_LINK'] = $checks['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['DONKEY_STS_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                break;
+            case 'vehicle_main_trailer':
+                $properties['TRAILER_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['TRAILER_LICENSE_PLATE'] = $group['meta']['license_plate'];
+                if ($group['name'] === 'sts') {
+                    $properties['TRAILER_STS_STATUS'] = $group['status'];
+                    //$properties['TRAILER_STS_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRAILER_STS_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'rent_agreement') {
+                    $properties['TRAILER_RENT_AGREEMENT_STATUS'] = $group['status'];
+                    //$properties['TRAILER_RENT_AGREEMENT_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRAILER_RENT_AGREEMENT_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                break;
+            case 'vehicle_secondary_trailer':
+                $properties['TRAILER_SECONDARY_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['TRAILER_SECONDARY_LICENSE_PLATE'] = $group['meta']['license_plate'];
+                if ($group['name'] === 'sts') {
+                    $properties['TRAILER_SECONDARY_STS_STATUS'] = $group['status'];
+                    //$properties['TRAILER_SECONDARY_STS_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRAILER_SECONDARY_STS_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'rent_agreement') {
+                    $properties['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS'] = $group['status'];
+                    //$properties['TRAILER_SECONDARY_RENT_AGREEMENT_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRAILER_SECONDARY_RENT_AGREEMENT_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'agreement_withLeasingCompany') {
+                    $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS'] = $group['status'];
+                    //$properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'marriage_certificate') {
+                    $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS'] = $group['status'];
+                    //$properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'free_usage_agreement') {
+                    $properties['TRAILER_SECONDARY_FREE_USAGE_STATUS'] = $group['status'];
+                    //$properties['TRAILER_SECONDARY_FREE_USAGE_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRAILER_SECONDARY_FREE_USAGE_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                break;
+            case 'vehicle_truck':
+                $properties['TRUCK_CHECKS'] = $checksTrue . '/' .$countChecks;
+                // Номерной знак
+                $properties['TRUCK_LICENSE_PLATE'] = $group['meta']['license_plate'];
+                if ($group['name'] === 'sts') {
+                    $properties['TRUCK_STS_STATUS'] = $group['status'];
+                    //$properties['TRUCK_STS_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRUCK_STS_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'rent_agreement') {
+                    $properties['TRUCK_RENT_AGREEMENT_STATUS'] = $group['status'];
+                    //$properties['TRUCK_RENT_AGREEMENT_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRUCK_RENT_AGREEMENT_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'agreement_withLeasingCompany') {
+                    $properties['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS'] = $group['status'];
+                    //$properties['TRUCK_AGREEMENT_LEASING_COMPANY_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRUCK_AGREEMENT_LEASING_COMPANY_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'marriage_certificate') {
+                    $properties['TRUCK_MARRIAGE_CERTIFICATE_STATUS'] = $group['status'];
+                    //$properties['TRUCK_MARRIAGE_CERTIFICATE_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRUCK_MARRIAGE_CERTIFICATE_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                if ($group['name'] === 'free_usage_agreement') {
+                    $properties['TRUCK_FREE_USAGE_STATUS'] = $group['status'];
+                    //$properties['TRUCK_FREE_USAGE_FORWARDER_LINK'] = $group['attachments'][1]['url'];
+                    foreach ($group['attachments'] as $file) {
+                        $properties['TRUCK_FREE_USAGE_LINK'] .= $file['url'] . ',';
+                    }
+                }
+                break;
+        }
+
+        return $properties;
     }
 }
