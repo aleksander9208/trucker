@@ -500,6 +500,6 @@ class TransportationList extends CBitrixComponent
             ]
         ])->fetch();
 
-        return $price['UF_LINK'];
+        return $price['UF_LINK'] ?: '';
     }
 }
