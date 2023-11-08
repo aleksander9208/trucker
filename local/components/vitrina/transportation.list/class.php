@@ -1,10 +1,14 @@
 <?php
 
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ErrorCollection;
 use Bitrix\Main\Grid\Options;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
 use Bitrix\Main\UI\PageNavigation;
+use Bitrix\Highloadblock as HL;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
@@ -411,7 +415,6 @@ class TransportationList extends CBitrixComponent
                 'FORWARDER_INN_' => 'FORWARDER_INN',
                 'CARRIER_' => 'CARRIER',
                 'CARRIER_INN_' => 'CARRIER_INN',
-                'DEVIATION_MARKET_PRICE_' => 'AUTOMATIC_PRICES',
                 'CHECKLIST_CARRIER_' => 'CHECKLIST_CARRIER',
                 'CHECKLIST_FORWARDER_' => 'CHECKLIST_FORWARDER',
             ],
@@ -429,6 +432,8 @@ class TransportationList extends CBitrixComponent
          */
         $good = $error = 0;
         foreach ($vitrina->fetchAll() as $item) {
+            $item['DEVIATION_MARKET_PRICE_VALUE'] = self::getPrice($item['ID']);
+
             $date = explode('-', $item['DATE_SHIPMENT_VALUE']);
             $goodStatus = $errorStatus = '';
 
@@ -467,5 +472,34 @@ class TransportationList extends CBitrixComponent
 
         $this->arResult["ROWS"] = $vitrinaList;
         $this->arResult["NAV"] = $nav;
+    }
+
+    /**
+     * Возвращаем отклонение от
+     * рыночной стоимости
+     *
+     * @param int $id
+     * @return string
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    protected static function getPrice(int $id): string
+    {
+        $hlblockId = HL\HighloadBlockTable::getList([
+            'filter' => ['=NAME' => 'FnsLinkDocuments']
+        ])->fetch();
+
+        $entity_data_class = (HL\HighloadBlockTable::compileEntity($hlblockId))->getDataClass();
+
+        $price = $entity_data_class::getList([
+            "select" => ["*"],
+            "filter" => [
+                "UF_ID_ELEMENT" => $id,
+                "UF_GROUP_NAME" => 'prices',
+            ]
+        ])->fetch();
+
+        return $price['UF_LINK'];
     }
 }
