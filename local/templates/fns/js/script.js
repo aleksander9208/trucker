@@ -298,7 +298,9 @@ $(document).ready(function() {
             let DOC_APP_TRANSPORT_LINK = '';
 
             $.each(carriage.DOC_APP_TRANSPORT_LINK.split(","),function(index,value){
-                DOC_APP_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    DOC_APP_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#documents_link').show().removeClass('status-info_confirmation_error');
@@ -315,7 +317,9 @@ $(document).ready(function() {
             let DOC_EPD_LINK = '';
 
             $.each(carriage.DOC_EPD_LINK.split(","),function(index,value){
-                DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#epd_link').show().removeClass('status-info_confirmation_error');
@@ -332,7 +336,9 @@ $(document).ready(function() {
             let DOC_DRIVER_APP_LINK = '';
 
             $.each(carriage.DOC_DRIVER_APP_LINK.split(","),function(index,value){
-                DOC_DRIVER_APP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    DOC_DRIVER_APP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#driver_link').show().removeClass('status-info_confirmation_error');
@@ -349,7 +355,9 @@ $(document).ready(function() {
             let DOC_EXP_LINK = '';
 
             $.each(carriage.DOC_EXP_LINK.split(","),function(index,value){
-                DOC_EXP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    DOC_EXP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#exp_link').show().removeClass('status-info_confirmation_error');
@@ -366,7 +374,9 @@ $(document).ready(function() {
             let DOC_EXP_RECEIPT_LINK = '';
 
             $.each(carriage.DOC_EXP_RECEIPT_LINK.split(","),function(index,value){
-                DOC_EXP_RECEIPT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    DOC_EXP_RECEIPT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#receipt_link').show().removeClass('status-info_confirmation_error');
@@ -409,7 +419,9 @@ $(document).ready(function() {
             let AUTO_GEO = '';
 
             $.each(carriage.AUTO_GEO.split(","),function(index,value){
-                AUTO_GEO += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    AUTO_GEO += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#geo_link').show().removeClass('status-info_confirmation_error');
@@ -441,7 +453,9 @@ $(document).ready(function() {
             let ACC_INVOICE_LINK = '';
 
             $.each(carriage.ACC_INVOICE_LINK.split(","),function(index,value){
-                ACC_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    ACC_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#invoice_link').show().removeClass('status-info_confirmation_error');
@@ -458,7 +472,9 @@ $(document).ready(function() {
             let ACC_ACT_ACC_LINK = '';
 
             $.each(carriage.ACC_ACT_ACC_LINK.split(","),function(index,value){
-                ACC_ACT_ACC_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    ACC_ACT_ACC_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#act_link').show().removeClass('status-info_confirmation_error');
@@ -475,7 +491,9 @@ $(document).ready(function() {
             let ACC_ACT_MULTI_TRANSPORT_LINK_VALUE = '';
 
             $.each(carriage.ACC_ACT_MULTI_TRANSPORT_LINK_VALUE.split(","),function(index,value){
-                ACC_ACT_MULTI_TRANSPORT_LINK_VALUE += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    ACC_ACT_MULTI_TRANSPORT_LINK_VALUE += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#multi_link').show().removeClass('status-info_confirmation_error');
@@ -492,7 +510,9 @@ $(document).ready(function() {
             let ACC_TRANSPORT_REG_LINK = '';
 
             $.each(carriage.ACC_TRANSPORT_REG_LINK.split(","),function(index,value){
-                ACC_TRANSPORT_REG_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    ACC_TRANSPORT_REG_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#reg_link').show().removeClass('status-info_confirmation_error');
@@ -509,7 +529,9 @@ $(document).ready(function() {
             let ACC_TAX_INVOICE_LINK = '';
 
             $.each(carriage.ACC_TAX_INVOICE_LINK.split(","),function(index,value){
-                ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#tax_link').show().removeClass('status-info_confirmation_error');
@@ -526,7 +548,9 @@ $(document).ready(function() {
             let ACC_UPD_LINK = '';
 
             $.each(carriage.ACC_UPD_LINK.split(","),function(index,value){
-                ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#upd_link').show().removeClass('status-info_confirmation_error');
@@ -564,7 +588,9 @@ $(document).ready(function() {
             let DONKEY_STS_LINK = '';
 
             $.each(carriage.DONKEY_STS_LINK.split(","),function(index,value){
-                DONKEY_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    DONKEY_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#donkey_link').show().removeClass('status-info_confirmation_error');
@@ -602,7 +628,9 @@ $(document).ready(function() {
             let TRAILER_STS_LINK = '';
 
             $.each(carriage.TRAILER_STS_LINK.split(","),function(index,value){
-                TRAILER_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRAILER_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#trailer_ctc_link').show().removeClass('status-info_confirmation_error');
@@ -619,7 +647,9 @@ $(document).ready(function() {
             let TRAILER_RENT_AGR_LINK = '';
 
             $.each(carriage.TRAILER_RENT_AGR_LINK.split(","),function(index,value){
-                TRAILER_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRAILER_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#trailer_rent_link').show().removeClass('status-info_confirmation_error');
@@ -657,7 +687,9 @@ $(document).ready(function() {
             let TRAILER_SEC_STS_LINK = '';
 
             $.each(carriage.TRAILER_SEC_STS_LINK.split(","),function(index,value){
-                TRAILER_SEC_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRAILER_SEC_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#trailer_sec_ctc_link').show().removeClass('status-info_confirmation_error');
@@ -674,7 +706,9 @@ $(document).ready(function() {
             let TRAILER_SEC_RENT_LINK = '';
 
             $.each(carriage.TRAILER_SEC_RENT_LINK.split(","),function(index,value){
-                TRAILER_SEC_RENT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRAILER_SEC_RENT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#trailer_sec_rent_link').show().removeClass('status-info_confirmation_error');
@@ -691,7 +725,9 @@ $(document).ready(function() {
             let TRAILER_SEC_LEASING_COMPANY_LINK = '';
 
             $.each(carriage.TRAILER_SEC_LEASING_COMPANY_LINK.split(","),function(index,value){
-                TRAILER_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRAILER_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#trailer_sec_lias_link').show().removeClass('status-info_confirmation_error');
@@ -708,7 +744,9 @@ $(document).ready(function() {
             let TRAILER_SEC_CERTIFICATE_LINK = '';
 
             $.each(carriage.TRAILER_SEC_CERTIFICATE_LINK.split(","),function(index,value){
-                TRAILER_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRAILER_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#trailer_sec_cer_link').show().removeClass('status-info_confirmation_error');
@@ -725,7 +763,9 @@ $(document).ready(function() {
             let TRAILER_SEC_FREE_USAGE_LINK = '';
 
             $.each(carriage.TRAILER_SEC_FREE_USAGE_LINK.split(","),function(index,value){
-                TRAILER_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRAILER_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#trailer_sec_usage_link').show().removeClass('status-info_confirmation_error');
@@ -763,7 +803,9 @@ $(document).ready(function() {
             let TRUCK_STS_LINK = '';
 
             $.each(carriage.TRUCK_STS_LINK.split(","),function(index,value){
-                TRUCK_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRUCK_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#truck_sts_link').show().removeClass('status-info_confirmation_error');
@@ -780,7 +822,9 @@ $(document).ready(function() {
             let TRUCK_RENT_LINK = '';
 
             $.each(carriage.TRUCK_RENT_LINK.split(","),function(index,value){
-                TRUCK_RENT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRUCK_RENT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#truck_rent').show().removeClass('status-info_confirmation_error');
@@ -797,7 +841,9 @@ $(document).ready(function() {
             let TRUCK_LEASING_COMPANY_LINK = '';
 
             $.each(carriage.TRUCK_LEASING_COMPANY_LINK.split(","),function(index,value){
-                TRUCK_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRUCK_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#truck_leas_link').show().removeClass('status-info_confirmation_error');
@@ -814,7 +860,9 @@ $(document).ready(function() {
             let TRUCK_CERTIFICATE_LINK = '';
 
             $.each(carriage.TRUCK_CERTIFICATE_LINK.split(","),function(index,value){
-                TRUCK_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRUCK_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#truck_cert_link').show().removeClass('status-info_confirmation_error');
@@ -831,7 +879,9 @@ $(document).ready(function() {
             let TRUCK_FREE_USAGE_LINK = '';
 
             $.each(carriage.TRUCK_FREE_USAGE_LINK.split(","),function(index,value){
-                TRUCK_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                if (value !== '') {
+                    TRUCK_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
             });
 
             $('#truck_usage_link').show().removeClass('status-info_confirmation_error');
