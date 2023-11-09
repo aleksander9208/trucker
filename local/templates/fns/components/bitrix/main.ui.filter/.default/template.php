@@ -57,10 +57,10 @@ $arResult = array_merge($arResult, array(
 ));
 
 $filterSearchClass = "main-ui-filter-theme-".mb_strtolower($arResult["THEME"]);
-if ($arResult["DISABLE_SEARCH"] || !$arParams["CONFIG"]["SEARCH"])
-{
-	$filterSearchClass .= " main-ui-filter-no-search";
-}
+//if ($arResult["DISABLE_SEARCH"] || !$arParams["CONFIG"]["SEARCH"])
+//{
+//	$filterSearchClass .= " main-ui-filter-no-search";
+//}
 
 if (
 	$arResult["THEME"] === \Bitrix\Main\UI\Filter\Theme::LIGHT
