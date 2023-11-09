@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace Taxcom\Library\Controller;
 
+use Bitrix\Main\Application;
 use Bitrix\Main\Engine\AutoWire\Parameter;
+use Bitrix\Main\Engine\Response\File;
 use Bitrix\Main\Error;
+use Bitrix\Main\Loader;
 use Bitrix\Main\UI\PageNavigation;
 use Bitrix\Highloadblock as HL;
+use Bitrix\Main\IO;
+use Bitrix\Main\Web\MimeType;
+use CBXArchive;
 
 /**
  * Контроллер для работы с витриной
@@ -182,61 +188,76 @@ class Vitrina extends BaseController
      * Возвращаем архив документов
      *
      * @param int $id
-     * @return void
+     * @return array
      */
     public function getFileArchivAction(int $id)
     {
         try {
-            $shipping = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
-                'filter' => ['ID' => $id],
-                'select' => [
-                    'CONT_EXP_LINK' => 'CONTRACT_EXPEDITION_LINK.VALUE',
-                    'CONT_TRANSPORT_LINK' => 'CONTRACT_TRANSPORTATION_LINK.VALUE',
-                    'CONT_ORDER_ONE_TIME_LINK' => 'CONTRACT_ORDER_ONE_TIME_LINK.VALUE',
-                    'DOC_EPD_LINK' => 'DOCUMENTS_EPD_LINK.VALUE',
-                    'DOC_EXP_LINK' => 'DOCUMENTS_EXPEDITOR_LINK.VALUE',
-                    'DOC_EXP_REC_LINK' => 'DOCUMENTS_EXPEDITOR_RECEIPT_LINK.VALUE',
-                    'DOC_DRIVER_APP_LINK' => 'DOCUMENTS_DRIVER_APPROVALS_LINK.VALUE',
-                    'DOC_APP_TRANSPORT_LINK' => 'DOCUMENTS_APPLICATION_TRANSPORTATION_LINK.VALUE',
-                    'ACC_INVOICE_LINK' => 'ACCOUNTING_INVOICE_LINK.VALUE',
-                    'ACC_ACT_ACC_LINK' => 'ACCOUNTING_ACT_ACCEPTANCE_LINK.VALUE',
-                    'ACC_ACT_MULTI_TRANSPORT_LINK' => 'ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK.VALUE',
-                    'ACC_TRANSPORT_REG_LINK' => 'ACCOUNTING_TRANSPORTATION_REGISTRY_LINK.VALUE',
-                    'ACC_TAX_INVOICE_LINK' => 'ACCOUNTING_TAX_INVOICE_LINK.VALUE',
-                    'ACC_UPD_LINK' => 'ACCOUNTING_UPD_LINK.VALUE',
-                    'DONKEY_STS' => 'DONKEY_STS_LINK.VALUE',
-                    'TRAILER_STS' => 'TRAILER_STS_LINK.VALUE',
-                    'TRAILER_RENT_LINK' => 'TRAILER_RENT_AGREEMENT_LINK.VALUE',
-                    'TRAILER_SEC_STS_LINK' => 'TRAILER_SECONDARY_STS_LINK.VALUE',
-                    'TRAILER_SEC_RENT_LINK' => 'TRAILER_SECONDARY_RENT_AGREEMENT_LINK.VALUE',
-                    'TRAILER_SEC_LEASING_COMPANY_LINK' => 'TRAILER_SEC_AGR_LEASING_COMPANY_FOR_LINK.VALUE',
-                    'TRAILER_SEC_CERTIFICATE_LINK' => 'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK.VALUE',
-                    'TRAILER_SEC_FREE_USAGE_LINK' => 'TRAILER_SECONDARY_FREE_USAGE_LINK.VALUE',
-                    'TRUCK_STS' => 'TRUCK_STS_LINK.VALUE',
-                    'TRUCK_RENT_LINK' => 'TRUCK_RENT_AGREEMENT_LINK.VALUE',
-                    'TRUCK_LEASING_COMPANY_LINK' => 'TRUCK_AGREEMENT_LEASING_COMPANY_LINK.VALUE',
-                    'TRUCK_CERTIFICATE_LINK' => 'TRUCK_MARRIAGE_CERTIFICATE_LINK.VALUE',
-                    'TRUCK_FREE_USAGE' => 'TRUCK_FREE_USAGE_LINK.VALUE',
-                ],
-            ])->fetch();
-            $links = [];
+            Loader::IncludeModule("highloadblock");
 
-            foreach ($shipping as $link) {
-                if($link !== null) {
-                    $links[] = $link;
+            $arPackFiles = [];
+            $hlblockId = HL\HighloadBlockTable::getList([
+                'filter' => ['=NAME' => 'FnsLinkDocuments']
+            ])->fetch();
+
+            $entity_data_class = (HL\HighloadBlockTable::compileEntity($hlblockId))->getDataClass();
+
+            $links = $entity_data_class::getList([
+                "select" => ["UF_NAME_LINK", "UF_LINK"],
+                "filter" => [
+                    "UF_ID_ELEMENT" => $id,
+                    "!UF_LINK" => '',
+                ]
+            ])->fetchAll();
+
+            self::dirDel(Application::getDocumentRoot() . "/upload/tmp/");
+            $sDirTmpName = randString();
+            $sDirTmpPath = Application::getDocumentRoot() . "/upload/tmp/$sDirTmpName/";
+
+            $file = new IO\File(Application::getDocumentRoot() . "/upload/tmp/$sDirTmpName/Не доступные ссылки.txt");
+            $arPackFiles[] = $file->getPath();
+
+            foreach ($links as $k => $link) {
+                $fp = fopen($link['UF_LINK'], 'rb');
+                if (!$fp) {
+                    $file->putContents($link['UF_LINK'] . "\n", IO\File::APPEND);
+                } else {
+                    $arPackFiles[] = $link['UF_LINK'];
                 }
             }
 
-            var_dump($links);
+            $packarc = CBXArchive::GetArchive($sDirTmpPath . "file.zip");
+            $packarc->Pack($arPackFiles);
 
-            die('324');
-
-            return ;
+            return ['URL' => "/upload/tmp/$sDirTmpName/file.zip"];
         } catch (\Exception $e) {
             $this->addError(new Error($e->getMessage(), $e->getCode()));
 
             return null;
-        }    }
+        }
+    }
+
+    /**
+     * Удаляем директорию
+     *
+     * @param $dir
+     * @return void
+     */
+    protected static function dirDel($dir)
+    {
+        $d = opendir($dir);
+        while (($entry = readdir($d)) !== false) {
+            if ($entry != "." && $entry != "..") {
+                if (is_dir($dir . "/" . $entry)) {
+                    self::dirDel($dir . "/" . $entry);
+                } else {
+                    unlink($dir . "/" . $entry);
+                }
+            }
+        }
+        closedir($d);
+        rmdir($dir);
+    }
 
     /**
      * Проверяем на количество не
@@ -248,7 +269,7 @@ class Vitrina extends BaseController
     protected static function isError(?string $checks)
     {
         if ($checks) {
-            $step =  explode("/", $checks);
+            $step = explode("/", $checks);
 
             return $step[0] === $step[1];
         }
@@ -275,34 +296,34 @@ class Vitrina extends BaseController
             switch ($link['UF_ID_GROUP']) {
                 case 'contract':
                     if ($link['UF_GROUP_NAME'] === 'transport_expedition_contract') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['CONTRACT_EXPEDITION_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['CONTRACT_EXPEDITION_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['CONTRACT_EXPEDITION_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['CONTRACT_EXPEDITION_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'transportation_contract') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['CONTRACT_TRANSPORTATION_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['CONTRACT_TRANSPORTATION_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['CONTRACT_TRANSPORTATION_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['CONTRACT_TRANSPORTATION_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'order_one_time_contract') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['CONTRACT_ORDER_ONE_TIME_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['CONTRACT_ORDER_ONE_TIME_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['CONTRACT_ORDER_ONE_TIME_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['CONTRACT_ORDER_ONE_TIME_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
@@ -310,56 +331,56 @@ class Vitrina extends BaseController
                     break;
                 case 'execution_documents':
                     if ($link['UF_GROUP_NAME'] === 'epd') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['DOCUMENTS_EPD_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DOCUMENTS_EPD_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['DOCUMENTS_EPD_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DOCUMENTS_EPD_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'expeditor_order') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['DOCUMENTS_EXPEDITOR_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DOCUMENTS_EXPEDITOR_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['DOCUMENTS_EXPEDITOR_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DOCUMENTS_EXPEDITOR_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'expeditor_agent_receipt') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['DOCUMENTS_EXPEDITOR_RECEIPT_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DOCUMENTS_EXPEDITOR_RECEIPT_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['DOCUMENTS_EXPEDITOR_RECEIPT_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DOCUMENTS_EXPEDITOR_RECEIPT_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'driver_approvals') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['DOCUMENTS_DRIVER_APPROVALS_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DOCUMENTS_DRIVER_APPROVALS_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['DOCUMENTS_DRIVER_APPROVALS_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DOCUMENTS_DRIVER_APPROVALS_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'application_for_transportation') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
@@ -375,67 +396,67 @@ class Vitrina extends BaseController
                     break;
                 case 'accounting':
                     if ($link['UF_GROUP_NAME'] === 'invoice') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['ACCOUNTING_INVOICE_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_INVOICE_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['ACCOUNTING_INVOICE_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_INVOICE_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'act_of_service_acceptance') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['ACCOUNTING_ACT_ACCEPTANCE_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_ACT_ACCEPTANCE_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['ACCOUNTING_ACT_ACCEPTANCE_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_ACT_ACCEPTANCE_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'act_of_service_acceptance_multiple_transportations') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'transportation_registry') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'tax_invoice') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['ACCOUNTING_TAX_INVOICE_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_TAX_INVOICE_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['ACCOUNTING_TAX_INVOICE_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_TAX_INVOICE_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'universal_transfer_document') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['ACCOUNTING_UPD_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_UPD_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['ACCOUNTING_UPD_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['ACCOUNTING_UPD_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
@@ -443,12 +464,12 @@ class Vitrina extends BaseController
                     break;
                 case 'vehicle_donkey':
                     if ($link['UF_GROUP_NAME'] === 'sts') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['DONKEY_STS_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DONKEY_STS_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['DONKEY_STS_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DONKEY_STS_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
@@ -456,23 +477,23 @@ class Vitrina extends BaseController
                     break;
                 case 'vehicle_main_trailer':
                     if ($link['UF_GROUP_NAME'] === 'sts') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRAILER_STS_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_STS_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRAILER_STS_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_STS_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'rent_agreement') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRAILER_RENT_AGREEMENT_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_RENT_AGREEMENT_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRAILER_RENT_AGREEMENT_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_RENT_AGREEMENT_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
@@ -480,56 +501,56 @@ class Vitrina extends BaseController
                     break;
                 case 'vehicle_secondary_trailer':
                     if ($link['UF_GROUP_NAME'] === 'sts') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRAILER_SECONDARY_STS_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_SECONDARY_STS_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRAILER_SECONDARY_STS_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_SECONDARY_STS_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'rent_agreement') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRAILER_SECONDARY_RENT_AGREEMENT_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_SECONDARY_RENT_AGREEMENT_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRAILER_SECONDARY_RENT_AGREEMENT_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_SECONDARY_RENT_AGREEMENT_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'agreement_withLeasingCompany') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'marriage_certificate') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'free_usage_agreement') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRAILER_SECONDARY_FREE_USAGE_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_SECONDARY_FREE_USAGE_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRAILER_SECONDARY_FREE_USAGE_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRAILER_SECONDARY_FREE_USAGE_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
@@ -537,56 +558,56 @@ class Vitrina extends BaseController
                     break;
                 case 'vehicle_truck':
                     if ($link['UF_GROUP_NAME'] === 'sts') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRUCK_STS_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRUCK_STS_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRUCK_STS_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRUCK_STS_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'rent_agreement') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRUCK_RENT_AGREEMENT_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRUCK_RENT_AGREEMENT_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRUCK_RENT_AGREEMENT_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRUCK_RENT_AGREEMENT_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'agreement_withLeasingCompany') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRUCK_AGREEMENT_LEASING_COMPANY_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRUCK_AGREEMENT_LEASING_COMPANY_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRUCK_AGREEMENT_LEASING_COMPANY_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRUCK_AGREEMENT_LEASING_COMPANY_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'marriage_certificate') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRUCK_MARRIAGE_CERTIFICATE_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRUCK_MARRIAGE_CERTIFICATE_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRUCK_MARRIAGE_CERTIFICATE_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRUCK_MARRIAGE_CERTIFICATE_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($link['UF_GROUP_NAME'] === 'free_usage_agreement') {
-                        if($link['UF_ATTACHMENTS']) {
+                        if ($link['UF_ATTACHMENTS']) {
                             $properties['TRUCK_FREE_USAGE_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRUCK_FREE_USAGE_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
 
-                        if($link['UF_EDM_ATTACHMENTS']) {
+                        if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['TRUCK_FREE_USAGE_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['TRUCK_FREE_USAGE_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }

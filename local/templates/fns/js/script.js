@@ -1,27 +1,27 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     /**
      * Стилизация инпута в фильтре
      */
-    $(window).keyup(function(e){
+    $(window).keyup(function (e) {
         var target = $('.filter_checkbox input:focus');
-        if (e.keyCode == 9 && $(target).length){
+        if (e.keyCode == 9 && $(target).length) {
             $(target).parent().addClass('focused');
         }
     });
 
-    $('.filter_checkbox input').focusout(function(){
+    $('.filter_checkbox input').focusout(function () {
         $(this).parent().removeClass('focused');
     });
 
-    $(window).keyup(function(e){
+    $(window).keyup(function (e) {
         var target = $('.filter_list-label input:focus');
-        if (e.keyCode == 9 && $(target).length){
+        if (e.keyCode == 9 && $(target).length) {
             $(target).parent().addClass('focused_type');
         }
     });
 
-    $('.filter_list-label input').focusout(function(){
+    $('.filter_list-label input').focusout(function () {
         $(this).parent().removeClass('focused_type');
     });
 
@@ -31,7 +31,7 @@ $(document).ready(function() {
      */
     $('.filter_top-organizations span').click(function () {
         if ($('.filter_list-type-organizations').css('display') === 'none') {
-            $('.filter_list-type-organizations').css('display','flex');
+            $('.filter_list-type-organizations').css('display', 'flex');
         } else {
             $('.filter_list-type-organizations').hide();
         }
@@ -41,7 +41,7 @@ $(document).ready(function() {
      * Получаем информацию в
      * инфо бар по перевозки
      */
-    $(document).on('click', '.info_bar-content', function() {
+    $(document).on('click', '.info_bar-content', function () {
         const id = $(this).parents('.main-grid-row').attr('data-id');
 
         /** Скрываем блоки */
@@ -53,7 +53,7 @@ $(document).ready(function() {
             data: '',
             timeout: 2000,
             dataType: 'json',
-            onsuccess: function(response){
+            onsuccess: function (response) {
                 if (response.status === 'success') {
                     const carriage = response.data;
 
@@ -74,10 +74,10 @@ $(document).ready(function() {
                     /** Грузовладелец */
                     if (carriage.CARGO != null) {
                         let cargo = carriage.CARGO_INN ? carriage.CARGO_INN : '';
-                         $('#carriage_owner').html(
+                        $('#carriage_owner').html(
                             'Грузовладелец <span class="carriage_name">' +
-                             carriage.CARGO + '</span><span id="carriage_owner_inn">' +
-                             cargo + '</span>'
+                            carriage.CARGO + '</span><span id="carriage_owner_inn">' +
+                            cargo + '</span>'
                         )
                     } else {
                         $('#carriage_owner').html('');
@@ -111,7 +111,7 @@ $(document).ready(function() {
                     // if (carriage.CHECKLIST_FORWARDER != null) {
                     //     $('#checklist_forwarder').show();
                     // } else {
-                        $('#checklist_forwarder').hide();
+                    $('#checklist_forwarder').hide();
                     // }
 
                     contract(carriage);
@@ -124,18 +124,15 @@ $(document).ready(function() {
                     truck(carriage);
                 }
 
-                if(response.status === 'error') {
+                if (response.status === 'error') {
                     $('#error').html(response.errors[0].message);
                 }
             },
         });
     });
 
-    $(document).on('click', '#link_archiv', function() {
+    $(document).on('click', '#link_archiv', function () {
         const id = $(this).attr('data-id');
-
-        /** Скрываем блоки */
-        hideBlock();
 
         BX.ajax({
             url: '/api/v1/vhs/vitrina/archiv/' + id,
@@ -143,12 +140,13 @@ $(document).ready(function() {
             data: '',
             timeout: 2000,
             dataType: 'json',
-            onsuccess: function(response){
+            onsuccess: function (response) {
+                console.log(response);
                 if (response.status === 'success') {
-
+                    window.location.href = response.data.URL;
                 }
 
-                if(response.status === 'error') {
+                if (response.status === 'error') {
                     $('#error').html(response.errors[0].message);
                 }
             },
@@ -228,10 +226,11 @@ $(document).ready(function() {
             let CONT_TRANSPORT_LINK = '';
             const DESCRIPTION_CONT_TRANSPORT_LINK = carriage.CONTRACT_TRANSPORTATION_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.CONTRACT_TRANSPORTATION_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.CONTRACT_TRANSPORTATION_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_CONT_TRANSPORT_LINK[index] !== '') {
                     CONT_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_TRANSPORT_LINK[index] + '</li>';
-                } else if(DESCRIPTION_CONT_TRANSPORT_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_CONT_TRANSPORT_LINK[index] === '') {
+                } else {
                     CONT_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -254,10 +253,11 @@ $(document).ready(function() {
             let CONT_EXP_LINK = '';
             const DESCRIPTION_CONT_EXP_LINK = carriage.CONTRACT_EXPEDITION_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.CONTRACT_EXPEDITION_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.CONTRACT_EXPEDITION_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_CONT_EXP_LINK[index] !== '') {
                     CONT_EXP_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_EXP_LINK[index] + '</li>';
-                } else if(DESCRIPTION_CONT_EXP_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_CONT_EXP_LINK[index] === '') {
+                } else {
                     CONT_EXP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -280,10 +280,11 @@ $(document).ready(function() {
             let CONT_ORDER_ONE_TIME = '';
             const DESCRIPTION_CONT_ORDER_ONE_TIME = carriage.CONTRACT_ORDER_ONE_TIME_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.CONTRACT_ORDER_ONE_TIME_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.CONTRACT_ORDER_ONE_TIME_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_CONT_ORDER_ONE_TIME[index] !== '') {
                     CONT_ORDER_ONE_TIME += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_ORDER_ONE_TIME[index] + '</li>';
-                } else if(DESCRIPTION_CONT_ORDER_ONE_TIME[index] === '') {} else {
+                } else if (DESCRIPTION_CONT_ORDER_ONE_TIME[index] === '') {
+                } else {
                     CONT_ORDER_ONE_TIME += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -321,10 +322,11 @@ $(document).ready(function() {
             let DOC_APP_TRANSPORT_LINK = '';
             const DESCRIPTION_DOC_APP_TRANSPORT_LINK = carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] !== '') {
                     DOC_APP_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] + '</li>';
-                } else if(DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] === '') {
+                } else {
                     DOC_APP_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -347,10 +349,11 @@ $(document).ready(function() {
             let DOC_EPD_LINK = '';
             const DESCRIPTION_DOC_EPD_LINK = carriage.DOCUMENTS_EPD_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.DOCUMENTS_EPD_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.DOCUMENTS_EPD_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_DOC_EPD_LINK[index] !== '') {
                     DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EPD_LINK[index] + '</li>';
-                } else if(DESCRIPTION_DOC_EPD_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_DOC_EPD_LINK[index] === '') {
+                } else {
                     DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -373,10 +376,11 @@ $(document).ready(function() {
             let DOC_DRIVER_APP_LINK = '';
             const DESCRIPTION_DOC_DRIVER_APP_LINK = carriage.DOCUMENTS_DRIVER_APPROVALS_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.DOCUMENTS_DRIVER_APPROVALS_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.DOCUMENTS_DRIVER_APPROVALS_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_DOC_DRIVER_APP_LINK[index] !== '') {
                     DOC_DRIVER_APP_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_DRIVER_APP_LINK[index] + '</li>';
-                } else if(DESCRIPTION_DOC_DRIVER_APP_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_DOC_DRIVER_APP_LINK[index] === '') {
+                } else {
                     DOC_DRIVER_APP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -399,10 +403,11 @@ $(document).ready(function() {
             let DOC_EXP_LINK = '';
             const DESCRIPTION_DOC_EXP_LINK = carriage.DOCUMENTS_EXPEDITOR_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.DOCUMENTS_EXPEDITOR_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.DOCUMENTS_EXPEDITOR_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_DOC_EXP_LINK[index] !== '') {
                     DOC_EXP_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EXP_LINK[index] + '</li>';
-                } else if(DESCRIPTION_DOC_EXP_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_DOC_EXP_LINK[index] === '') {
+                } else {
                     DOC_EXP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -425,10 +430,11 @@ $(document).ready(function() {
             let DOC_EXP_RECEIPT_LINK = '';
             const DESCRIPTION_DOC_EXP_RECEIPT_LINK = carriage.DOCUMENTS_EXPEDITOR_RECEIPT_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.DOCUMENTS_EXPEDITOR_RECEIPT_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.DOCUMENTS_EXPEDITOR_RECEIPT_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_DOC_EXP_RECEIPT_LINK[index] !== '') {
                     DOC_EXP_RECEIPT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EXP_RECEIPT_LINK[index] + '</li>';
-                } else if(DESCRIPTION_DOC_EXP_RECEIPT_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_DOC_EXP_RECEIPT_LINK[index] === '') {
+                } else {
                     DOC_EXP_RECEIPT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -507,10 +513,11 @@ $(document).ready(function() {
             let ACC_INVOICE_LINK = '';
             const DESCRIPTION_ACC_INVOICE_LINK = carriage.ACCOUNTING_INVOICE_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.ACCOUNTING_INVOICE_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.ACCOUNTING_INVOICE_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_ACC_INVOICE_LINK[index] !== '') {
                     ACC_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_INVOICE_LINK[index] + '</li>';
-                } else if(DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] === '') {
+                } else {
                     ACC_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -533,10 +540,11 @@ $(document).ready(function() {
             let ACC_ACT_ACC_LINK = '';
             const DESCRIPTION_ACC_ACT_ACC_LINK = carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_ACC_ACT_ACC_LINK[index] !== '') {
                     ACC_ACT_ACC_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_ACT_ACC_LINK[index] + '</li>';
-                } else if(DESCRIPTION_ACC_ACT_ACC_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_ACC_ACT_ACC_LINK[index] === '') {
+                } else {
                     ACC_ACT_ACC_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -559,10 +567,11 @@ $(document).ready(function() {
             let ACC_ACT_MULTI_TRANSPORT_LINK = '';
             const DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK = carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_ACC_ACT_ACC_LINK[index] !== '') {
                     ACC_ACT_MULTI_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK[index] + '</li>';
-                } else if(DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK[index] === '') {
+                } else {
                     ACC_ACT_MULTI_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -585,10 +594,11 @@ $(document).ready(function() {
             let ACC_TRANSPORT_REG_LINK = '';
             const DESCRIPTION_ACC_TRANSPORT_REG_LINK = carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_ACC_TRANSPORT_REG_LINK[index] !== '') {
                     ACC_TRANSPORT_REG_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_TRANSPORT_REG_LINK[index] + '</li>';
-                } else if(DESCRIPTION_ACC_TRANSPORT_REG_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_ACC_TRANSPORT_REG_LINK[index] === '') {
+                } else {
                     ACC_TRANSPORT_REG_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -611,10 +621,11 @@ $(document).ready(function() {
             let ACC_TAX_INVOICE_LINK = '';
             const DESCRIPTION_ACC_TAX_INVOICE_LINK = carriage.ACCOUNTING_TAX_INVOICE_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.ACCOUNTING_TAX_INVOICE_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.ACCOUNTING_TAX_INVOICE_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_ACC_TAX_INVOICE_LINK[index] !== '') {
                     ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_TAX_INVOICE_LINK[index] + '</li>';
-                } else if(DESCRIPTION_ACC_TAX_INVOICE_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_ACC_TAX_INVOICE_LINK[index] === '') {
+                } else {
                     ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -637,10 +648,11 @@ $(document).ready(function() {
             let ACC_UPD_LINK = '';
             const DESCRIPTION_ACC_UPD_LINK = carriage.ACCOUNTING_UPD_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.ACCOUNTING_UPD_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.ACCOUNTING_UPD_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_ACC_UPD_LINK[index] !== '') {
                     ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_UPD_LINK[index] + '</li>';
-                } else if(DESCRIPTION_ACC_UPD_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_ACC_UPD_LINK[index] === '') {
+                } else {
                     ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -684,10 +696,11 @@ $(document).ready(function() {
             let DONKEY_STS_LINK = '';
             const DESCRIPTION_DONKEY_STS_LINK = carriage.DONKEY_STS_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.DONKEY_STS_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.DONKEY_STS_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_DONKEY_STS_LINK[index] !== '') {
                     DONKEY_STS_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_STS_LINK[index] + '</li>';
-                } else if(DESCRIPTION_DONKEY_STS_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_DONKEY_STS_LINK[index] === '') {
+                } else {
                     DONKEY_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -731,10 +744,11 @@ $(document).ready(function() {
             let TRAILER_STS_LINK = '';
             const DESCRIPTION_TRAILER_STS_LINK = carriage.TRAILER_STS_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRAILER_STS_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRAILER_STS_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRAILER_STS_LINK[index] !== '') {
                     TRAILER_STS_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_STS_LINK[index] + '</li>';
-                } else if(DESCRIPTION_DONKEY_STS_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRAILER_STS_LINK[index] === '') {
+                } else {
                     TRAILER_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -757,10 +771,11 @@ $(document).ready(function() {
             let TRAILER_RENT_AGR_LINK = '';
             const DESCRIPTION_TRAILER_RENT_AGR_LINK = carriage.TRAILER_RENT_AGREEMENT_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRAILER_RENT_AGREEMENT_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRAILER_RENT_AGREEMENT_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRAILER_RENT_AGR_LINK[index] !== '') {
                     TRAILER_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_RENT_AGR_LINK[index] + '</li>';
-                } else if(DESCRIPTION_DONKEY_STS_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRAILER_RENT_AGR_LINK[index] === '') {
+                } else {
                     TRAILER_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -804,10 +819,11 @@ $(document).ready(function() {
             let TRAILER_SEC_STS_LINK = '';
             const DESCRIPTION_TRAILER_SEC_STS_LINK = carriage.TRAILER_SECONDARY_STS_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRAILER_SECONDARY_STS_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRAILER_SECONDARY_STS_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRAILER_SEC_STS_LINK[index] !== '') {
                     TRAILER_SEC_STS_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_STS_LINK[index] + '</li>';
-                } else if(DESCRIPTION_TRAILER_SEC_STS_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRAILER_SEC_STS_LINK[index] === '') {
+                } else {
                     TRAILER_SEC_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -830,10 +846,11 @@ $(document).ready(function() {
             let TRAILER_SEC_RENT_LINK = '';
             const DESCRIPTION_TRAILER_SEC_RENT_LINK = carriage.TRAILER_SECONDARY_RENT_AGREEMENT_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRAILER_SECONDARY_RENT_AGREEMENT_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRAILER_SECONDARY_RENT_AGREEMENT_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRAILER_SEC_RENT_LINK[index] !== '') {
                     TRAILER_SEC_RENT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_RENT_LINK[index] + '</li>';
-                } else if(DESCRIPTION_TRAILER_SEC_RENT_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRAILER_SEC_RENT_LINK[index] === '') {
+                } else {
                     TRAILER_SEC_RENT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -856,10 +873,11 @@ $(document).ready(function() {
             let TRAILER_SEC_LEASING_COMPANY_LINK = '';
             const DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK = carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] !== '') {
                     TRAILER_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] + '</li>';
-                } else if(DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] === '') {
+                } else {
                     TRAILER_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -882,10 +900,11 @@ $(document).ready(function() {
             let TRAILER_SEC_CERTIFICATE_LINK = '';
             const DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK = carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] !== '') {
                     TRAILER_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] + '</li>';
-                } else if(DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] === '') {
+                } else {
                     TRAILER_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -906,10 +925,11 @@ $(document).ready(function() {
             let TRAILER_SEC_FREE_USAGE_LINK = '';
             const DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK = carriage.TRAILER_SECONDARY_FREE_USAGE_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRAILER_SECONDARY_FREE_USAGE_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRAILER_SECONDARY_FREE_USAGE_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] !== '') {
                     TRAILER_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] + '</li>';
-                } else if(DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] === '') {
+                } else {
                     TRAILER_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -953,10 +973,11 @@ $(document).ready(function() {
             let TRUCK_STS_LINK = '';
             const DESCRIPTION_TRUCK_STS_LINK = carriage.TRUCK_STS_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRUCK_STS_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRUCK_STS_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRUCK_STS_LINK[index] !== '') {
                     TRUCK_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + DESCRIPTION_TRUCK_STS_LINK[index] + '</li>';
-                } else if(DESCRIPTION_TRUCK_STS_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRUCK_STS_LINK[index] === '') {
+                } else {
                     TRUCK_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -979,10 +1000,11 @@ $(document).ready(function() {
             let TRUCK_RENT_LINK = '';
             const DESCRIPTION_TRUCK_RENT_LINK = carriage.TRUCK_RENT_AGREEMENT_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRUCK_RENT_AGREEMENT_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRUCK_RENT_AGREEMENT_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRUCK_RENT_LINK[index] !== '') {
                     TRUCK_RENT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_RENT_LINK[index] + '</li>';
-                } else if(DESCRIPTION_TRUCK_RENT_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRUCK_RENT_LINK[index] === '') {
+                } else {
                     TRUCK_RENT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -1005,10 +1027,11 @@ $(document).ready(function() {
             let TRUCK_LEASING_COMPANY_LINK = '';
             const DESCRIPTION_TRUCK_LEASING_COMPANY_LINK = carriage.TRUCK_AGREEMENT_LEASING_COMPANY_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRUCK_AGREEMENT_LEASING_COMPANY_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRUCK_AGREEMENT_LEASING_COMPANY_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRUCK_LEASING_COMPANY_LINK[index] !== '') {
                     TRUCK_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_LEASING_COMPANY_LINK[index] + '</li>';
-                } else if(DESCRIPTION_TRUCK_LEASING_COMPANY_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRUCK_LEASING_COMPANY_LINK[index] === '') {
+                } else {
                     TRUCK_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -1031,10 +1054,11 @@ $(document).ready(function() {
             let TRUCK_CERTIFICATE_LINK = '';
             const DESCRIPTION_TRUCK_CERTIFICATE_LINK = carriage.TRUCK_MARRIAGE_CERTIFICATE_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRUCK_MARRIAGE_CERTIFICATE_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRUCK_MARRIAGE_CERTIFICATE_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRUCK_CERTIFICATE_LINK[index] !== '') {
                     TRUCK_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_CERTIFICATE_LINK[index] + '</li>';
-                } else if(DESCRIPTION_TRUCK_CERTIFICATE_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRUCK_CERTIFICATE_LINK[index] === '') {
+                } else {
                     TRUCK_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
@@ -1057,10 +1081,11 @@ $(document).ready(function() {
             let TRUCK_FREE_USAGE_LINK = '';
             const DESCRIPTION_TRUCK_FREE_USAGE_LINK = carriage.TRUCK_FREE_USAGE_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.TRUCK_FREE_USAGE_LINK.VALUE.split(","),function(index,value){
+            $.each(carriage.TRUCK_FREE_USAGE_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRUCK_FREE_USAGE_LINK[index] !== '') {
                     TRUCK_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_FREE_USAGE_LINK[index] + '</li>';
-                } else if(DESCRIPTION_TRUCK_FREE_USAGE_LINK[index] === '') {} else {
+                } else if (DESCRIPTION_TRUCK_FREE_USAGE_LINK[index] === '') {
+                } else {
                     TRUCK_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });

@@ -295,14 +295,14 @@ class ParserCarrier
         foreach ($groups as $group) {
             foreach ($group['checks'] as $check) {
                 foreach ($check['attachments'] as $attachment) {
-                    $nameLink = $attachment['name'];
-                    $link = $attachment['url'];
+                    $nameLink = $attachment['name'] ?: '';
+                    $link = $attachment['url'] ?: '';
                     $ufAttachments = true;
                     $ufEdmAttachments = false;
                 }
                 foreach ($check['edm_attachments'] as $attachment) {
-                    $nameLink = $attachment['name'];
-                    $link = $attachment['printed_form'];
+                    $nameLink = $attachment['name'] ?: '';
+                    $link = $attachment['printed_form'] ?: '';
                     $ufAttachments = false;
                     $ufEdmAttachments = true;
                 }
