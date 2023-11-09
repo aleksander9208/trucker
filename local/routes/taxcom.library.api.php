@@ -19,6 +19,7 @@ return function (RoutingConfigurator $routes) {
                         ->group(function (RoutingConfigurator $routes) {
                             $routes->post('{id}', [Vitrina::class, 'getAction']);
                             $routes->post('archiv/{id}', [Vitrina::class, 'getFileArchivAction']);
+                            $routes->post('archiv', [Vitrina::class, 'getArchivAction']);
                         });
                 });
         });

@@ -131,11 +131,40 @@ $(document).ready(function () {
         });
     });
 
+    /**
+     * Скачиваем архив файлов одного
+     * элемента
+     */
     $(document).on('click', '#link_archiv', function () {
         const id = $(this).attr('data-id');
 
         BX.ajax({
             url: '/api/v1/vhs/vitrina/archiv/' + id,
+            method: 'POST',
+            data: '',
+            timeout: 2000,
+            dataType: 'json',
+            onsuccess: function (response) {
+                console.log(response);
+                if (response.status === 'success') {
+                    window.location.href = response.data.URL;
+                }
+
+                if (response.status === 'error') {
+                    $('#error').html(response.errors[0].message);
+                }
+            },
+        });
+    });
+
+    $(document).on('click', '#file_filter_download', function () {
+        // const id = $('#vitrina_grid_table').parents('.main-grid-row-checked').attr('data-id');
+        const id = $('#vitrina_grid_table').parent();
+
+        console.log('id')
+        console.log(id)
+        BX.ajax({
+            url: '/api/v1/vhs/vitrina/archiv/',
             method: 'POST',
             data: '',
             timeout: 2000,

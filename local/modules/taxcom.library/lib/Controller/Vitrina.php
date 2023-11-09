@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Taxcom\Library\Controller;
 
 use Bitrix\Main\Application;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Engine\AutoWire\Parameter;
 use Bitrix\Main\Engine\Response\File;
 use Bitrix\Main\Error;
 use Bitrix\Main\Loader;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
 use Bitrix\Main\UI\PageNavigation;
 use Bitrix\Highloadblock as HL;
 use Bitrix\Main\IO;
@@ -186,12 +189,67 @@ class Vitrina extends BaseController
 
     /**
      * Возвращаем архив документов
-     *
+     * элемента
      * @param int $id
-     * @return array
+     * @return array|null
      */
-    public function getFileArchivAction(int $id)
+    public function getFileArchivAction(int $id): ?array
     {
+        try {
+            Loader::IncludeModule("highloadblock");
+
+            $arPackFiles = [];
+            $hlblockId = HL\HighloadBlockTable::getList([
+                'filter' => ['=NAME' => 'FnsLinkDocuments']
+            ])->fetch();
+
+            $entity_data_class = (HL\HighloadBlockTable::compileEntity($hlblockId))->getDataClass();
+
+            $links = $entity_data_class::getList([
+                "select" => ["UF_NAME_LINK", "UF_LINK"],
+                "filter" => [
+                    "UF_ID_ELEMENT" => $id,
+                    "!UF_LINK" => '',
+                ]
+            ])->fetchAll();
+
+            self::dirDel(Application::getDocumentRoot() . "/upload/tmp/");
+            $sDirTmpName = randString();
+            $sDirTmpPath = Application::getDocumentRoot() . "/upload/tmp/$sDirTmpName/";
+
+            $file = new IO\File(Application::getDocumentRoot() . "/upload/tmp/$sDirTmpName/Не доступные ссылки.txt");
+            $arPackFiles[] = $file->getPath();
+
+            foreach ($links as $k => $link) {
+                $fp = fopen($link['UF_LINK'], 'rb');
+                if (!$fp) {
+                    $file->putContents($link['UF_LINK'] . "\n", IO\File::APPEND);
+                } else {
+                    $arPackFiles[] = $link['UF_LINK'];
+                }
+            }
+
+            $packarc = CBXArchive::GetArchive($sDirTmpPath . "file.zip");
+            $packarc->Pack($arPackFiles);
+
+            return ['URL' => "/upload/tmp/$sDirTmpName/file.zip"];
+        } catch (\Exception $e) {
+            $this->addError(new Error($e->getMessage(), $e->getCode()));
+
+            return null;
+        }
+    }
+
+    /**
+     * Возвращаем архив файлов
+     * по выбранным элементам
+     *
+     * @return array|null
+     */
+    public function getArchivAction(): ?array
+    {
+
+        die('234');
         try {
             Loader::IncludeModule("highloadblock");
 
@@ -243,7 +301,7 @@ class Vitrina extends BaseController
      * @param $dir
      * @return void
      */
-    protected static function dirDel($dir)
+    protected static function dirDel($dir): void
     {
         $d = opendir($dir);
         while (($entry = readdir($d)) !== false) {
@@ -275,7 +333,17 @@ class Vitrina extends BaseController
         }
     }
 
-    protected static function getProperties($id)
+    /**
+     * Возвращаем свойства
+     * ссылок документов
+     *
+     * @param $id
+     * @return array
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    protected static function getProperties($id): array
     {
         $properties = [];
 

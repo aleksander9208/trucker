@@ -189,22 +189,22 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
                 </div>
                 проверка по чек-листу не пройдена
             </div>
-            <div class="statistics_error-info">
-                <div>
-                    <span>129</span> с недостающими документами
-                </div>
-                <div>
-                    <span>57</span> нет подтверждения через геомониторинг
-                </div>
-                <div>
-                    <span>405</span> цена не соответствует рыночной
-                </div>
-            </div>
-            <div class="statistics_error-search">
-                <label>
-                    <span uk-icon="icon: search"></span>
-                </label>
-            </div>
+<!--            <div class="statistics_error-info">-->
+<!--                <div>-->
+<!--                    <span>129</span> с недостающими документами-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <span>57</span> нет подтверждения через геомониторинг-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <span>405</span> цена не соответствует рыночной-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="statistics_error-search">-->
+<!--                <label>-->
+<!--                    <span uk-icon="icon: search"></span>-->
+<!--                </label>-->
+<!--            </div>-->
         </div>
     </div>
 
@@ -237,10 +237,10 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
                 </select>
             </div>
         </div>
-        <div class="filter_file-download">
-            <span uk-icon="icon: download"></span>
-            <span>Скачать документы</span>
-        </div>
+<!--        <div class="filter_file-download" id="file_filter_download">-->
+<!--            <span uk-icon="icon: download"></span>-->
+<!--            <span>Скачать документы</span>-->
+<!--        </div>-->
     </div>
 
     <?php
