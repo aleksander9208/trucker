@@ -210,6 +210,9 @@ class ParserCarrier
                 if ($group['name'] === 'sts') {
                     $properties['DONKEY_STS_STATUS'] = $group['status'];
                 }
+                if ($group['name'] === 'rent_agreement') {
+                    $properties['DONKEY_RENT_AGREEMENT_STATUS'] = $group['status'];
+                }
                 break;
             case 'vehicle_main_trailer':
                 $properties['TRAILER_CHECKS'] = $checksTrue . '/' .$countChecks;
@@ -294,15 +297,20 @@ class ParserCarrier
         
         foreach ($groups as $group) {
             foreach ($group['checks'] as $check) {
+                $nameLink = '';
+                $link = '';
+                $ufAttachments = '';
+                $ufEdmAttachments = '';
+
                 foreach ($check['attachments'] as $attachment) {
-                    $nameLink = $attachment['name'] ?: '';
-                    $link = $attachment['url'] ?: '';
+                    $nameLink = $attachment['name'];
+                    $link = $attachment['url'];
                     $ufAttachments = true;
                     $ufEdmAttachments = false;
                 }
                 foreach ($check['edm_attachments'] as $attachment) {
-                    $nameLink = $attachment['name'] ?: '';
-                    $link = $attachment['printed_form'] ?: '';
+                    $nameLink = $attachment['name'];
+                    $link = $attachment['printed_form'];
                     $ufAttachments = false;
                     $ufEdmAttachments = true;
                 }
@@ -351,7 +359,7 @@ class ParserCarrier
             ])->Fetch();
 
             if ($data) {
-                $entity_data_class::update($data['ID'], $data);
+                $entity_data_class::update($data['ID'], $item);
             } else {
                 $entity_data_class::add($item);
             }

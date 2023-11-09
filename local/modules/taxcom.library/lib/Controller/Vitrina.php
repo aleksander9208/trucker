@@ -7,7 +7,6 @@ namespace Taxcom\Library\Controller;
 use Bitrix\Main\Application;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Engine\AutoWire\Parameter;
-use Bitrix\Main\Engine\Response\File;
 use Bitrix\Main\Error;
 use Bitrix\Main\Loader;
 use Bitrix\Main\ObjectPropertyException;
@@ -15,7 +14,6 @@ use Bitrix\Main\SystemException;
 use Bitrix\Main\UI\PageNavigation;
 use Bitrix\Highloadblock as HL;
 use Bitrix\Main\IO;
-use Bitrix\Main\Web\MimeType;
 use CBXArchive;
 
 /**
@@ -93,6 +91,7 @@ class Vitrina extends BaseController
                     'DONKEY_CHECKS_VALUE' => 'DONKEY_CHECKS.VALUE',
                     'DONKEY_LICENSE_PLATE_VALUE' => 'DONKEY_LICENSE_PLATE.VALUE',
                     'DONKEY_STS_STATUS_VALUE' => 'DONKEY_STS_STATUS.VALUE',
+                    'DONKEY_RENT_AGREEMENT_STATUS_VALUE' => 'DONKEY_RENT_AGREEMENT_STATUS.VALUE',
                     'TRAILER_CHECKS_VALUE' => 'TRAILER_CHECKS.VALUE',
                     'TRAILER_LICENSE_PLATE_VALUE' => 'TRAILER_LICENSE_PLATE.VALUE',
                     'TRAILER_STS_STATUS_VALUE' => 'TRAILER_STS_STATUS.VALUE',
@@ -154,6 +153,7 @@ class Vitrina extends BaseController
                 'DONKEY_CHECKS_ERROR' => self::isError($shipping['DONKEY_CHECKS_VALUE']),
                 'DONKEY_LICENSE_PLATE' => $shipping['DONKEY_LICENSE_PLATE_VALUE'],
                 'DONKEY_STS_STATUS' => $shipping['DONKEY_STS_STATUS_VALUE'],
+                'DONKEY_RENT_AGREEMENT_STATUS' => $shipping['DONKEY_RENT_AGREEMENT_STATUS_VALUE'],
                 'TRAILER_CHECKS' => $shipping['TRAILER_CHECKS_VALUE'],
                 'TRAILER_CHECKS_ERROR' => self::isError($shipping['TRAILER_CHECKS_VALUE']),
                 'TRAILER_LICENSE_PLATE' => $shipping['TRAILER_LICENSE_PLATE_VALUE'],
@@ -540,6 +540,17 @@ class Vitrina extends BaseController
                         if ($link['UF_EDM_ATTACHMENTS']) {
                             $properties['DONKEY_STS_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
                             $properties['DONKEY_STS_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
+                        }
+                    }
+                    if ($link['UF_GROUP_NAME'] === 'rent_agreement') {
+                        if ($link['UF_ATTACHMENTS']) {
+                            $properties['DONKEY_RENT_AGREEMENT_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
+                            $properties['DONKEY_RENT_AGREEMENT_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
+                        }
+
+                        if ($link['UF_EDM_ATTACHMENTS']) {
+                            $properties['DONKEY_RENT_AGREEMENT_EDM_LINK']['VALUE'] .= $link['UF_LINK'] . ',';
+                            $properties['DONKEY_RENT_AGREEMENT_EDM_LINK']['DESCRIPTION'] .= $link['UF_NAME_LINK'] . ',';
                         }
                     }
                     break;

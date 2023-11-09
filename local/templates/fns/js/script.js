@@ -497,7 +497,7 @@ $(document).ready(function () {
         ) {
             $('#prices_link').show();
         }
-        if (carriage.AUTOMATIC_PRICES !== false) {
+        if (carriage.AUTOMATIC_PRICES_STATUS === 'passed') {
             $('#prices_link').show().removeClass('status-info_confirmation_error');
             $('#prices_file').show();
         } else {
@@ -510,7 +510,7 @@ $(document).ready(function () {
         ) {
             $('#geo_link').show();
         }
-        if (carriage.AUTOMATIC_GEO_MONITORING != null) {
+        if (carriage.AUTOMATIC_GEO_MONITORING_STATUS === 'passed') {
             $('#geo_link').show().removeClass('status-info_confirmation_error');
             $('#geo_file').show();
         } else {
@@ -741,6 +741,34 @@ $(document).ready(function () {
             $('#donkey_file').hide();
             $('#donkey_link').addClass('status-info_confirmation_error');
             $("#list_file_donkey_link").html();
+        }
+
+        /** Договор аренды тягач */
+        if (carriage.DONKEY_RENT_AGREEMENT_STATUS === 'passed' ||
+            carriage.DONKEY_RENT_AGREEMENT_STATUS === 'in_progress'
+        ) {
+            $('#donkey_rent_link').show();
+        }
+        if (carriage.DONKEY_RENT_AGREEMENT_LINK != null) {
+            let DONKEY_RENT_AGR_LINK = '';
+            const DESCRIPTION_DONKEY_RENT_AGR_LINK = carriage.DONKEY_RENT_AGREEMENT_LINK.DESCRIPTION.split(",");
+
+            $.each(carriage.DONKEY_RENT_AGREEMENT_LINK.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_DONKEY_RENT_AGR_LINK[index] !== '') {
+                    DONKEY_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_RENT_AGR_LINK[index] + '</li>';
+                } else if (DESCRIPTION_TRAILER_RENT_AGR_LINK[index] === '') {
+                } else {
+                    DONKEY_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#donkey_rent_link').show().removeClass('status-info_confirmation_error');
+            $("#list_file_donkey_rent_link").html(DONKEY_RENT_AGR_LINK);
+            $('#donkey_rent_file').show();
+        } else {
+            $('#donkey_rent_file').hide();
+            $('#donkey_rent_link').addClass('status-info_confirmation_error');
+            $("#list_file_donkey_rent_link").html();
         }
     }
 

@@ -265,6 +265,12 @@ class TransportationList extends CBitrixComponent
                         'LINK_ID' => 'donkey_file',
                         'FILE' => true,
                     ],
+                    1 => [
+                        'ID' => 'donkey_rent_link',
+                        'NAME' => 'Договор аренды',
+                        'LINK_ID' => 'donkey_rent_file',
+                        'FILE' => true,
+                    ],
                 ],
             ],
             5 => [
