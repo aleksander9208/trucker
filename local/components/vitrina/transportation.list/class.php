@@ -1,6 +1,7 @@
 <?php
 
 use Bitrix\Main\ArgumentException;
+use Bitrix\Main\Context;
 use Bitrix\Main\ErrorCollection;
 use Bitrix\Main\Grid\Options;
 use Bitrix\Main\Loader;
@@ -28,10 +29,12 @@ class TransportationList extends CBitrixComponent
      */
     protected function prepareResult(): void
     {
-        $this->arResult['COLUMNS'] = self::getColumns();
-        $this->getRows();
         $this->arResult['YEAR'] = date("Y");
+        $this->arResult['COLUMNS'] = self::getColumns();
         $this->arResult['INFO_BAR_DOC'] = self::getDocuments();
+        $this->arResult['FILTER_YEAR'] = self::getFilterYear();
+        $this->getRows();
+
     }
 
     /**
@@ -66,7 +69,7 @@ class TransportationList extends CBitrixComponent
      *
      * @return array
      */
-    public static function getColumns(): array
+    protected static function getColumns(): array
     {
         return [
             [
@@ -126,7 +129,7 @@ class TransportationList extends CBitrixComponent
      *
      * @return array[]
      */
-    public static function getDocuments(): array
+    protected static function getDocuments(): array
     {
         return [
             0 => [
@@ -373,6 +376,90 @@ class TransportationList extends CBitrixComponent
     }
 
     /**
+     * Возвращаем фильтр
+     * годовых параметров
+     *
+     * @return array[]
+     */
+    protected static function getFilterYear(): array
+    {
+        return [
+            0 => [
+                'NAME' => '1-й квартал',
+                'VALUE' => '1',
+                'MONTH' => [
+                    0 => [
+                        'NAME' => 'янв',
+                        'VALUE' => 'january',
+                    ],
+                    1 => [
+                        'NAME' => 'фев',
+                        'VALUE' => 'february',
+                    ],
+                    2 => [
+                        'NAME' => 'мар',
+                        'VALUE' => 'march',
+                    ],
+                ],
+            ],
+            1 => [
+                'NAME' => '2-й квартал',
+                'VALUE' => '2',
+                'MONTH' => [
+                    0 => [
+                        'NAME' => 'апр',
+                        'VALUE' => 'april',
+                    ],
+                    1 => [
+                        'NAME' => 'май',
+                        'VALUE' => 'may',
+                    ],
+                    2 => [
+                        'NAME' => 'июн',
+                        'VALUE' => 'june',
+                    ],
+                ],
+            ],
+            2 => [
+                'NAME' => '3-й квартал',
+                'VALUE' => '3',
+                'MONTH' => [
+                    0 => [
+                        'NAME' => 'июл',
+                        'VALUE' => 'july',
+                    ],
+                    1 => [
+                        'NAME' => 'авг',
+                        'VALUE' => 'august',
+                    ],
+                    2 => [
+                        'NAME' => 'сен',
+                        'VALUE' => 'september',
+                    ],
+                ],
+            ],
+            3 => [
+                'NAME' => '4-й квартал',
+                'VALUE' => '4',
+                'MONTH' => [
+                    0 => [
+                        'NAME' => 'окт',
+                        'VALUE' => 'october',
+                    ],
+                    1 => [
+                        'NAME' => 'ноя',
+                        'VALUE' => 'november',
+                    ],
+                    2 => [
+                        'NAME' => 'дек',
+                        'VALUE' => 'december',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
      * Формируем массив данных
      *
      * @return void
@@ -409,6 +496,17 @@ class TransportationList extends CBitrixComponent
             ];
         }
 
+        $request = Context::getCurrent()->getRequest();
+
+        $this->getFilterQuarter($request->get('kvartal'));
+
+        $this->getFilterMonth($request->get('month'));
+
+        if ($request->get('year')) {
+            $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-01-01 00:00:00';
+            $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-12-31 23:59:59';
+        }
+
         $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
             'filter' => $this->arResult["FILTER"],
             'select' => [
@@ -433,9 +531,7 @@ class TransportationList extends CBitrixComponent
         $this->arResult['COUNT'] = $vitrina->getCount();
 
         $nav->setRecordCount($vitrina->getCount());
-        /**
-         * TODO Удалить хардкод перед публикацией
-         */
+
         $good = $error = 0;
         foreach ($vitrina->fetchAll() as $item) {
             $item['DEVIATION_MARKET_PRICE_VALUE'] = self::getPrice($item['ID']);
@@ -478,6 +574,95 @@ class TransportationList extends CBitrixComponent
 
         $this->arResult["ROWS"] = $vitrinaList;
         $this->arResult["NAV"] = $nav;
+    }
+
+    /**
+     * Возвращаем фильтр по
+     * кварталам
+     *
+     * @param string|null $number
+     * @return void
+     */
+    protected function getFilterQuarter(string $number = null): void
+    {
+        switch ($number){
+            case '1':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-01-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-03-31 23:59:59';
+                break;
+            case '2':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-04-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-06-30 23:59:59';
+                break;
+            case '3':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-07-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-09-30 23:59:59';
+                break;
+            case '4':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-10-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-12-31 23:59:59';
+                break;
+        }
+    }
+
+    /**
+     * Возвращаем фильтр по
+     * месяцам
+     * @param string|null $month
+     * @return void
+     */
+    protected function getFilterMonth(string $month = null): void
+    {
+        switch ($month){
+            case 'january':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-01-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-01-31 23:59:59';
+                break;
+            case 'february':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-02-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-02-30 23:59:59';
+                break;
+            case 'march':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-03-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-03-31 23:59:59';
+                break;
+            case 'april':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-04-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-04-30 23:59:59';
+                break;
+            case 'may':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-05-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-05-31 23:59:59';
+                break;
+            case 'june':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-06-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-06-30 23:59:59';
+                break;
+            case 'july':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-07-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-07-31 23:59:59';
+                break;
+            case 'august':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-08-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-08-31 23:59:59';
+                break;
+            case 'september':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-09-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-09-30 23:59:59';
+                break;
+            case 'october':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-10-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-10-31 23:59:59';
+                break;
+            case 'november':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-11-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-11-30 23:59:59';
+                break;
+            case 'december':
+                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-12-01 00:00:00';
+                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-12-31 23:59:59';
+                break;
+        }
     }
 
     /**

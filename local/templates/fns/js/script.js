@@ -3,16 +3,16 @@ $(document).ready(function () {
     /**
      * Стилизация инпута в фильтре
      */
-    $(window).keyup(function (e) {
-        var target = $('.filter_checkbox input:focus');
-        if (e.keyCode == 9 && $(target).length) {
-            $(target).parent().addClass('focused');
-        }
-    });
-
-    $('.filter_checkbox input').focusout(function () {
-        $(this).parent().removeClass('focused');
-    });
+    // $(window).keyup(function (e) {
+    //     var target = $('.filter_checkbox input:focus');
+    //     if (e.keyCode == 9 && $(target).length) {
+    //         $(target).parent().addClass('focused');
+    //     }
+    // });
+    //
+    // $('.filter_checkbox input').focusout(function () {
+    //     $(this).parent().removeClass('focused');
+    // });
 
     $(window).keyup(function (e) {
         var target = $('.filter_list-label input:focus');
@@ -108,11 +108,11 @@ $(document).ready(function () {
                     /** Чек-лист с перевозчиком */
 
                     /** Чек-лист с экспедитором */
-                    // if (carriage.CHECKLIST_FORWARDER != null) {
-                    //     $('#checklist_forwarder').show();
-                    // } else {
-                    $('#checklist_forwarder').hide();
-                    // }
+                    if (carriage.CHECKLIST_FORWARDER != null) {
+                        $('#checklist_forwarder').show();
+                    } else {
+                        $('#checklist_forwarder').hide();
+                    }
 
                     contract(carriage);
                     executionDocuments(carriage);

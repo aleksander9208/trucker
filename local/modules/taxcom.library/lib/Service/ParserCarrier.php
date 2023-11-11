@@ -104,6 +104,46 @@ class ParserCarrier
         $properties['CHECKLIST_CARRIER'] = false;
         //Чек-лист с экспедиторов
         $properties['CHECKLIST_FORWARDER'] = false;
+        $properties['CONTRACT_CHECK'] = '';
+        $properties['CONTRACT_EXPEDITION_STATUS'] = '';
+        $properties['CONTRACT_TRANSPORTATION_STATUS'] = '';
+        $properties['CONTRACT_ORDER_ONE_TIME_STATUS'] = '';
+        $properties['DOCUMENTS_CHECK'] = '';
+        $properties['DOCUMENTS_EPD_STATUS'] = '';
+        $properties['DOCUMENTS_EXPEDITOR_STATUS'] = '';
+        $properties['DOCUMENTS_EXPEDITOR_RECEIPT_STATUS'] = '';
+        $properties['DOCUMENTS_DRIVER_APPROVALS_STATUS'] = '';
+        $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS'] = '';
+        $properties['AUTOMATIC_CHECKS'] = '';
+        $properties['ACCOUNTING_CHECKS'] = '';
+        $properties['ACCOUNTING_INVOICE_STATUS'] = '';
+        $properties['ACCOUNTING_ACT_ACCEPTANCE_STATUS'] = '';
+        $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS'] = '';
+        $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS'] = '';
+        $properties['ACCOUNTING_TAX_INVOICE_STATUS'] = '';
+        $properties['ACCOUNTING_UPD_STATUS'] = '';
+        $properties['DONKEY_CHECKS'] = '';
+        $properties['DONKEY_LICENSE_PLATE'] = '';
+        $properties['DONKEY_STS_STATUS'] = '';
+        $properties['DONKEY_RENT_AGREEMENT_STATUS'] = '';
+        $properties['TRAILER_CHECKS'] = '';
+        $properties['TRAILER_LICENSE_PLATE'] = '';
+        $properties['TRAILER_STS_STATUS'] = '';
+        $properties['TRAILER_RENT_AGREEMENT_STATUS'] = '';
+        $properties['TRAILER_SECONDARY_CHECKS'] = '';
+        $properties['TRAILER_SECONDARY_LICENSE_PLATE'] = '';
+        $properties['TRAILER_SECONDARY_STS_STATUS'] = '';
+        $properties['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS'] = '';
+        $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS'] = '';
+        $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS'] = '';
+        $properties['TRAILER_SECONDARY_FREE_USAGE_STATUS'] = '';
+        $properties['TRUCK_CHECKS'] = '';
+        $properties['TRUCK_LICENSE_PLATE'] = '';
+        $properties['TRUCK_STS_STATUS'] = '';
+        $properties['TRUCK_RENT_AGREEMENT_STATUS'] = '';
+        $properties['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS'] = '';
+        $properties['TRUCK_MARRIAGE_CERTIFICATE_STATUS'] = '';
+        $properties['TRUCK_FREE_USAGE_STATUS'] = '';
 
         if ($carrier['root']) {
             $properties['CHECKLIST_FORWARDER'] = true;

@@ -10,132 +10,60 @@
  * @global CUser $USER
  */
 
+use Bitrix\Main\Context;
+
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
+$request = Context::getCurrent()->getRequest();
+
+if ($request->get('year')) {
+    $classFilterYear = 'focused';
+}
 ?>
 <div class="uk-container uk-container-large">
 
     <div class="form_filter">
         <form class="form_filter-date">
             <div class="form_cvartal">
-                <div class="filter_date-cvartal">
-                    <div class="filter_cvartal-main">
-                        <label class="filter_checkbox">
-                            <input name="kvartal" value="1" type="submit">
-                            <span>1-й квартал</span>
-                        </label>
-                    </div>
-                    <div class="filter-month">
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>янв</span>
+                <?php foreach ($arResult['FILTER_YEAR'] as $kvartal) {
+                    $classFilterKvartal = '';
+
+                    if ($request->get('kvartal') === $kvartal['VALUE']) {
+                        $classFilterKvartal = 'focused';
+                    }
+                ?>
+                    <div class="filter_date-cvartal">
+                        <div class="filter_cvartal-main">
+                            <label class="filter_checkbox <?=$classFilterKvartal ?>">
+                                <input name="kvartal" value="<?= $kvartal['VALUE'] ?>" type="submit">
+                                <span><?= $kvartal['NAME'] ?></span>
                             </label>
                         </div>
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>фев</span>
-                            </label>
-                        </div>
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>мар</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="filter_date-cvartal">
-                    <div class="filter_cvartal-main">
-                        <label class="filter_checkbox">
-                            <input name="kvartal" value="2" type="submit">
-                            <span>2-й квартал</span>
-                        </label>
-                    </div>
-                    <div class="filter-month">
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>апр</span>
-                            </label>
-                        </div>
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>май</span>
-                            </label>
-                        </div>
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>июн</span>
-                            </label>
+
+                        <div class="filter-month">
+                            <?php foreach ($kvartal['MONTH'] as $month) {
+                                $classFilter = '';
+
+                                if ($request->get('month') === $month['VALUE']) {
+                                    $classFilter = 'focused';
+                                }
+                            ?>
+                                <div class="filter_cvartal-month">
+                                    <label class="filter_checkbox <?=$classFilter ?>">
+                                        <input class="uk-checkbox" name="month" value="<?= $month['VALUE'] ?>" type="submit">
+                                        <span><?= $month['NAME'] ?></span>
+                                    </label>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
-                </div>
-                <div class="filter_date-cvartal">
-                    <div class="filter_cvartal-main">
-                        <label class="filter_checkbox">
-                            <input name="kvartal" value="3" type="submit">
-                            <span>3-й квартал</span>
-                        </label>
-                    </div>
-                    <div class="filter-month">
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>июл</span>
-                            </label>
-                        </div>
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>авг</span>
-                            </label>
-                        </div>
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>сен</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="filter_date-cvartal">
-                    <div class="filter_cvartal-main">
-                        <label class="filter_checkbox">
-                            <input name="kvartal" value="4" type="submit">
-                            <span>4-й квартал</span>
-                        </label>
-                    </div>
-                    <div class="filter-month">
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>окт</span>
-                            </label>
-                        </div>
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>ноя</span>
-                            </label>
-                        </div>
-                        <div class="filter_cvartal-month">
-                            <label class="filter_checkbox">
-                                <input class="uk-checkbox" type="checkbox">
-                                <span>дек</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+                <?php } ?>
             </div>
             <div class="form_date">
                 <div class="form_date-year">
-                    <label class ="filter_checkbox">
+                    <label class ="filter_checkbox <?= $classFilterYear ?>">
                         <input name="year" value="<?= $arResult['YEAR'] ?>" type="submit">
                         <span>Весь год</span>
                     </label>
@@ -209,38 +137,38 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     </div>
 
     <div class="filter_list">
-        <div class="filter_list-top">
-            <div class="filter_list-top-error-organizations">
-                <label class="filter_top-organizations">
-                    <input class="uk-checkbox" type="checkbox">
-                    <span>Топ проблемных организаций</span>
-                </label>
-                <div class="filter_list-type-organizations">
-                    <label class="filter_list-label">
-                        <input class="uk-checkbox" type="checkbox">
-                        <span>Грузовладельцы</span>
-                    </label>
-                    <label class="filter_list-label">
-                        <input class="uk-checkbox" type="checkbox">
-                        <span>Перевозчики</span>
-                    </label>
-                    <label class="filter_list-label">
-                        <input class="uk-checkbox" type="checkbox">
-                        <span>Экспедиторы</span>
-                    </label>
-                </div>
-            </div>
-            <div class="filter_list-top-error-transportation">
-                <span>Отображать проблемные перевозки</span>
-                <select class="uk-select">
-                    <option>Все</option>
-                </select>
-            </div>
-        </div>
-<!--        <div class="filter_file-download" id="file_filter_download">-->
-<!--            <span uk-icon="icon: download"></span>-->
-<!--            <span>Скачать документы</span>-->
+<!--        <div class="filter_list-top">-->
+<!--            <div class="filter_list-top-error-organizations">-->
+<!--                <label class="filter_top-organizations">-->
+<!--                    <input class="uk-checkbox" type="checkbox">-->
+<!--                    <span>Топ проблемных организаций</span>-->
+<!--                </label>-->
+<!--                <div class="filter_list-type-organizations">-->
+<!--                    <label class="filter_list-label">-->
+<!--                        <input class="uk-checkbox" type="checkbox">-->
+<!--                        <span>Грузовладельцы</span>-->
+<!--                    </label>-->
+<!--                    <label class="filter_list-label">-->
+<!--                        <input class="uk-checkbox" type="checkbox">-->
+<!--                        <span>Перевозчики</span>-->
+<!--                    </label>-->
+<!--                    <label class="filter_list-label">-->
+<!--                        <input class="uk-checkbox" type="checkbox">-->
+<!--                        <span>Экспедиторы</span>-->
+<!--                    </label>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="filter_list-top-error-transportation">-->
+<!--                <span>Отображать проблемные перевозки</span>-->
+<!--                <select class="uk-select">-->
+<!--                    <option>Все</option>-->
+<!--                </select>-->
+<!--            </div>-->
 <!--        </div>-->
+        <div class="filter_file-download" id="file_filter_download">
+            <span uk-icon="icon: download"></span>
+            <span>Скачать документы</span>
+        </div>
     </div>
 
     <?php
