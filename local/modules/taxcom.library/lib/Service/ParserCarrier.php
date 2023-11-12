@@ -379,6 +379,15 @@ class ParserCarrier
                 if ($group['name'] === 'rent_agreement') {
                     $properties['DONKEY_RENT_AGREEMENT_STATUS'] = $group['status'];
                 }
+                if ($group['name'] === 'agreement_withLeasingCompany') {
+                    $properties['DONKEY_LEASING_COMPANY_STATUS'] = $group['status'];
+                }
+                if ($group['name'] === 'marriage_certificate') {
+                    $properties['DONKEY_MARRIAGE_CERTIFICATE_STATUS'] = $group['status'];
+                }
+                if ($group['name'] === 'free_usage_agreement') {
+                    $properties['DONKEY_FREE_USAGE_STATUS'] = $group['status'];
+                }
                 break;
             case 'vehicle_main_trailer':
                 $properties['TRAILER_CHECKS'] = $checksTrue . '/' .$countChecks;
@@ -388,6 +397,15 @@ class ParserCarrier
                 }
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRAILER_RENT_AGREEMENT_STATUS'] = $group['status'];
+                }
+                if ($group['name'] === 'agreement_withLeasingCompany') {
+                    $properties['TRAILER_LEASING_COMPANY_STATUS'] = $group['status'];
+                }
+                if ($group['name'] === 'marriage_certificate') {
+                    $properties['TRAILER_MARRIAGE_CERTIFICATE_STATUS'] = $group['status'];
+                }
+                if ($group['name'] === 'free_usage_agreement') {
+                    $properties['TRAILER_FREE_USAGE_STATUS'] = $group['status'];
                 }
                 break;
             case 'vehicle_secondary_trailer':
@@ -511,6 +529,15 @@ class ParserCarrier
                 if ($group['name'] === 'rent_agreement') {
                     $properties['DONKEY_RENT_FOR_STATUS'] = $group['status'];
                 }
+                if ($group['name'] === 'agreement_withLeasingCompany') {
+                    $properties['DONKEY_LEASING_COMPANY_FOR_STATUS'] = $group['status'];
+                }
+                if ($group['name'] === 'marriage_certificate') {
+                    $properties['DONKEY_MARRIAGE_CERTIFICATE_FOR_STATUS'] = $group['status'];
+                }
+                if ($group['name'] === 'free_usage_agreement') {
+                    $properties['DONKEY_FREE_USAGE_FOR_STATUS'] = $group['status'];
+                }
                 break;
             case 'vehicle_main_trailer':
                 $properties['TRAILER_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
@@ -520,6 +547,15 @@ class ParserCarrier
                 }
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRAILER_RENT_AGREEMENT_FOR_STATUS'] = $group['status'];
+                }
+                if ($group['name'] === 'agreement_withLeasingCompany') {
+                    $properties['TRAILER_LEASING_COMPANY_FOR_STATUS'] = $group['status'];
+                }
+                if ($group['name'] === 'marriage_certificate') {
+                    $properties['TRAILER_MARRIAGE_CERTIFICATE_FOR_STATUS'] = $group['status'];
+                }
+                if ($group['name'] === 'free_usage_agreement') {
+                    $properties['TRAILER_FREE_USAGE_FOR_STATUS'] = $group['status'];
                 }
                 break;
             case 'vehicle_secondary_trailer':

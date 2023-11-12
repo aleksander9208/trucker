@@ -2665,8 +2665,8 @@ $(document).ready(function () {
             $("#list_file_truck_sts_link_for").html();
         }
         /** Договор аренды грузовик */
-        if (carriage.TRUCK_RENT_AGREEMENT_STATUS_FOR === 'passed' ||
-            carriage.TRUCK_RENT_AGREEMENT_STATUS_FOR === 'in_progress'
+        if (carriage.TRUCK_RENT_AGR_STATUS_FOR === 'passed' ||
+            carriage.TRUCK_RENT_AGR_STATUS_FOR === 'in_progress'
         ) {
             $('#truck_rent_for').show();
         }
@@ -2704,8 +2704,8 @@ $(document).ready(function () {
             $("#list_file_truck_rent_for").html();
         }
         /** Договор с лизинговой компанией грузовик */
-        if (carriage.TRUCK_LEASING_COMPANY_STATUS_FOR === 'passed' ||
-            carriage.TRUCK_LEASING_COMPANY_STATUS_FOR === 'in_progress'
+        if (carriage.TRUCK_AGR_LEASING_COMPANY_STATUS_FOR === 'passed' ||
+            carriage.TRUCK_AGR_LEASING_COMPANY_STATUS_FOR === 'in_progress'
         ) {
             $('#truck_leas_link_for').show();
         }
