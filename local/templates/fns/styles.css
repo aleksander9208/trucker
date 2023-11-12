@@ -389,6 +389,12 @@ body {
     line-height: 1.2;
 }
 
+.bar-status-good {
+    background: #52c41a;
+    color: #fff;
+    padding: 2px 12px;
+}
+
 .bar-status {
     padding: 2px 9px 2px 28px;
     color: #F5222D;

@@ -209,9 +209,7 @@ if ($request->get('year')) {
                 <div class="bar-title">
                     Перевозка <span id="carriage_id"></span>
                 </div>
-                <div class="bar-status">
-                    Проверка не пройдена
-                </div>
+                <div class="bar-status" id="status_shipping"></div>
             </div>
 
             <div class="bar-content_date">
@@ -275,75 +273,30 @@ if ($request->get('year')) {
                     </li>
                     <li id="checklist_forwarder">
                         <div class="detail-content">
-                            <div class="detail-content_confirmation">
-                                <div class="detail-content_title">
-                                    Подписанные договоры <span id="detail_status-transportation">1/1</span>
-                                </div>
 
-                                <div class="status-info_confirmation" id="status_transportation-link">
-                                    <span class="status-info_confirmation_title">Договор перевозки</span>
-                                    <a href="" class="status-link_file" id="status_transportation-file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                            </div>
+                            <?php foreach ($arResult['INFO_BAR_DOC_FOR'] as $docGroup) { ?>
+                                <div class="detail-content_confirmation" id="<?= $docGroup['ID'] ?>">
+                                    <div class="detail-content_title">
+                                        <?= $docGroup['NAME'] ?>
+                                        <?php if ($docGroup['ID_PLATE']) { ?>
+                                            <span class="detail-content_auto" id="<?= $docGroup['ID_PLATE'] ?>"></span>
+                                        <?php } ?>
+                                        <span id="<?= $docGroup['ID_CHECK'] ?>"></span>
+                                    </div>
 
-                            <div class="detail-content_confirmation">
-                                <div class="detail-content_title">
-                                    Оформление перевозки <span id="documents_check"></span>
-                                </div>
+                                    <?php foreach ($docGroup['DOCUMENTS'] as $document) { ?>
+                                        <div class="status-info_confirmation" id="<?= $document['ID'] ?>">
+                                            <span class="status-info_confirmation_title"><?= $document['NAME'] ?></span>
 
-                                <div class="status-info_confirmation" id="documents_link">
-                                    <span class="status-info_confirmation_title">Заявка на перевозку</span>
-                                    <a href="" class="status-link_file" id="documents_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
+                                            <div class="status-link_file" id="<?= $document['LINK_ID'] ?>" type="button">
+                                                <?php if($document['FILE']) { ?> Посмотреть <span uk-icon="icon: check;"></span><?php } ?>
+                                            </div>
+                                            <div uk-dropdown="mode: click" class="list_file_link" id="list_file_<?= $document['ID'] ?>"></div>
+                                        </div>
+                                    <?php } ?>
                                 </div>
-                                <div class="status-info_confirmation" id="epd_link">
-                                    <span class="status-info_confirmation_title">Подписанная ЭТрН</span>
-                                    <a href="" class="status-link_file" id="epd_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                                <div class="status-info_confirmation" id="prices_link">
-                                    <span class="status-info_confirmation_title">Стоимость перевозки соответствует рыночным ценам</span>
-                                    <a href="" class="status-link_file" id="prices_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                                <div class="status-info_confirmation" id="geo_link">
-                                    <span class="status-info_confirmation_title">Подтверждения перевозки через геомониторинг</span>
-                                    <a href="" class="status-link_file" id="geo_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                                <div class="status-info_confirmation" id="driver_link">
-                                    <span class="status-info_confirmation_title">Подтверждения договорных отношений с водителем</span>
-                                    <a href="" class="status-link_file" id="driver_file">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                            </div>
+                            <?php } ?>
 
-                            <div class="detail-content_confirmation">
-                                <div class="detail-content_title">
-                                    Подтверждения владения ТС <span class="detail-content_auto"></span>
-                                    <span id="truck_check"></span>
-                                </div>
-
-                                <div class="status-info_confirmation" id="truck_rent">
-                                    <span class="status-info_confirmation_title">Договор аренды</span>
-                                    <a href="" class="status-link_file" id="truck_link">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                                <div class="status-info_confirmation" id="truck_sts">
-                                    <span class="status-info_confirmation_title">СТС</span>
-                                    <a href="" class="status-link_file" id="sts_link">
-                                        Посмотреть <span uk-icon="icon: check;"></span>
-                                    </a>
-                                </div>
-                            </div>
                         </div>
                     </li>
                 </ul>

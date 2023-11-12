@@ -70,6 +70,12 @@ $(document).ready(function () {
                         $('#deviation-price').show();
                         $('#carriage_deviation-price').html(carriage.AUTO_PRICES + '%');
                     }
+                    /** Статус перевозки */
+                    if (carriage.STATUS_SHIPPING === 'passed') {
+                        $('#status_shipping').html('Проверка пройдена').addClass('bar-status-good');
+                    } else {
+                        $('#status_shipping').html('Проверка не пройдена').removeClass('bar-status-good');
+                    }
 
                     /** Грузовладелец */
                     if (carriage.CARGO != null) {
@@ -212,6 +218,7 @@ $(document).ready(function () {
 
         $('#donkey').hide();
         $('#donkey_link').hide();
+        $('#donkey_rent_link').hide();
 
         $('#trailer').hide();
         $('#trailer_ctc_link').hide();
@@ -230,6 +237,52 @@ $(document).ready(function () {
         $('#truck_leas_link').hide();
         $('#truck_cert_link').hide();
         $('#truck_usage_link').hide();
+
+        $('#contract_for').hide();
+        $('#transport_link_for').hide();
+        $('#contract_link_for').hide();
+        $('#one_time_link_for').hide();
+
+        $('#execution_documents_for').hide();
+        $('#documents_link_for').hide();
+        $('#epd_link_for').hide();
+        $('#driver_link_for').hide();
+        $('#exp_link_for').hide();
+        $('#receipt_link_for').hide();
+
+        $('#automatic_for').hide();
+        $('#prices_link_for').hide();
+        $('#geo_link_for').hide();
+
+        $('#accounting_for').hide();
+        $('#invoice_link_for').hide();
+        $('#act_link_for').hide();
+        $('#multi_link_for').hide();
+        $('#reg_link_for').hide();
+        $('#tax_link_for').hide();
+        $('#upd_link_for').hide();
+
+        $('#donkey_for').hide();
+        $('#donkey_link_for').hide();
+        $('#donkey_rent_link_for').hide();
+
+        $('#trailer_for').hide();
+        $('#trailer_ctc_link_for').hide();
+        $('#trailer_rent_link_for').hide();
+
+        $('#trailer_sec_for').hide();
+        $('#trailer_sec_ctc_link_for').hide();
+        $('#trailer_sec_rent_link_for').hide();
+        $('#trailer_sec_lias_link_for').hide();
+        $('#trailer_sec_cer_link_for').hide();
+        $('#trailer_sec_usage_link_for').hide();
+
+        $('#truck_for').hide();
+        $('#truck_sts_link_for').hide();
+        $('#truck_rent_for').hide();
+        $('#truck_leas_link_for').hide();
+        $('#truck_cert_link_for').hide();
+        $('#truck_usage_link_for').hide();
     }
 
     /** Подписанные договоры */
@@ -326,6 +379,101 @@ $(document).ready(function () {
             $('#one_time_link').addClass('status-info_confirmation_error');
             $("#list_file_one_time_link").html();
         }
+
+
+        /** Подписанные договоры экспедитора*/
+        if (carriage.CONTRACT_FOR_CHECK != null) {
+            $('#contract_for').show();
+            if (carriage.CONTRACT_FOR_CHECK_ERROR !== false) {
+                $('#detail_status-transportation_for').addClass('detail-status_good').html(carriage.CONTRACT_FOR_CHECK);
+            } else {
+                $('#detail_status-transportation_for').addClass('detail-status_error').html('Выполнено ' + carriage.CONTRACT_FOR_CHECK);
+            }
+        } else {
+            $('#detail_status-transportation_for').html('').removeClass();
+        }
+        /** Договор перевозки */
+        if (carriage.CONTRACT_TRANSPORT_STATUS_FOR === 'passed' ||
+            carriage.CONTRACT_TRANSPORT_STATUS_FOR === 'in_progress'
+        ) {
+            $('#transport_link_for').show();
+        }
+        if (carriage.CONTRACT_TRANSPORTATION_LINK_FOR != null) {
+            let CONT_TRANSPORT_LINK_FOR = '';
+            const DESCRIPTION_CONT_TRANSPORT_LINK_FOR = carriage.CONTRACT_TRANSPORTATION_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.CONTRACT_TRANSPORTATION_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_CONT_TRANSPORT_LINK_FOR[index] !== '') {
+                    CONT_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_TRANSPORT_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_CONT_TRANSPORT_LINK_FOR[index] === '') {
+                } else {
+                    CONT_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#transport_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_transport_link_for").html(CONT_TRANSPORT_LINK_FOR);
+            $('#transport_file_for').show();
+        } else {
+            $('#transport_file_for').hide();
+            $('#transport_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_transport_link_for").html('');
+        }
+        /** Договор транспортной экспедиции */
+        if (carriage.CONTRACT_EXP_STATUS_FOR === 'passed' ||
+            carriage.CONTRACT_EXP_STATUS_FOR === 'in_progress'
+        ) {
+            $('#contract_link_for').show();
+        }
+
+        if (carriage.CONTRACT_EXP_LINK_FOR != null) {
+            let CONT_EXP_LINK_FOR = '';
+            const DESCRIPTION_CONT_EXP_LINK_FOR = carriage.CONTRACT_EXP_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.CONTRACT_EXP_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_CONT_EXP_LINK_FOR[index] !== '') {
+                    CONT_EXP_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_EXP_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_CONT_EXP_LINK_FOR[index] === '') {
+                } else {
+                    CONT_EXP_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#contract_link_for').removeClass('status-info_confirmation_error');
+            $("#list_file_contract_link_for").html(CONT_EXP_LINK_FOR);
+            $('#contract_file_for').show();
+        } else {
+            $('#contract_file_for').hide();
+            $('#contract_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_contract_link_for").html();
+        }
+        /** Заказ (разовая договор-заявка) */
+        if (carriage.CONTRACT_ORDER_ONE_TIME_STATUS_FOR === 'passed' ||
+            carriage.CONTRACT_ORDER_ONE_TIME_STATUS_FOR === 'in_progress'
+        ) {
+            $('#one_time_link_for').show();
+        }
+        if (carriage.CONTRACT_ORDER_ONE_TIME_LINK_FOR != null) {
+            let CONT_ORDER_ONE_TIME_FOR = '';
+            const DESCRIPTION_CONT_ORDER_ONE_TIME_FOR = carriage.CONTRACT_ORDER_ONE_TIME_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.CONTRACT_ORDER_ONE_TIME_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_CONT_ORDER_ONE_TIME_FOR[index] !== '') {
+                    CONT_ORDER_ONE_TIME_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_ORDER_ONE_TIME_FOR[index] + '</li>';
+                } else if (DESCRIPTION_CONT_ORDER_ONE_TIME_FOR[index] === '') {
+                } else {
+                    CONT_ORDER_ONE_TIME_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#one_time_link_for').removeClass('status-info_confirmation_error');
+            $("#list_file_one_time_link_for").html(CONT_ORDER_ONE_TIME_FOR);
+            $('#one_time_file_for').show();
+        } else {
+            $('#one_time_file_for').hide();
+            $('#one_time_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_one_time_link_for").html();
+        }
     }
 
     /** Оформление перевозки */
@@ -356,7 +504,7 @@ $(document).ready(function () {
                     DOC_APP_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] + '</li>';
                 } else if (DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] === '') {
                 } else {
-                    DOC_APP_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    DOC_APP_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank"> Файл ' + (index + 1) + '</li>';
                 }
             });
 
@@ -374,18 +522,32 @@ $(document).ready(function () {
         ) {
             $('#epd_link').show();
         }
-        if (carriage.DOCUMENTS_EPD_LINK != null) {
+        if (carriage.DOCUMENTS_EPD_LINK != null || carriage.DOCUMENTS_EPD_EDM_LINK != null) {
             let DOC_EPD_LINK = '';
-            const DESCRIPTION_DOC_EPD_LINK = carriage.DOCUMENTS_EPD_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.DOCUMENTS_EPD_LINK.VALUE.split(","), function (index, value) {
-                if (DESCRIPTION_DOC_EPD_LINK[index] !== '') {
-                    DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EPD_LINK[index] + '</li>';
-                } else if (DESCRIPTION_DOC_EPD_LINK[index] === '') {
-                } else {
-                    DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
-                }
-            });
+            if (carriage.DOCUMENTS_EPD_LINK != null) {
+                const DESCRIPTION_DOC_EPD_LINK = carriage.DOCUMENTS_EPD_LINK.DESCRIPTION.split(",");
+
+                $.each(carriage.DOCUMENTS_EPD_LINK.VALUE.split(","), function (index, value) {
+                    if (DESCRIPTION_DOC_EPD_LINK[index] !== '') {
+                        DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EPD_LINK[index] + '</li>';
+                    } else if (DESCRIPTION_DOC_EPD_LINK[index] === '') {
+                    } else {
+                        DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    }
+                });
+            }
+
+            if (carriage.DOCUMENTS_EPD_EDM_LINK != null) {
+                const DESCRIPTION_DOC_EPD_EDM_LINK = carriage.DOCUMENTS_EPD_EDM_LINK.DESCRIPTION.split(",");
+
+                $.each(carriage.DOCUMENTS_EPD_EDM_LINK.VALUE.split(","), function (index, value) {
+                    if (value !== '') {
+                        DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    } else if (value === '') {
+                    }
+                });
+            }
 
             $('#epd_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_epd_link").html(DOC_EPD_LINK);
@@ -476,6 +638,182 @@ $(document).ready(function () {
             $('#receipt_link').addClass('status-info_confirmation_error');
             $("#list_file_receipt_link").html();
         }
+
+
+        /** Оформление перевозки экспедитор*/
+        if (carriage.DOCUMENTS_FOR_CHECK != null) {
+            $('#execution_documents_for').show();
+            if (carriage.DOCUMENTS_FOR_CHECK_ERROR !== false) {
+                $('#documents_check_for').addClass('detail-status_good').html(carriage.DOCUMENTS_FOR_CHECK);
+            } else {
+                $('#documents_check_for').addClass('detail-status_error').html('Выполнено ' + carriage.DOCUMENTS_FOR_CHECK);
+            }
+        } else {
+            $('#documents_check_for').html('').removeClass();
+        }
+        /** Заявка на перевозку */
+        if (carriage.DOCUMENTS_TRANSPORT_STATUS_FOR === 'passed' ||
+            carriage.DOCUMENTS_TRANSPORT_STATUS_FOR === 'in_progress'
+        ) {
+            $('#documents_link_for').show();
+        }
+        if (carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_LINK_FOR != null) {
+            let DOC_APP_TRANSPORT_LINK_FOR = '';
+            const DESCRIPTION_DOC_APP_TRANSPORT_LINK_FOR = carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_DOC_APP_TRANSPORT_LINK_FOR[index] !== '') {
+                    DOC_APP_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_APP_TRANSPORT_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_DOC_APP_TRANSPORT_LINK_FOR[index] === '') {
+                } else {
+                    DOC_APP_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank"> Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#documents_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_documents_link_for").html(DOC_APP_TRANSPORT_LINK_FOR);
+            $('#documents_file_for').show();
+        } else {
+            $('#documents_file_for').hide();
+            $('#documents_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_one_time_link_for").html();
+        }
+        /** Подписанная ЭТрН */
+        if (carriage.DOCUMENTS_EPD_STATUS_FOR === 'passed' ||
+            carriage.DOCUMENTS_EPD_STATUS_FOR === 'in_progress'
+        ) {
+            $('#epd_link_for').show();
+        }
+        if (carriage.DOCUMENTS_EPD_LINK_FOR != null || carriage.DOCUMENTS_EPD_EDM_LINK_FOR != null) {
+            let DOC_EPD_LINK_FOR = '';
+
+            if (carriage.DOCUMENTS_EPD_LINK_FOR != null) {
+                const DESCRIPTION_DOC_EPD_LINK_FOR = carriage.DOCUMENTS_EPD_LINK_FOR.DESCRIPTION.split(",");
+
+                $.each(carriage.DOCUMENTS_EPD_LINK_FOR.VALUE.split(","), function (index, value) {
+                    if (DESCRIPTION_DOC_EPD_LINK_FOR[index] !== '') {
+                        DOC_EPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EPD_LINK_FOR[index] + '</li>';
+                    } else if (DESCRIPTION_DOC_EPD_LINK_FOR[index] === '') {
+                    } else {
+                        DOC_EPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    }
+                });
+            }
+
+            if (carriage.DOCUMENTS_EPD_EDM_LINK_FOR != null) {
+                const DESCRIPTION_DOC_EPD_EDM_LINK_FOR = carriage.DOCUMENTS_EPD_EDM_LINK_FOR.DESCRIPTION.split(",");
+
+                $.each(carriage.DOCUMENTS_EPD_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
+                    if (value !== '') {
+                        DOC_EPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    } else if (value === '') {
+                    }
+                });
+            }
+
+            $('#epd_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_epd_link_for").html(DOC_EPD_LINK_FOR);
+            $('#epd_file_for').show();
+        } else {
+            $('#epd_file_for').hide();
+            $('#epd_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_epd_link_for").html();
+        }
+        /** Подтверждение договорных отношений с водителем */
+        if (carriage.DOCUMENTS_DRIVER_STATUS_FOR === 'passed' ||
+            carriage.DOCUMENTS_DRIVER_STATUS_FOR === 'in_progress'
+        ) {
+            $('#driver_link_for').show();
+        }
+        if (carriage.DOCUMENTS_DRIVER_APPROVALS_LINK_FOR != null) {
+            let DOC_DRIVER_APP_LINK_FOR = '';
+            const DESCRIPTION_DOC_DRIVER_APP_LINK_FOR = carriage.DOCUMENTS_DRIVER_APPROVALS_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.DOCUMENTS_DRIVER_APPROVALS_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_DOC_DRIVER_APP_LINK_FOR[index] !== '') {
+                    DOC_DRIVER_APP_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_DRIVER_APP_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_DOC_DRIVER_APP_LINK_FOR[index] === '') {
+                } else {
+                    DOC_DRIVER_APP_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#driver_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_driver_link_for").html(DOC_DRIVER_APP_LINK_FOR);
+            $('#driver_file_for').show();
+        } else {
+            $('#driver_file_for').hide();
+            $('#driver_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_driver_link_for").html('');
+        }
+        /** Поручение экспедитору */
+        console.log('DOCUMENTS_EXPEDITOR_STATUS_FOR')
+        console.log(carriage.DOCUMENTS_EXPEDITOR_STATUS_FOR)
+        if (carriage.DOCUMENTS_EXPEDITOR_STATUS_FOR === 'passed' ||
+            carriage.DOCUMENTS_EXPEDITOR_STATUS_FOR === 'in_progress'
+        ) {
+            $('#exp_link_for').show();
+        }
+        if (carriage.DOCUMENTS_EXPEDITOR_LINK_FOR != null || carriage.DOCUMENTS_EXPEDITOR_EDM_LINK_FOR != null) {
+            let DOC_EXP_LINK_FOR = '';
+
+            if (carriage.DOCUMENTS_EXPEDITOR_LINK_FOR != null) {
+                const DESCRIPTION_DOC_EXP_LINK_FOR = carriage.DOCUMENTS_EXPEDITOR_LINK_FOR.DESCRIPTION.split(",");
+
+                $.each(carriage.DOCUMENTS_EXPEDITOR_LINK_FOR.VALUE.split(","), function (index, value) {
+                    if (DESCRIPTION_DOC_EXP_LINK_FOR[index] !== '') {
+                        DOC_EXP_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EXP_LINK_FOR[index] + '</li>';
+                    } else if (DESCRIPTION_DOC_EXP_LINK_FOR[index] === '') {
+                    } else {
+                        DOC_EXP_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    }
+                });
+            }
+
+            if (carriage.DOCUMENTS_EXPEDITOR_EDM_LINK_FOR != null) {
+                $.each(carriage.DOCUMENTS_EXPEDITOR_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
+                    if (value !== '') {
+                        DOC_EPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    } else if (value === '') {
+                    }
+                });
+            }
+
+            $('#exp_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_exp_link_for").html(DOC_EXP_LINK_FOR);
+            $('#exp_file_for').show();
+        } else {
+            $('#exp_file_for').hide();
+            $('#exp_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_exp_link_for").html('');
+        }
+        /** Экспедиторская расписка */
+        if (carriage.DOCUMENTS_EXPEDITOR_RECEIPT_STATUS_FOR === 'passed' ||
+            carriage.DOCUMENTS_EXPEDITOR_RECEIPT_STATUS_FOR === 'in_progress'
+        ) {
+            $('#receipt_link_for').show();
+        }
+        if (carriage.DOCUMENTS_EXPEDITOR_RECEIPT_LINK_FOR != null) {
+            let DOC_EXP_RECEIPT_LINK_FOR = '';
+            const DESCRIPTION_DOC_EXP_RECEIPT_LINK_FOR = carriage.DOCUMENTS_EXPEDITOR_RECEIPT_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.DOCUMENTS_EXPEDITOR_RECEIPT_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_DOC_EXP_RECEIPT_LINK_FOR[index] !== '') {
+                    DOC_EXP_RECEIPT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EXP_RECEIPT_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_DOC_EXP_RECEIPT_LINK_FOR[index] === '') {
+                } else {
+                    DOC_EXP_RECEIPT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#receipt_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_receipt_link_for").html(DOC_EXP_RECEIPT_LINK_FOR);
+            $('#receipt_file_for').show();
+        } else {
+            $('#receipt_file_for').hide();
+            $('#receipt_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_receipt_link_for").html();
+        }
     }
 
     /** Автоматические проверки */
@@ -492,11 +830,9 @@ $(document).ready(function () {
             $('#auto_check').html('').removeClass();
         }
         /** Стоимость перевозки соответствует рыночным ценам */
-        if (carriage.AUTOMATIC_PRICES_STATUS === 'passed' ||
-            carriage.AUTOMATIC_PRICES_STATUS === 'in_progress'
-        ) {
-            $('#prices_link').show();
-        }
+
+        $('#prices_link').show();
+
         if (carriage.AUTOMATIC_PRICES_STATUS === 'passed') {
             $('#prices_link').show().removeClass('status-info_confirmation_error');
             $('#prices_file').show();
@@ -505,17 +841,47 @@ $(document).ready(function () {
             $('#prices_file').hide();
         }
         /** Подтверждения перевозки через геомониторинг */
-        if (carriage.AUTOMATIC_GEO_MONITORING_STATUS === 'passed' ||
-            carriage.AUTOMATIC_GEO_MONITORING_STATUS === 'in_progress'
-        ) {
-            $('#geo_link').show();
-        }
+        $('#geo_link').show();
+
         if (carriage.AUTOMATIC_GEO_MONITORING_STATUS === 'passed') {
             $('#geo_link').show().removeClass('status-info_confirmation_error');
             $('#geo_file').show();
         } else {
             $('#geo_link').addClass('status-info_confirmation_error');
             $('#geo_file').hide();
+        }
+
+        /** Автоматические проверки экспедитор*/
+        if (carriage.AUTOMATIC_FOR_CHECKS != null) {
+            $('#automatic_for').show();
+            if (carriage.AUTOMATIC_FOR_CHECKS_ERROR !== false) {
+                $('#auto_check_for').addClass('detail-status_good').html(carriage.AUTOMATIC_FOR_CHECKS);
+            } else {
+                $('#auto_check_for').addClass('detail-status_error').html('Выполнено ' + carriage.AUTOMATIC_FOR_CHECKS);
+            }
+        } else {
+            $('#auto_check_for').html('').removeClass();
+        }
+        /** Стоимость перевозки соответствует рыночным ценам */
+
+        $('#prices_link_for').show();
+
+        if (carriage.AUTOMATIC_PRICES_STATUS_FOR === 'passed') {
+            $('#prices_link_for').show().removeClass('status-info_confirmation_error');
+            $('#prices_file_for').show();
+        } else {
+            $('#prices_link_for').addClass('status-info_confirmation_error');
+            $('#prices_file_for').hide();
+        }
+        /** Подтверждения перевозки через геомониторинг */
+        $('#geo_link_for').show();
+
+        if (carriage.AUTOMATIC_GEO_MONITORING_STATUS_FOR === 'passed') {
+            $('#geo_link_for').show().removeClass('status-info_confirmation_error');
+            $('#geo_file_for').show();
+        } else {
+            $('#geo_link_for').addClass('status-info_confirmation_error');
+            $('#geo_file_for').hide();
         }
     }
 
@@ -545,7 +911,7 @@ $(document).ready(function () {
             $.each(carriage.ACCOUNTING_INVOICE_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_ACC_INVOICE_LINK[index] !== '') {
                     ACC_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_INVOICE_LINK[index] + '</li>';
-                } else if (DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] === '') {
+                } else if (DESCRIPTION_ACC_INVOICE_LINK[index] === '') {
                 } else {
                     ACC_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
@@ -646,18 +1012,32 @@ $(document).ready(function () {
         ) {
             $('#tax_link').show();
         }
-        if (carriage.ACCOUNTING_TAX_INVOICE_LINK != null) {
+        if (carriage.ACCOUNTING_TAX_INVOICE_LINK != null || carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK != null) {
             let ACC_TAX_INVOICE_LINK = '';
-            const DESCRIPTION_ACC_TAX_INVOICE_LINK = carriage.ACCOUNTING_TAX_INVOICE_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.ACCOUNTING_TAX_INVOICE_LINK.VALUE.split(","), function (index, value) {
-                if (DESCRIPTION_ACC_TAX_INVOICE_LINK[index] !== '') {
-                    ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_TAX_INVOICE_LINK[index] + '</li>';
-                } else if (DESCRIPTION_ACC_TAX_INVOICE_LINK[index] === '') {
-                } else {
-                    ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
-                }
-            });
+            if (carriage.ACCOUNTING_TAX_INVOICE_LINK != null) {
+                const DESCRIPTION_ACC_TAX_INVOICE_LINK = carriage.ACCOUNTING_TAX_INVOICE_LINK.DESCRIPTION.split(",");
+
+                $.each(carriage.ACCOUNTING_TAX_INVOICE_LINK.VALUE.split(","), function (index, value) {
+                    if (DESCRIPTION_ACC_TAX_INVOICE_LINK[index] !== '') {
+                        ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_TAX_INVOICE_LINK[index] + '</li>';
+                    } else if (DESCRIPTION_ACC_TAX_INVOICE_LINK[index] === '') {
+                    } else {
+                        ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    }
+                });
+            }
+
+            if (carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK != null) {
+                const DESCRIPTION_ACC_TAX_INVOICE_EDM_LINK = carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK.DESCRIPTION.split(",");
+
+                $.each(carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK.VALUE.split(","), function (index, value) {
+                    if (value !== '') {
+                        ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    } else if (value === '') {
+                    }
+                });
+            }
 
             $('#tax_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_tax_link").html(ACC_TAX_INVOICE_LINK);
@@ -693,6 +1073,192 @@ $(document).ready(function () {
             $('#upd_file').hide();
             $('#upd_link').addClass('status-info_confirmation_error');
             $("#list_file_upd_link").html();
+        }
+
+        /** Бухгалтерские документы экспедитора */
+        if (carriage.ACCOUNTING_FOR_CHECKS != null) {
+            $('#accounting_for').show();
+            if (carriage.ACCOUNTING_FOR_CHECKS_ERROR !== false) {
+                $('#accounting_check_for').addClass('detail-status_good').html(carriage.ACCOUNTING_FOR_CHECKS);
+            } else {
+                $('#accounting_check_for').addClass('detail-status_error').html('Выполнено ' + carriage.ACCOUNTING_FOR_CHECKS);
+            }
+        } else {
+            $('#accounting_check_for').html('').removeClass();
+        }
+        /** Счёт */
+        if (carriage.ACCOUNTING_INVOICE_STATUS_FOR === 'passed' ||
+            carriage.ACCOUNTING_INVOICE_STATUS_FOR === 'in_progress'
+        ) {
+            $('#invoice_link_for').show();
+        }
+        if (carriage.ACCOUNTING_INVOICE_LINK_FOR != null) {
+            let ACC_INVOICE_LINK_FOR = '';
+            const DESCRIPTION_ACC_INVOICE_LINK_FOR = carriage.ACCOUNTING_INVOICE_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.ACCOUNTING_INVOICE_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_ACC_INVOICE_LINK_FOR[index] !== '') {
+                    ACC_INVOICE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_INVOICE_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_ACC_INVOICE_LINK_FOR[index] === '') {
+                } else {
+                    ACC_INVOICE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#invoice_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_invoice_link_for").html(ACC_INVOICE_LINK_FOR);
+            $('#invoice_file_for').show();
+        } else {
+            $('#invoice_file_for').hide();
+            $('#invoice_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_invoice_link_for").html();
+        }
+        /** Акт о приемке выполненных работ по услуге */
+        if (carriage.ACCOUNTING_ACT_ACCEPTANCE_STATUS_FOR === 'passed' ||
+            carriage.ACCOUNTING_ACT_ACCEPTANCE_STATUS_FOR === 'in_progress'
+        ) {
+            $('#act_link_for').show();
+        }
+        if (carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR != null) {
+            let ACC_ACT_ACC_LINK_FOR = '';
+            const DESCRIPTION_ACC_ACT_ACC_LINK_FOR = carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] !== '') {
+                    ACC_ACT_ACC_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] === '') {
+                } else {
+                    ACC_ACT_ACC_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#act_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_act_link_for").html(ACC_ACT_ACC_LINK_FOR);
+            $('#act_file_for').show();
+        } else {
+            $('#act_file_for').hide();
+            $('#act_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_act_link_for").html();
+        }
+        /** Акт о приемке выполненных работ, включающий несколько перевозок */
+        if (carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORT_STATUS_FOR === 'passed' ||
+            carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORT_STATUS_FOR === 'in_progress'
+        ) {
+            $('#multi_link_for').show();
+        }
+        if (carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK_FOR != null) {
+            let ACC_ACT_MULTI_TRANSPORT_LINK_FOR = '';
+            const DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK_FOR = carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK_FOR[index] !== '') {
+                    ACC_ACT_MULTI_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK_FOR[index] === '') {
+                } else {
+                    ACC_ACT_MULTI_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#multi_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_multi_link_for").html(ACC_ACT_MULTI_TRANSPORT_LINK_FOR);
+            $('#multi_file_for').show();
+        } else {
+            $('#multi_file_for').hide();
+            $('#multi_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_multi_link_for").html();
+        }
+        /** Реестр на перевозки */
+        if (carriage.ACCOUNTING_TRANSPORT_REGISTRY_STATUS_FOR === 'passed' ||
+            carriage.ACCOUNTING_TRANSPORT_REGISTRY_STATUS_FOR === 'in_progress'
+        ) {
+            $('#reg_link_for').show();
+        }
+        if (carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_LINK_FOR != null) {
+            let ACC_TRANSPORT_REG_LINK_FOR = '';
+            const DESCRIPTION_ACC_TRANSPORT_REG_LINK_FOR = carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_ACC_TRANSPORT_REG_LINK_FOR[index] !== '') {
+                    ACC_TRANSPORT_REG_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_TRANSPORT_REG_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_ACC_TRANSPORT_REG_LINK_FOR[index] === '') {
+                } else {
+                    ACC_TRANSPORT_REG_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#reg_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_reg_link_for").html(ACC_TRANSPORT_REG_LINK_FOR);
+            $('#reg_file_for').show();
+        } else {
+            $('#reg_file_for').hide();
+            $('#reg_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_reg_link_for").html();
+        }
+        /** Счёт-фактура */
+        if (carriage.ACCOUNTING_TAX_INVOICE_STATUS_FOR === 'passed' ||
+            carriage.ACCOUNTING_TAX_INVOICE_STATUS_FOR === 'in_progress'
+        ) {
+            $('#tax_link_for').show();
+        }
+        if (carriage.ACCOUNTING_TAX_INVOICE_LINK_FOR != null || carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK_FOR != null) {
+            let ACC_TAX_INVOICE_LINK_FOR = '';
+
+            if (carriage.ACCOUNTING_TAX_INVOICE_LINK_FOR != null) {
+                const DESCRIPTION_ACC_TAX_INVOICE_LINK_FOR = carriage.ACCOUNTING_TAX_INVOICE_LINK_FOR.DESCRIPTION.split(",");
+
+                $.each(carriage.ACCOUNTING_TAX_INVOICE_LINK_FOR.VALUE.split(","), function (index, value) {
+                    if (DESCRIPTION_ACC_TAX_INVOICE_LINK_FOR[index] !== '') {
+                        ACC_TAX_INVOICE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_TAX_INVOICE_LINK_FOR[index] + '</li>';
+                    } else if (DESCRIPTION_ACC_TAX_INVOICE_LINK_FOR[index] === '') {
+                    } else {
+                        ACC_TAX_INVOICE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    }
+                });
+            }
+
+            if (carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK_FOR != null) {
+                $.each(carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
+                    if (value !== '') {
+                        ACC_TAX_INVOICE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    } else if (value === '') {
+                    }
+                });
+            }
+
+            $('#tax_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_tax_link_for").html(ACC_TAX_INVOICE_LINK_FOR);
+            $('#tax_file_for').show();
+        } else {
+            $('#tax_file_for').hide();
+            $('#tax_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_tax_link_for").html();
+        }
+        /** УПД */
+        if (carriage.ACCOUNTING_UPD_STATUS_FOR === 'passed' ||
+            carriage.ACCOUNTING_UPD_STATUS_FOR === 'in_progress'
+        ) {
+            $('#upd_link_for').show();
+        }
+        if (carriage.ACCOUNTING_UPD_LINK_FOR != null) {
+            let ACC_UPD_LINK_FOR = '';
+            const DESCRIPTION_ACC_UPD_LINK_FOR = carriage.ACCOUNTING_UPD_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.ACCOUNTING_UPD_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_ACC_UPD_LINK_FOR[index] !== '') {
+                    ACC_UPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_UPD_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_ACC_UPD_LINK_FOR[index] === '') {
+                } else {
+                    ACC_UPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#upd_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_upd_link_for").html(ACC_UPD_LINK_FOR);
+            $('#upd_file_for').show();
+        } else {
+            $('#upd_file_for').hide();
+            $('#upd_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_upd_link_for").html();
         }
     }
 
@@ -749,6 +1315,7 @@ $(document).ready(function () {
         ) {
             $('#donkey_rent_link').show();
         }
+
         if (carriage.DONKEY_RENT_AGREEMENT_LINK != null) {
             let DONKEY_RENT_AGR_LINK = '';
             const DESCRIPTION_DONKEY_RENT_AGR_LINK = carriage.DONKEY_RENT_AGREEMENT_LINK.DESCRIPTION.split(",");
@@ -769,6 +1336,80 @@ $(document).ready(function () {
             $('#donkey_rent_file').hide();
             $('#donkey_rent_link').addClass('status-info_confirmation_error');
             $("#list_file_donkey_rent_link").html();
+        }
+
+        /** Подтверждения владения тягач экспедитор*/
+        if (carriage.DONKEY_FOR_CHECKS != null) {
+            $('#donkey_for').show();
+            if (carriage.DONKEY_FOR_CHECKS_ERROR !== false) {
+                $('#donkey_check_for').addClass('detail-status_good').html(carriage.DONKEY_FOR_CHECKS);
+            } else {
+                $('#donkey_check_for').addClass('detail-status_error').html('Выполнено ' + carriage.DONKEY_FOR_CHECKS);
+            }
+        } else {
+            $('#donkey_check_for').html('').removeClass();
+        }
+        /** Номерной знак тягач */
+        if (carriage.DONKEY_LICENSE_PLATE_FOR != null) {
+            $('#donkey_plate_for').html(carriage.DONKEY_LICENSE_PLATE_FOR);
+        } else {
+            $('#donkey_plate_for').html('');
+        }
+        /** СТС тягач */
+        if (carriage.DONKEY_STS_STATUS_FOR === 'passed' ||
+            carriage.DONKEY_STS_STATUS_FOR === 'in_progress'
+        ) {
+            $('#donkey_link_for').show();
+        }
+        if (carriage.DONKEY_STS_LINK_FOR != null) {
+            let DONKEY_STS_LINK_FOR = '';
+            const DESCRIPTION_DONKEY_STS_LINK_FOR = carriage.DONKEY_STS_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.DONKEY_STS_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_DONKEY_STS_LINK_FOR[index] !== '') {
+                    DONKEY_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_STS_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_DONKEY_STS_LINK_FOR[index] === '') {
+                } else {
+                    DONKEY_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#donkey_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_donkey_link_for").html(DONKEY_STS_LINK_FOR);
+            $('#donkey_file_for').show();
+        } else {
+            $('#donkey_file_for').hide();
+            $('#donkey_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_donkey_link_for").html();
+        }
+
+        /** Договор аренды тягач */
+        if (carriage.DONKEY_RENT_AGREEMENT_STATUS_FOR === 'passed' ||
+            carriage.DONKEY_RENT_AGREEMENT_STATUS_FOR === 'in_progress'
+        ) {
+            $('#donkey_rent_link_for').show();
+        }
+
+        if (carriage.DONKEY_RENT_AGREEMENT_LINK_FOR != null) {
+            let DONKEY_RENT_AGR_LINK_FOR = '';
+            const DESCRIPTION_DONKEY_RENT_AGR_LINK_FOR = carriage.DONKEY_RENT_AGREEMENT_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.DONKEY_RENT_AGREEMENT_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_DONKEY_RENT_AGR_LINK_FOR[index] !== '') {
+                    DONKEY_RENT_AGR_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_RENT_AGR_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRAILER_RENT_AGR_LINK_FOR[index] === '') {
+                } else {
+                    DONKEY_RENT_AGR_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#donkey_rent_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_donkey_rent_link_for").html(DONKEY_RENT_AGR_LINK_FOR);
+            $('#donkey_rent_file_for').show();
+        } else {
+            $('#donkey_rent_file_for').hide();
+            $('#donkey_rent_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_donkey_rent_link_for").html();
         }
     }
 
@@ -844,6 +1485,78 @@ $(document).ready(function () {
             $('#trailer_rent_file').hide();
             $('#trailer_rent_link').addClass('status-info_confirmation_error');
             $("#list_file_trailer_rent_link").html();
+        }
+
+        /** Подтверждения владения прицеп экспедитор*/
+        if (carriage.TRAILER_FOR_CHECKS != null) {
+            $('#trailer_for').show();
+            if (carriage.TRAILER_FOR_CHECKS_ERROR !== false) {
+                $('#trailer_check_for').addClass('detail-status_good').html(carriage.TRAILER_FOR_CHECKS);
+            } else {
+                $('#trailer_check_for').addClass('detail-status_error').html('Выполнено ' + carriage.TRAILER_FOR_CHECKS);
+            }
+        } else {
+            $('#trailer_check_for').html('').removeClass();
+        }
+        /** Номерной знак прицеп */
+        if (carriage.TRAILER_LICENSE_PLATE_FOR != null) {
+            $('#trailer_plate_for').html(carriage.TRAILER_LICENSE_PLATE_FOR);
+        } else {
+            $('#trailer_plate_for').html('');
+        }
+        /** СТС прицеп */
+        if (carriage.TRAILER_STS_STATUS_FOR === 'passed' ||
+            carriage.TRAILER_STS_STATUS_FOR === 'in_progress'
+        ) {
+            $('#trailer_ctc_link_for').show();
+        }
+        if (carriage.TRAILER_STS_LINK_FOR != null) {
+            let TRAILER_STS_LINK_FOR = '';
+            const DESCRIPTION_TRAILER_STS_LINK_FOR = carriage.TRAILER_STS_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRAILER_STS_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRAILER_STS_LINK_FOR[index] !== '') {
+                    TRAILER_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_STS_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRAILER_STS_LINK_FOR[index] === '') {
+                } else {
+                    TRAILER_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#trailer_ctc_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_trailer_ctc_link_for").html(TRAILER_STS_LINK_FOR);
+            $('#trailer_ctc_file_for').show();
+        } else {
+            $('#trailer_ctc_file_for').hide();
+            $('#trailer_ctc_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_trailer_ctc_link_for").html();
+        }
+        /** Договор аренды прицеп */
+        if (carriage.TRAILER_RENT_AGREEMENT_STATUS_FOR === 'passed' ||
+            carriage.TRAILER_RENT_AGREEMENT_STATUS_FOR === 'in_progress'
+        ) {
+            $('#trailer_rent_link_for').show();
+        }
+        if (carriage.TRAILER_RENT_AGREEMENT_LINK_FOR != null) {
+            let TRAILER_RENT_AGR_LINK_FOR = '';
+            const DESCRIPTION_TRAILER_RENT_AGR_LINK_FOR = carriage.TRAILER_RENT_AGREEMENT_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRAILER_RENT_AGREEMENT_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRAILER_RENT_AGR_LINK_FOR[index] !== '') {
+                    TRAILER_RENT_AGR_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_RENT_AGR_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRAILER_RENT_AGR_LINK_FOR[index] === '') {
+                } else {
+                    TRAILER_RENT_AGR_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#trailer_rent_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_trailer_rent_link_for").html(TRAILER_RENT_AGR_LINK_FOR);
+            $('#trailer_rent_file_for').show();
+        } else {
+            $('#trailer_rent_file_for').hide();
+            $('#trailer_rent_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_trailer_rent_link_for").html();
         }
     }
 
@@ -999,6 +1712,157 @@ $(document).ready(function () {
             $('#trailer_sec_usage_link').addClass('status-info_confirmation_error');
             $("#list_file_trailer_sec_usage_link").html();
         }
+
+        /** Подтверждения владения второго прицеп экспедитора */
+        if (carriage.TRAILER_SECONDARY_FOR_CHECKS != null) {
+            $('#trailer_sec_for').show();
+            if (carriage.TRAILER_SECONDARY_FOR_CHECKS_ERROR !== false) {
+                $('#trailer_sec_check_for').addClass('detail-status_good').html(carriage.TRAILER_SECONDARY_FOR_CHECKS);
+            } else {
+                $('#trailer_sec_check_for').addClass('detail-status_error').html('Выполнено ' + carriage.TRAILER_SECONDARY_FOR_CHECKS);
+            }
+        } else {
+            $('#trailer_sec_check_for').html('').removeClass();
+        }
+        /** Номерной знак второго прицеп */
+        if (carriage.TRAILER_SECONDARY_LICENSE_PLATE_FOR != null) {
+            $('#trailer_sec_plate_for').html(carriage.TRAILER_SECONDARY_LICENSE_PLATE_FOR);
+        } else {
+            $('#trailer_sec_plate_for').html('');
+        }
+        /** СТС второго прицеп */
+        if (carriage.TRAILER_SECONDARY_STS_STATUS_FOR === 'passed' ||
+            carriage.TRAILER_SECONDARY_STS_STATUS_FOR === 'in_progress'
+        ) {
+            $('#trailer_sec_ctc_link_for').show();
+        }
+        if (carriage.TRAILER_SECONDARY_STS_LINK_FOR != null) {
+            let TRAILER_SEC_STS_LINK_FOR = '';
+            const DESCRIPTION_TRAILER_SEC_STS_LINK_FOR = carriage.TRAILER_SECONDARY_STS_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRAILER_SECONDARY_STS_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRAILER_SEC_STS_LINK_FOR[index] !== '') {
+                    TRAILER_SEC_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_STS_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRAILER_SEC_STS_LINK_FOR[index] === '') {
+                } else {
+                    TRAILER_SEC_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#trailer_sec_ctc_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_trailer_sec_ctc_link_for").html(TRAILER_SEC_STS_LINK_FOR);
+            $('#trailer_sec_ctc_file_for').show();
+        } else {
+            $('#trailer_sec_ctc_file_for').hide();
+            $('#trailer_sec_ctc_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_trailer_sec_ctc_link_for").html();
+        }
+        /** Договор аренды второго прицепа */
+        if (carriage.TRAILER_SECONDARY_RENT_AGREEMENT_STATUS_FOR === 'passed' ||
+            carriage.TRAILER_SECONDARY_RENT_AGREEMENT_STATUS_FOR === 'in_progress'
+        ) {
+            $('#trailer_sec_rent_link_for').show();
+        }
+        if (carriage.TRAILER_SECONDARY_RENT_AGREEMENT_LINK_FOR != null) {
+            let TRAILER_SEC_RENT_LINK_FOR = '';
+            const DESCRIPTION_TRAILER_SEC_RENT_LINK_FOR = carriage.TRAILER_SECONDARY_RENT_AGREEMENT_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRAILER_SECONDARY_RENT_AGREEMENT_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRAILER_SEC_RENT_LINK_FOR[index] !== '') {
+                    TRAILER_SEC_RENT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_RENT_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRAILER_SEC_RENT_LINK_FOR[index] === '') {
+                } else {
+                    TRAILER_SEC_RENT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#trailer_sec_rent_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_trailer_sec_rent_link_for").html(TRAILER_SEC_RENT_LINK_FOR);
+            $('#trailer_sec_rent_file_for').show();
+        } else {
+            $('#trailer_sec_rent_file_for').hide();
+            $('#trailer_sec_rent_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_trailer_sec_rent_link_for").html();
+        }
+        /** Договор с лизинговой компанией второго (прицеп) */
+        if (carriage.TRAILER_SECONDARY_LEASING_COMPANY_STATUS === 'passed' ||
+            carriage.TRAILER_SECONDARY_LEASING_COMPANY_STATUS === 'in_progress'
+        ) {
+            $('#trailer_sec_lias_link_for').show();
+        }
+        if (carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK_FOR != null) {
+            let TRAILER_SEC_LEASING_COMPANY_LINK_FOR = '';
+            const DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK_FOR = carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK_FOR[index] !== '') {
+                    TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] === '') {
+                } else {
+                    TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#trailer_sec_lias_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_trailer_sec_lias_link_for").html(TRAILER_SEC_LEASING_COMPANY_LINK_FOR);
+            $('#trailer_sec_lias_file_for').show();
+        } else {
+            $('#trailer_sec_lias_file_for').hide();
+            $('#trailer_sec_lias_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_trailer_sec_lias_link_for").html();
+        }
+        /** Свидетельство о браке второго (прицепа) */
+        if (carriage.TRAILER_SECONDARY_CERTIFICATE_STATUS_FOR === 'passed' ||
+            carriage.TRAILER_SECONDARY_CERTIFICATE_STATUS_FOR === 'in_progress'
+        ) {
+            $('#trailer_sec_cer_link_for').show();
+        }
+        if (carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK_FOR != null) {
+            let TRAILER_SEC_CERTIFICATE_LINK_FOR = '';
+            const DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR = carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR[index] !== '') {
+                    TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR[index] === '') {
+                } else {
+                    TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#trailer_sec_cer_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_trailer_sec_cer_link_for").html(TRAILER_SEC_CERTIFICATE_LINK_FOR);
+        } else {
+            $('#trailer_sec_cer_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_trailer_sec_cer_link_for").html();
+        }
+        /** Договор безвозмездного использования второго (прицепа) */
+        if (carriage.TRAILER_SECONDARY_FREE_USAGE_STATUS_FOR === 'passed' ||
+            carriage.TRAILER_SECONDARY_FREE_USAGE_STATUS_FOR === 'in_progress'
+        ) {
+            $('#trailer_sec_usage_link_for').show();
+        }
+        if (carriage.TRAILER_SECONDARY_FREE_USAGE_LINK_FOR != null) {
+            let TRAILER_SEC_FREE_USAGE_LINK_FOR = '';
+            const DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR = carriage.TRAILER_SECONDARY_FREE_USAGE_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRAILER_SECONDARY_FREE_USAGE_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR[index] !== '') {
+                    TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR[index] === '') {
+                } else {
+                    TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#trailer_sec_usage_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_trailer_sec_usage_link_for").html(TRAILER_SEC_FREE_USAGE_LINK_FOR);
+            $('#trailer_sec_usage_file_for').show();
+        } else {
+            $('#trailer_sec_usage_file_for').hide();
+            $('#trailer_sec_usage_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_trailer_sec_usage_link_for").html();
+        }
     }
 
     /** Блок грузовика */
@@ -1027,20 +1891,20 @@ $(document).ready(function () {
             $('#truck_sts_link').show();
         }
         if (carriage.TRUCK_STS_LINK != null) {
-            let TRUCK_STS_LINK = '';
+            let TRUCK_STS_LINKS = '';
             const DESCRIPTION_TRUCK_STS_LINK = carriage.TRUCK_STS_LINK.DESCRIPTION.split(",");
 
             $.each(carriage.TRUCK_STS_LINK.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_TRUCK_STS_LINK[index] !== '') {
-                    TRUCK_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + DESCRIPTION_TRUCK_STS_LINK[index] + '</li>';
+                    TRUCK_STS_LINKS += '<li><a href="' + value + '" target="_blank">Файл ' + DESCRIPTION_TRUCK_STS_LINK[index] + '</li>';
                 } else if (DESCRIPTION_TRUCK_STS_LINK[index] === '') {
                 } else {
-                    TRUCK_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    TRUCK_STS_LINKS += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                 }
             });
 
             $('#truck_sts_link').show().removeClass('status-info_confirmation_error');
-            $("#list_file_truck_sts_link").html(TRUCK_STS_LINK);
+            $("#list_file_truck_sts_link").html(TRUCK_STS_LINKS);
             $('#truck_sts_file').show();
         } else {
             $('#truck_sts_file').hide();
@@ -1155,5 +2019,160 @@ $(document).ready(function () {
             $('#truck_usage_link').addClass('status-info_confirmation_error');
             $("#list_file_truck_usage_link").html();
         }
+
+        /** Подтверждение владения грузовик экспедитор*/
+        if (carriage.TRUCK_FOR_CHECKS != null) {
+            $('#truck_for').show();
+            if (carriage.TRUCK_FOR_CHECKS_ERROR !== false) {
+                $('#truck_check_for').addClass('detail-status_good').html(carriage.TRUCK_FOR_CHECKS);
+            } else {
+                $('#truck_check_for').addClass('detail-status_error').html('Выполнено ' + carriage.TRUCK_FOR_CHECKS);
+            }
+        } else {
+            $('#truck_check_for').html('').removeClass();
+        }
+        /** Номерной знак грузовик */
+        if (carriage.TRUCK_LICENSE_PLATE_FOR != null) {
+            $('#truck_plate_for').html(carriage.TRUCK_LICENSE_PLATE_FOR);
+        } else {
+            $('#truck_plate_for').html('');
+        }
+        /** СТС грузовик */
+        if (carriage.TRUCK_STS_STATUS_FOR === 'passed' ||
+            carriage.TRUCK_STS_STATUS_FOR === 'in_progress'
+        ) {
+            $('#truck_sts_link_for').show();
+        }
+        if (carriage.TRUCK_STS_LINK_FOR != null) {
+            let TRUCK_STS_LINKS_FOR = '';
+            const DESCRIPTION_TRUCK_STS_LINK_FOR = carriage.TRUCK_STS_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRUCK_STS_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRUCK_STS_LINK_FOR[index] !== '') {
+                    TRUCK_STS_LINKS_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + DESCRIPTION_TRUCK_STS_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRUCK_STS_LINK_FOR[index] === '') {
+                } else {
+                    TRUCK_STS_LINKS_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#truck_sts_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_truck_sts_link_for").html(TRUCK_STS_LINKS_FOR);
+            $('#truck_sts_file_for').show();
+        } else {
+            $('#truck_sts_file_for').hide();
+            $('#truck_sts_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_truck_sts_link_for").html();
+        }
+        /** Договор аренды грузовик */
+        if (carriage.TRUCK_RENT_AGREEMENT_STATUS_FOR === 'passed' ||
+            carriage.TRUCK_RENT_AGREEMENT_STATUS_FOR === 'in_progress'
+        ) {
+            $('#truck_rent_for').show();
+        }
+        if (carriage.TRUCK_RENT_AGREEMENT_LINK_FOR != null) {
+            let TRUCK_RENT_LINK_FOR = '';
+            const DESCRIPTION_TRUCK_RENT_LINK_FOR = carriage.TRUCK_RENT_AGREEMENT_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRUCK_RENT_AGREEMENT_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRUCK_RENT_LINK_FOR[index] !== '') {
+                    TRUCK_RENT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_RENT_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRUCK_RENT_LINK[index] === '') {
+                } else {
+                    TRUCK_RENT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#truck_rent_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_truck_rent_for").html(TRUCK_RENT_LINK_FOR);
+            $('#truck_link_for').show();
+        } else {
+            $('#truck_link_for').hide();
+            $('#truck_rent_for').addClass('status-info_confirmation_error');
+            $("#list_file_truck_rent_for").html();
+        }
+        /** Договор с лизинговой компанией грузовик */
+        if (carriage.TRUCK_LEASING_COMPANY_STATUS_FOR === 'passed' ||
+            carriage.TRUCK_LEASING_COMPANY_STATUS_FOR === 'in_progress'
+        ) {
+            $('#truck_leas_link_for').show();
+        }
+        if (carriage.TRUCK_AGREEMENT_LEASING_COMPANY_LINK_FOR != null) {
+            let TRUCK_LEASING_COMPANY_LINK_FOR = '';
+            const DESCRIPTION_TRUCK_LEASING_COMPANY_LINK_FOR = carriage.TRUCK_AGREEMENT_LEASING_COMPANY_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRUCK_AGREEMENT_LEASING_COMPANY_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRUCK_LEASING_COMPANY_LINK_FOR[index] !== '') {
+                    TRUCK_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_LEASING_COMPANY_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRUCK_LEASING_COMPANY_LINK_FOR[index] === '') {
+                } else {
+                    TRUCK_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#truck_leas_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_truck_leas_link_for").html(TRUCK_LEASING_COMPANY_LINK_FOR);
+            $('#truck_leas_file_for').show();
+        } else {
+            $('#truck_leas_file_for').hide();
+            $('#truck_leas_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_truck_leas_link_for").html();
+        }
+        /** Свидетельство о браке грузовик */
+        if (carriage.TRUCK_CERTIFICATE_STATUS_FOR === 'passed' ||
+            carriage.TRUCK_CERTIFICATE_STATUS_FOR === 'in_progress'
+        ) {
+            $('#truck_cert_link_for').show();
+        }
+        if (carriage.TRUCK_MARRIAGE_CERTIFICATE_LINK_FOR != null) {
+            let TRUCK_CERTIFICATE_LINK_FOR = '';
+            const DESCRIPTION_TRUCK_CERTIFICATE_LINK_FOR = carriage.TRUCK_MARRIAGE_CERTIFICATE_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRUCK_MARRIAGE_CERTIFICATE_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRUCK_CERTIFICATE_LINK_FOR[index] !== '') {
+                    TRUCK_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_CERTIFICATE_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRUCK_CERTIFICATE_LINK_FOR[index] === '') {
+                } else {
+                    TRUCK_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#truck_cert_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_truck_cert_link_for").html(TRUCK_CERTIFICATE_LINK_FOR);
+            $('#truck_cert_file_for').show();
+        } else {
+            $('#truck_cert_file_for').hide();
+            $('#truck_cert_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_truck_cert_link_for").html();
+        }
+        /** Договор безвозмездного использования грузовик */
+        if (carriage.TRUCK_FREE_USAGE_STATUS_FOR === 'passed' ||
+            carriage.TRUCK_FREE_USAGE_STATUS_FOR === 'in_progress'
+        ) {
+            $('#truck_usage_link_for').show();
+        }
+        if (carriage.TRUCK_FREE_USAGE_LINK_FOR != null) {
+            let TRUCK_FREE_USAGE_LINK_FOR = '';
+            const DESCRIPTION_TRUCK_FREE_USAGE_LINK_FOR = carriage.TRUCK_FREE_USAGE_LINK_FOR.DESCRIPTION.split(",");
+
+            $.each(carriage.TRUCK_FREE_USAGE_LINK_FOR.VALUE.split(","), function (index, value) {
+                if (DESCRIPTION_TRUCK_FREE_USAGE_LINK_FOR[index] !== '') {
+                    TRUCK_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_FREE_USAGE_LINK_FOR[index] + '</li>';
+                } else if (DESCRIPTION_TRUCK_FREE_USAGE_LINK_FOR[index] === '') {
+                } else {
+                    TRUCK_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                }
+            });
+
+            $('#truck_usage_link_for').show().removeClass('status-info_confirmation_error');
+            $("#list_file_truck_usage_link_for").html(TRUCK_FREE_USAGE_LINK_FOR);
+            $('#truck_usage_file_for').show();
+        } else {
+            $('#truck_usage_file_for').hide();
+            $('#truck_usage_link_for').addClass('status-info_confirmation_error');
+            $("#list_file_truck_usage_link_for").html();
+        }
     }
+
+
 });
