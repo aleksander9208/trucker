@@ -1270,7 +1270,7 @@ $(document).ready(function () {
         if (carriage.ACCOUNTING_UPD_LINK != null || carriage.ACCOUNTING_UPD_EDM_LINK != null) {
             let ACC_UPD_LINK = '';
 
-            if (carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK != null) {
+            if (carriage.ACCOUNTING_UPD_LINK != null) {
                 const DESCRIPTION_ACC_UPD_LINK = carriage.ACCOUNTING_UPD_LINK.DESCRIPTION.split(",");
 
                 $.each(carriage.ACCOUNTING_UPD_LINK.VALUE.split(","), function (index, value) {
