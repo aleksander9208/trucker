@@ -923,7 +923,7 @@ $(document).ready(function () {
             if (carriage.DOCUMENTS_EXPEDITOR_EDM_LINK_FOR != null) {
                 $.each(carriage.DOCUMENTS_EXPEDITOR_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DOC_EPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EXP_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                     } else if (value === '') {
                     }
                 });
