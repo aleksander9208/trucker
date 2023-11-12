@@ -823,8 +823,8 @@ class Vitrina extends BaseController
                         }
 
                         if ($linkFor['UF_EDM_ATTACHMENTS']) {
-                            $properties['CONTRACT_TRANSPORT_EDM_LINK']['VALUE'] .= $linkFor['UF_LINK'] . ',';
-                            $properties['CONTRACT_TRANSPORT_EDM_LINK']['DESCRIPTION'] .= $linkFor['UF_NAME_LINK'] . ',';
+                            $properties['CONTRACT_TRANSPORT_EDM_LINK_FOR']['VALUE'] .= $linkFor['UF_LINK'] . ',';
+                            $properties['CONTRACT_TRANSPORT_EDM_LINK_FOR']['DESCRIPTION'] .= $linkFor['UF_NAME_LINK'] . ',';
                         }
                     }
                     if ($linkFor['UF_GROUP_NAME'] === 'order_one_time_contract') {

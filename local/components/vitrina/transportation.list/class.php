@@ -794,12 +794,16 @@ class TransportationList extends CBitrixComponent
 
             if ($item['CHECKLIST_CARRIER_VALUE'] === '1') {
                 $this->arResult['COUNT_GOOD'] = $good;
-                $goodStatus = '<span class="transit-good"></span>';
+                $goodStatusCarrier = '<span class="transit-good"></span>';
+            } else {
+                $errorStatusCarrier = '<span class="transit-error"></span>';
             }
 
-            if ($item['CHECKLIST_FORWARDER_VALUE'] === '0') {
+            if ($item['CHECKLIST_FORWARDER_VALUE'] === '1') {
                 $this->arResult['COUNT_ERROR'] = $error;
-                $errorStatus = '<span class="transit-error"></span>';
+                $errorStatusFor = '<span class="transit-error"></span>';
+            } else {
+                $goodStatusFor = '<span class="transit-good"></span>';
             }
 
             $vitrinaList[] = [
@@ -811,8 +815,8 @@ class TransportationList extends CBitrixComponent
                     "FORWARDER" => $item['FORWARDER_VALUE'] . '<span>' . $item['FORWARDER_INN_VALUE'] . '</span>',
                     "CARRIER" => $item['CARRIER_VALUE'] . '<span>' . $item['CARRIER_INN_VALUE'] . '</span>',
                     "DEVIATION_FROM_PRICE" => $item['DEVIATION_MARKET_PRICE_VALUE'],
-                    "CHECKLIST_CARRIER" => $goodStatus,
-                    "CHECKLIST_FORWARDER" => $errorStatus,
+                    "CHECKLIST_CARRIER" => $goodStatusCarrier ?: $errorStatusCarrier,
+                    "CHECKLIST_FORWARDER" => $errorStatusFor ?: $goodStatusFor,
                 ],
             ];
 
