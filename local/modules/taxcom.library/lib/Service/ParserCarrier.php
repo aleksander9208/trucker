@@ -379,7 +379,7 @@ class ParserCarrier
                 if ($group['name'] === 'rent_agreement') {
                     $properties['DONKEY_RENT_AGREEMENT_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'agreement_withLeasingCompany') {
+                if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['DONKEY_LEASING_COMPANY_STATUS'] = $group['status'];
                 }
                 if ($group['name'] === 'marriage_certificate') {
@@ -398,7 +398,7 @@ class ParserCarrier
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRAILER_RENT_AGREEMENT_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'agreement_withLeasingCompany') {
+                if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRAILER_LEASING_COMPANY_STATUS'] = $group['status'];
                 }
                 if ($group['name'] === 'marriage_certificate') {
@@ -417,7 +417,7 @@ class ParserCarrier
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'agreement_withLeasingCompany') {
+                if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS'] = $group['status'];
                 }
                 if ($group['name'] === 'marriage_certificate') {
@@ -436,7 +436,7 @@ class ParserCarrier
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRUCK_RENT_AGREEMENT_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'agreement_withLeasingCompany') {
+                if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS'] = $group['status'];
                 }
                 if ($group['name'] === 'marriage_certificate') {
@@ -529,7 +529,7 @@ class ParserCarrier
                 if ($group['name'] === 'rent_agreement') {
                     $properties['DONKEY_RENT_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'agreement_withLeasingCompany') {
+                if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['DONKEY_LEASING_COMPANY_FOR_STATUS'] = $group['status'];
                 }
                 if ($group['name'] === 'marriage_certificate') {
@@ -548,7 +548,7 @@ class ParserCarrier
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRAILER_RENT_AGREEMENT_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'agreement_withLeasingCompany') {
+                if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRAILER_LEASING_COMPANY_FOR_STATUS'] = $group['status'];
                 }
                 if ($group['name'] === 'marriage_certificate') {
@@ -567,7 +567,7 @@ class ParserCarrier
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRAILER_SECONDARY_RENT_AGREEMENT_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'agreement_withLeasingCompany') {
+                if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRAILER_SECONDARY_LEASING_COMPANY_FOR_STATUS'] = $group['status'];
                 }
                 if ($group['name'] === 'marriage_certificate') {
@@ -586,7 +586,7 @@ class ParserCarrier
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRUCK_RENT_AGREEMENT_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'agreement_withLeasingCompany') {
+                if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRUCK_AGREEMENT_LEASING_COMPANY_FOR_STATUS'] = $group['status'];
                 }
                 if ($group['name'] === 'marriage_certificate') {

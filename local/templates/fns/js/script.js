@@ -1749,6 +1749,9 @@ $(document).ready(function () {
             $('#donkey_rent_link_for').addClass('status-info_confirmation_error');
             $("#list_file_donkey_rent_link_for").html();
         }
+
+
+
     }
 
     /** Блок прицепа */
