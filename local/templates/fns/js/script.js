@@ -380,7 +380,6 @@ $(document).ready(function () {
             $("#list_file_one_time_link").html();
         }
 
-
         /** Подписанные договоры экспедитора*/
         if (carriage.CONTRACT_FOR_CHECK != null) {
             $('#contract_for').show();
@@ -398,11 +397,11 @@ $(document).ready(function () {
         ) {
             $('#transport_link_for').show();
         }
-        if (carriage.CONTRACT_TRANSPORTATION_LINK_FOR != null) {
+        if (carriage.CONTRACT_TRANSPORT_LINK_FOR != null) {
             let CONT_TRANSPORT_LINK_FOR = '';
-            const DESCRIPTION_CONT_TRANSPORT_LINK_FOR = carriage.CONTRACT_TRANSPORTATION_LINK_FOR.DESCRIPTION.split(",");
+            const DESCRIPTION_CONT_TRANSPORT_LINK_FOR = carriage.CONTRACT_TRANSPORT_LINK_FOR.DESCRIPTION.split(",");
 
-            $.each(carriage.CONTRACT_TRANSPORTATION_LINK_FOR.VALUE.split(","), function (index, value) {
+            $.each(carriage.CONTRACT_TRANSPORT_LINK_FOR.VALUE.split(","), function (index, value) {
                 if (DESCRIPTION_CONT_TRANSPORT_LINK_FOR[index] !== '') {
                     CONT_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_TRANSPORT_LINK_FOR[index] + '</li>';
                 } else if (DESCRIPTION_CONT_TRANSPORT_LINK_FOR[index] === '') {
@@ -539,8 +538,6 @@ $(document).ready(function () {
             }
 
             if (carriage.DOCUMENTS_EPD_EDM_LINK != null) {
-                const DESCRIPTION_DOC_EPD_EDM_LINK = carriage.DOCUMENTS_EPD_EDM_LINK.DESCRIPTION.split(",");
-
                 $.each(carriage.DOCUMENTS_EPD_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
                         DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
@@ -747,8 +744,6 @@ $(document).ready(function () {
             $("#list_file_driver_link_for").html('');
         }
         /** Поручение экспедитору */
-        console.log('DOCUMENTS_EXPEDITOR_STATUS_FOR')
-        console.log(carriage.DOCUMENTS_EXPEDITOR_STATUS_FOR)
         if (carriage.DOCUMENTS_EXPEDITOR_STATUS_FOR === 'passed' ||
             carriage.DOCUMENTS_EXPEDITOR_STATUS_FOR === 'in_progress'
         ) {
@@ -1119,18 +1114,30 @@ $(document).ready(function () {
         ) {
             $('#act_link_for').show();
         }
-        if (carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR != null) {
+        if (carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR != null || carriage.ACCOUNTING_ACT_ACCEPTANCE_EDM_LINK_FOR != null) {
             let ACC_ACT_ACC_LINK_FOR = '';
-            const DESCRIPTION_ACC_ACT_ACC_LINK_FOR = carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR.DESCRIPTION.split(",");
 
-            $.each(carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR.VALUE.split(","), function (index, value) {
-                if (DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] !== '') {
-                    ACC_ACT_ACC_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] + '</li>';
-                } else if (DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] === '') {
-                } else {
-                    ACC_ACT_ACC_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
-                }
-            });
+            if (carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR != null) {
+                const DESCRIPTION_ACC_ACT_ACC_LINK_FOR = carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR.DESCRIPTION.split(",");
+
+                $.each(carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR.VALUE.split(","), function (index, value) {
+                    if (DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] !== '') {
+                        ACC_ACT_ACC_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] + '</li>';
+                    } else if (DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] === '') {
+                    } else {
+                        ACC_ACT_ACC_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    }
+                });
+            }
+
+            if (carriage.ACCOUNTING_ACT_ACCEPTANCE_EDM_LINK_FOR != null) {
+                $.each(carriage.ACCOUNTING_ACT_ACCEPTANCE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
+                    if (value !== '') {
+                        ACC_ACT_ACC_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    } else if (value === '') {
+                    }
+                });
+            }
 
             $('#act_link_for').show().removeClass('status-info_confirmation_error');
             $("#list_file_act_link_for").html(ACC_ACT_ACC_LINK_FOR);
@@ -1384,8 +1391,8 @@ $(document).ready(function () {
         }
 
         /** Договор аренды тягач */
-        if (carriage.DONKEY_RENT_AGREEMENT_STATUS_FOR === 'passed' ||
-            carriage.DONKEY_RENT_AGREEMENT_STATUS_FOR === 'in_progress'
+        if (carriage.DONKEY_RENT_STATUS_FOR === 'passed' ||
+            carriage.DONKEY_RENT_STATUS_FOR === 'in_progress'
         ) {
             $('#donkey_rent_link_for').show();
         }
