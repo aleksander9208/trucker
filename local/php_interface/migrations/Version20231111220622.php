@@ -5,9 +5,9 @@ namespace Sprint\Migration;
 use Bitrix\Main\Loader,
     Bitrix\Highloadblock as HL;
 
-class Version20231108202310 extends Version
+class Version20231111220622 extends Version
 {
-    protected $description = "Добавляем справочник для хранения ссылок";
+    protected $description = "Добавляем справочник экспедитора для хранения ссылок";
 
     protected $moduleVersion = "4.6.1";
 
@@ -16,8 +16,8 @@ class Version20231108202310 extends Version
         Loader::includeModule("highloadblock");
 
         $hlblock = HL\HighloadBlockTable::add([
-            'NAME' => "FnsLinkDocuments",
-            'TABLE_NAME' => "fns_link_documents",
+            'NAME' => "FnsLinkDocumentsForwardes",
+            'TABLE_NAME' => "fns_link_documents_forwardes",
         ]);
         $HLBLOCK_ID = $hlblock->getId();
 
