@@ -572,7 +572,7 @@ $(document).ready(function () {
             $('#documents_link').show();
         }
         if (carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_LINK != null ||
-            carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK_FOR != null
+            carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK != null
         ) {
             let DOC_APP_TRANSPORT_LINK = '';
 
@@ -589,8 +589,8 @@ $(document).ready(function () {
                 });
             }
 
-            if (carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK_FOR != null) {
-                $.each(carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
+            if (carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK != null) {
+                $.each(carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
                         DOC_APP_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
                     } else if (value === '') {
