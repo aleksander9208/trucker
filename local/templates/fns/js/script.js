@@ -112,6 +112,11 @@ $(document).ready(function () {
                     }
 
                     /** Чек-лист с перевозчиком */
+                    if (carriage.CHECKLIST_CARRIER != null) {
+                        $('#checklist_carrier').show();
+                    } else {
+                        $('#checklist_carrier').hide();
+                    }
 
                     /** Чек-лист с экспедитором */
                     if (carriage.CHECKLIST_FORWARDER != null) {
@@ -1024,8 +1029,6 @@ $(document).ready(function () {
             }
 
             if (carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK != null) {
-                const DESCRIPTION_ACC_TAX_INVOICE_EDM_LINK = carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK.DESCRIPTION.split(",");
-
                 $.each(carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
                         ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
@@ -1048,18 +1051,30 @@ $(document).ready(function () {
         ) {
             $('#upd_link').show();
         }
-        if (carriage.ACCOUNTING_UPD_LINK != null) {
+        if (carriage.ACCOUNTING_UPD_LINK != null || carriage.ACCOUNTING_UPD_EDM_LINK != null) {
             let ACC_UPD_LINK = '';
-            const DESCRIPTION_ACC_UPD_LINK = carriage.ACCOUNTING_UPD_LINK.DESCRIPTION.split(",");
 
-            $.each(carriage.ACCOUNTING_UPD_LINK.VALUE.split(","), function (index, value) {
-                if (DESCRIPTION_ACC_UPD_LINK[index] !== '') {
-                    ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_UPD_LINK[index] + '</li>';
-                } else if (DESCRIPTION_ACC_UPD_LINK[index] === '') {
-                } else {
-                    ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
-                }
-            });
+            if (carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK != null) {
+                const DESCRIPTION_ACC_UPD_LINK = carriage.ACCOUNTING_UPD_LINK.DESCRIPTION.split(",");
+
+                $.each(carriage.ACCOUNTING_UPD_LINK.VALUE.split(","), function (index, value) {
+                    if (DESCRIPTION_ACC_UPD_LINK[index] !== '') {
+                        ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_UPD_LINK[index] + '</li>';
+                    } else if (DESCRIPTION_ACC_UPD_LINK[index] === '') {
+                    } else {
+                        ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    }
+                });
+            }
+
+            if (carriage.ACCOUNTING_UPD_EDM_LINK != null) {
+                $.each(carriage.ACCOUNTING_UPD_EDM_LINK.VALUE.split(","), function (index, value) {
+                    if (value !== '') {
+                        ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                    } else if (value === '') {
+                    }
+                });
+            }
 
             $('#upd_link').show().removeClass('status-info_confirmation_error');
             $("#list_file_upd_link").html(ACC_UPD_LINK);
