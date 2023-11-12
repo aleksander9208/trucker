@@ -612,9 +612,9 @@ class ParserCarrier
                     $ufAttachments = true;
                     $ufEdmAttachments = false;
                 }
-                foreach ($check['edm_attachments'] as $attachment) {
-                    $nameLink = $attachment['name'];
-                    $link = $attachment['printed_form'];
+                foreach ($check['edm_attachments'] as $edm_attachment) {
+                    $nameLink = $edm_attachment['name'];
+                    $link = $edm_attachment['original_file'];
                     $ufAttachments = false;
                     $ufEdmAttachments = true;
                 }
