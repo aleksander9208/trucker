@@ -224,8 +224,8 @@ $(document).ready(function () {
         $('#donkey').hide();
         $('#donkey_link').hide();
         $('#donkey_rent_link').hide();
-        $('#donkey_leas_link').hide();
-        $('#donkey_cert_link').hide();
+        $('#donkey_lias_link').hide();
+        $('#donkey_cer_link').hide();
         $('#donkey_usage_link').hide();
 
         $('#trailer').hide();
