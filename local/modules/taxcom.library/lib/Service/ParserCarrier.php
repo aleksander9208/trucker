@@ -104,104 +104,10 @@ class ParserCarrier
      */
     public static function getPropertyList(array $carrier): array
     {
-        //Чек-лист с экспедиторов
-        $properties['CHECKLIST_FORWARDER'] = false;
-        //Чек-лист с перевозчиком
-        $properties['CHECKLIST_CARRIER'] = false;
-        $properties['FORWARDER'] = '';
-        $properties['FORWARDER_INN'] = '';
         //Дата погрузки
         $properties['DATE_SHIPMENT'] = $carrier['loading_date'];
         //Статус перевозки
         $properties['STATUS_SHIPPING'] = $carrier['status'];
-        //Чеклист данных перевозчика
-        $properties['CONTRACT_CHECK'] = '';
-        $properties['DOCUMENTS_CHECK'] = '';
-        $properties['AUTOMATIC_CHECKS'] = '';
-        $properties['ACCOUNTING_CHECKS'] = '';
-        $properties['DONKEY_CHECKS'] = '';
-        $properties['TRAILER_CHECKS'] = '';
-        $properties['TRAILER_SECONDARY_CHECKS'] = '';
-        $properties['TRUCK_CHECKS'] = '';
-        //Чеклист данных экспедитора
-        $properties['CONTRACT_FOR_CHECK'] = '';
-        $properties['DOCUMENTS_FOR_CHECK'] = '';
-        $properties['AUTOMATIC_FOR_CHECKS'] = '';
-        $properties['ACCOUNTING_FOR_CHECKS'] = '';
-        $properties['DONKEY_FOR_CHECKS'] = '';
-        $properties['TRAILER_FOR_CHECKS'] = '';
-        $properties['TRAILER_SECONDARY_FOR_CHECKS'] = '';
-        $properties['TRUCK_FOR_CHECKS'] = '';
-        //Статусы перевозчика
-        $properties['CONTRACT_EXPEDITION_STATUS'] = '';
-        $properties['CONTRACT_TRANSPORTATION_STATUS'] = '';
-        $properties['CONTRACT_ORDER_ONE_TIME_STATUS'] = '';
-        $properties['DOCUMENTS_EPD_STATUS'] = '';
-        $properties['DOCUMENTS_EXPEDITOR_STATUS'] = '';
-        $properties['DOCUMENTS_EXPEDITOR_RECEIPT_STATUS'] = '';
-        $properties['DOCUMENTS_DRIVER_APPROVALS_STATUS'] = '';
-        $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS'] = '';
-        $properties['ACCOUNTING_INVOICE_STATUS'] = '';
-        $properties['ACCOUNTING_ACT_ACCEPTANCE_STATUS'] = '';
-        $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS'] = '';
-        $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS'] = '';
-        $properties['ACCOUNTING_TAX_INVOICE_STATUS'] = '';
-        $properties['ACCOUNTING_UPD_STATUS'] = '';
-        $properties['DONKEY_STS_STATUS'] = '';
-        $properties['DONKEY_RENT_AGREEMENT_STATUS'] = '';
-        $properties['TRAILER_STS_STATUS'] = '';
-        $properties['TRAILER_RENT_AGREEMENT_STATUS'] = '';
-        $properties['TRAILER_SECONDARY_STS_STATUS'] = '';
-        $properties['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS'] = '';
-        $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS'] = '';
-        $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS'] = '';
-        $properties['TRAILER_SECONDARY_FREE_USAGE_STATUS'] = '';
-        $properties['TRUCK_STS_STATUS'] = '';
-        $properties['TRUCK_RENT_AGREEMENT_STATUS'] = '';
-        $properties['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS'] = '';
-        $properties['TRUCK_MARRIAGE_CERTIFICATE_STATUS'] = '';
-        $properties['TRUCK_FREE_USAGE_STATUS'] = '';
-        //Статусы экспедитора
-        $properties['CONTRACT_EXPEDITION_FOR_STATUS'] = '';
-        $properties['CONTRACT_TRANSPORTATION_FOR_STATUS'] = '';
-        $properties['CONTRACT_ORDER_ONE_TIME_FOR_STATUS'] = '';
-        $properties['DOCUMENTS_EPD_FOR_STATUS'] = '';
-        $properties['DOCUMENTS_EXPEDITOR_FOR_STATUS'] = '';
-        $properties['DOCUMENTS_EXPEDITOR_RECEIPT_FOR_STATUS'] = '';
-        $properties['DOCUMENTS_DRIVER_APPROVALS_FOR_STATUS'] = '';
-        $properties['DOCUMENTS_APPLICATION_TRANSPORT_FOR_STATUS'] = '';
-        $properties['AUTOMATIC_PRICES_FOR_STATUS'] = '';
-        $properties['AUTOMATIC_GEO_MONITORING_FOR_STATUS'] = '';
-        $properties['ACCOUNTING_INVOICE_FOR_STATUS'] = '';
-        $properties['ACCOUNTING_ACT_ACCEPTANCE_FOR_STATUS'] = '';
-        $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORT_FOR_STATUS'] = '';
-        $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_FOR_STATUS'] = '';
-        $properties['ACCOUNTING_TAX_INVOICE_FOR_STATUS'] = '';
-        $properties['ACCOUNTING_UPD_FOR_STATUS'] = '';
-        $properties['DONKEY_STS_FOR_STATUS'] = '';
-        $properties['DONKEY_RENT_FOR_STATUS'] = '';
-        $properties['TRAILER_STS_FOR_STATUS'] = '';
-        $properties['TRAILER_RENT_AGREEMENT_FOR_STATUS'] = '';
-        $properties['TRAILER_SECONDARY_STS_FOR_STATUS'] = '';
-        $properties['TRAILER_SECONDARY_RENT_AGREEMENT_FOR_STATUS'] = '';
-        $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_FOR_STATUS'] = '';
-        $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FOR_STATUS'] = '';
-        $properties['TRAILER_SECONDARY_FREE_USAGE_FOR_STATUS'] = '';
-        $properties['TRUCK_STS_FOR_STATUS'] = '';
-        $properties['TRUCK_RENT_AGREEMENT_FOR_STATUS'] = '';
-        $properties['TRUCK_AGREEMENT_LEASING_COMPANY_FOR_STATUS'] = '';
-        $properties['TRUCK_MARRIAGE_CERTIFICATE_FOR_STATUS'] = '';
-        $properties['TRUCK_FREE_USAGE_FOR_STATUS'] = '';
-        //Номерные знаки перевозчика
-        $properties['DONKEY_LICENSE_PLATE'] = '';
-        $properties['TRAILER_LICENSE_PLATE'] = '';
-        $properties['TRAILER_SECONDARY_LICENSE_PLATE'] = '';
-        $properties['TRUCK_LICENSE_PLATE'] = '';
-        //Номерные знаки экспедитора
-        $properties['DONKEY_LICENSE_FOR_PLATE'] = '';
-        $properties['TRAILER_LICENSE_FOR_PLATE'] = '';
-        $properties['TRAILER_SECONDARY_LICENSE_FOR_PLATE'] = '';
-        $properties['TRUCK_LICENSE_FOR_PLATE'] = '';
 
         if ($carrier['root'] === true) {
             $properties['CHECKLIST_FORWARDER'] = true;
