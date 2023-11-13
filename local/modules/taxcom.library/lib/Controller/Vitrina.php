@@ -330,6 +330,22 @@ class Vitrina extends BaseController
                 ]
             ])->fetchAll();
 
+            $hlblockIdFor = HL\HighloadBlockTable::getList([
+                'filter' => ['=NAME' => 'FnsLinkDocumentsForwardes']
+            ])->fetch();
+
+            $entity_data_class_for = (HL\HighloadBlockTable::compileEntity($hlblockIdFor))->getDataClass();
+
+            $linksFor = $entity_data_class_for::getList([
+                "select" => ["UF_NAME_LINK", "UF_LINK"],
+                "filter" => [
+                    "UF_ID_ELEMENT" => $id,
+                    "!UF_LINK" => '',
+                ]
+            ])->fetchAll();
+
+            $links = array_merge($links, $linksFor);
+
             self::dirDel(Application::getDocumentRoot() . "/upload/tmp/");
             $sDirTmpName = randString();
             $sDirTmpPath = Application::getDocumentRoot() . "/upload/tmp/$sDirTmpName/";
