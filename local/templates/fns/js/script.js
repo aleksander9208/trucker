@@ -1668,7 +1668,7 @@ $(document).ready(function () {
         if (carriage.DONKEY_LEASING_COMPANY_STATUS === 'passed' ||
             carriage.DONKEY_LEASING_COMPANY_STATUS === 'in_progress'
         ) {
-            $('#donkey_sec_lias_link').show();
+            $('#donkey_lias_link').show();
         }
         if (carriage.DONKEY_AGREEMENT_LEASING_COMPANY_LINK != null ||
             carriage.DONKEY_AGREEMENT_LEASING_COMPANY_EDM_LINK != null
@@ -1697,19 +1697,19 @@ $(document).ready(function () {
                 });
             }
 
-            $('#donkey_sec_lias_link').show().removeClass('status-info_confirmation_error');
-            $("#list_file_donkey_sec_lias_link").html(DONKEY_SEC_LEASING_COMPANY_LINK);
-            $('#donkey_sec_lias_file').show();
+            $('#donkey_lias_link').show().removeClass('status-info_confirmation_error');
+            $("#list_file_donkey_lias_link").html(DONKEY_SEC_LEASING_COMPANY_LINK);
+            $('#donkey_lias_file').show();
         } else {
-            $('#donkey_sec_lias_file').hide();
-            $('#donkey_sec_lias_link').addClass('status-info_confirmation_error');
-            $("#list_file_donkey_sec_lias_link").html();
+            $('#donkey_lias_file').hide();
+            $('#donkey_lias_link').addClass('status-info_confirmation_error');
+            $("#list_file_donkey_lias_link").html();
         }
         /** Свидетельство о браке */
         if (carriage.DONKEY_MARRIAGE_CERTIFICATE_STATUS === 'passed' ||
             carriage.DONKEY_MARRIAGE_CERTIFICATE_STATUS === 'in_progress'
         ) {
-            $('#donkey_sec_cer_link').show();
+            $('#donkey_cer_link').show();
         }
         if (carriage.DONKEY_MARRIAGE_CERTIFICATE_LINK != null ||
             carriage.DONKEY_MARRIAGE_CERTIFICATE_EDM_LINK != null
@@ -1738,19 +1738,19 @@ $(document).ready(function () {
                 });
             }
 
-            $('#donkey_sec_cer_link').show().removeClass('status-info_confirmation_error');
-            $("#list_file_donkey_sec_cer_link").html(DONKEY_SEC_CERTIFICATE_LINK);
-            $('#donkey_sec_cer_file').show();
+            $('#donkey_cer_link').show().removeClass('status-info_confirmation_error');
+            $("#list_file_donkey_cer_link").html(DONKEY_SEC_CERTIFICATE_LINK);
+            $('#donkey_cer_file').show();
         } else {
-            $('#donkey_sec_cer_file').hide();
-            $('#donkey_sec_cer_link').addClass('status-info_confirmation_error');
-            $("#list_file_donkey_sec_cer_link").html();
+            $('#donkey_cer_file').hide();
+            $('#donkey_cer_link').addClass('status-info_confirmation_error');
+            $("#list_file_donkey_cer_link").html();
         }
         /** Договор безвозмездного использования */
         if (carriage.DONKEY_FREE_USAGE_STATUS === 'passed' ||
             carriage.DONKEY_FREE_USAGE_STATUS === 'in_progress'
         ) {
-            $('#donkey_sec_usage_link').show();
+            $('#donkey_usage_link').show();
         }
         if (carriage.DONKEY_FREE_USAGE_LINK != null ||
             carriage.DONKEY_FREE_USAGE_EDM_LINK != null
@@ -1779,13 +1779,13 @@ $(document).ready(function () {
                 });
             }
 
-            $('#donkey_sec_usage_link').show().removeClass('status-info_confirmation_error');
-            $("#list_file_donkey_sec_usage_link").html(DONKEY_SEC_FREE_USAGE_LINK);
-            $('#donkey_sec_usage_file').show();
+            $('#donkey_usage_link').show().removeClass('status-info_confirmation_error');
+            $("#list_file_donkey_usage_link").html(DONKEY_SEC_FREE_USAGE_LINK);
+            $('#donkey_usage_file').show();
         } else {
-            $('#donkey_sec_usage_file').hide();
-            $('#donkey_sec_usage_link').addClass('status-info_confirmation_error');
-            $("#list_file_donkey_sec_usage_link").html();
+            $('#donkey_usage_file').hide();
+            $('#donkey_usage_link').addClass('status-info_confirmation_error');
+            $("#list_file_donkey_usage_link").html();
         }
 
         /** Подтверждения владения тягач экспедитор*/
