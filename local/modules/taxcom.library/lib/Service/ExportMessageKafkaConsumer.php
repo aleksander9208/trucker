@@ -53,29 +53,32 @@ class ExportMessageKafkaConsumer
         $topicConf->set("auto.offset.reset", 'smallest');
 
         $topic = $rk->newTopic(self::TOPIC, $topicConf);
-        $topic->consumeStart(0, RD_KAFKA_OFFSET_STORED);
+
+        for ($partition = 0; $partition <= 4; $partition++) {
+            $topic->consumeStart($partition, RD_KAFKA_OFFSET_STORED);
 
 
-        while(true) {
-            $msg = $topic->consume(0, 1000);
+            while(true) {
+                $msg = $topic->consume($partition, 1000);
 
-            if($msg->err) {
-                var_dump($msg->errstr() );
-                break;
-            }
-
-            if($msg !== null) {
-                $carrier = json_decode($msg->payload, true,);
-
-                if (is_array($carrier)) {
-
-                    (new ParserCarrier($carrier, $msg->payload))->isParser();
-
+                if($msg->err) {
+                    var_dump($msg->errstr() );
+                    break;
                 }
-                $topic->offsetStore($msg->partition, ($msg->offset+1) );
-            } else {
-                var_dump(self::NO_MESSAGE);
-                break;
+
+                if($msg !== null) {
+                    $carrier = json_decode($msg->payload, true,);
+
+                    if (is_array($carrier)) {
+
+                        (new ParserCarrier($carrier, $msg->payload))->isParser();
+
+                    }
+                    $topic->offsetStore($msg->partition, ($msg->offset+1) );
+                } else {
+                    var_dump(self::NO_MESSAGE);
+                    break;
+                }
             }
         }
     }
