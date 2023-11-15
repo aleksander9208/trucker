@@ -35,3 +35,20 @@ $request = Context::getCurrent()->getRequest();
 <?php $APPLICATION->ShowPanel(); ?>
 
 <div class="content">
+    <div class="uk-container uk-container-large">
+        <div class="header">
+            <a href="" class="header_logo">
+                <img src="local/templates/fns/images/logo_text.png" alt="">
+            </a>
+
+            <div class="">
+                <?$APPLICATION->IncludeComponent("bitrix:system.auth.form","",Array(
+                        "REGISTER_URL" => "register.php",
+                        "FORGOT_PASSWORD_URL" => "",
+                        "PROFILE_URL" => "profile.php",
+                        "SHOW_ERRORS" => "Y"
+                    )
+                );?>
+            </div>
+        </div>
+    </div>

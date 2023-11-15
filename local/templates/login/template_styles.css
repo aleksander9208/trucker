@@ -60,8 +60,8 @@ body {
 	display: inline-block;
 	height: 150px;
 	text-decoration: none;
-	width: 150px;
-	background: url('images/logo.png') no-repeat;
+	width: 470px;
+	background: url('/local/templates/fns/images/logo_text.png') no-repeat;
 	background-size: 100%;
 	margin-top: 5%;
 }

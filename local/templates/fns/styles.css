@@ -10,8 +10,38 @@ body {
     font-size: 14px;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header_logo {
+    max-width: 320px;
+}
+
+form.form_auth {
+    display: flex;
+    align-items: center;
+}
+
+.form_auth_name {
+    font-size: 14px;
+    margin-right: 10px;
+    color: #2366b3;
+}
+
+.form_auth_exit input {
+    color: #fff;
+    background: #2366b3;
+    border: none;
+    padding: 4px 10px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
 .form_filter {
-    margin: 67px 0 22px;
+    margin: 22px 0;
     display: grid;
     grid-template-columns: 69% 29%;
     gap: 2%;
