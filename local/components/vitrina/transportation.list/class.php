@@ -853,16 +853,12 @@ class TransportationList extends CBitrixComponent
             "count_total" => true,
         ]);
 
-        $this->arResult['COUNT'] = $vitrina->getCount();
-
         $nav->setRecordCount($vitrina->getCount());
 
         $good = $error = 0;
         foreach ($vitrina->fetchAll() as $item) {
             $item['DEVIATION_MARKET_PRICE_VALUE'] = self::getPrice($item['ID']);
-
             $date = explode('-', $item['DATE_SHIPMENT_VALUE']);
-            $goodStatus = $errorStatus = '';
 
             if ($item['CHECKLIST_CARRIER_VALUE'] === '1') {
                 $this->arResult['COUNT_GOOD'] = $good;
@@ -896,13 +892,29 @@ class TransportationList extends CBitrixComponent
             $error++;
         }
 
+        $this->arResult["ROWS"] = $vitrinaList;
+        $this->arResult["NAV"] = $nav;
+    }
+
+    protected function getPercent()
+    {
+        $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
+            'filter' => $this->arResult["FILTER"],
+            'select' => [
+                'ID',
+                'NAME',
+                'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING',
+            ],
+            "order" => ['ID' => 'ASC'],
+            "count_total" => true,
+        ]);
+
+        $this->arResult['COUNT'] = $vitrina->getCount();
+
         if ($this->arResult['COUNT'] > 0) {
             $this->arResult['COUNT_GOOD_PERCENT'] = round($this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100, 2);
             $this->arResult['COUNT_ERROR_PERCENT'] = round($this->arResult['COUNT_ERROR']/$this->arResult['COUNT'] * 100 , 2);
         }
-
-        $this->arResult["ROWS"] = $vitrinaList;
-        $this->arResult["NAV"] = $nav;
     }
 
     /**

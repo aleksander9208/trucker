@@ -88,16 +88,10 @@ if ($arResult['ALLOW_QRCODE_AUTH'])
 				<?if ($arResult["STORE_PASSWORD"] == "Y"):?>
 				<input type="checkbox" id="USER_REMEMBER" name="USER_REMEMBER" value="Y" class="login-checkbox-user-remember"/><label class="login-item-checkbox-label" for="USER_REMEMBER"><?=GetMessage("AUTH_REMEMBER_ME")?></label>
 				<?endif?>
-				<?if($arParams["NOT_SHOW_LINKS"] != "Y" && $arResult["NEW_USER_REGISTRATION"] == "Y" && ($arParams["AUTHORIZE_REGISTRATION"] ?? null) != "Y"):?>
-					<noindex>
-						<div class="login-links"><a  href="<?=$arResult["AUTH_REGISTER_URL"]?>" rel="nofollow"><?=GetMessage("AUTH_REGISTER")?></a></div>
-					</noindex>
-				<?endif?>
 			</div>
 		</div>
 		<div class="log-popup-footer <?if($arResult["AUTH_SERVICES"]):?>--auth<?endif?>">
 			<input type="submit" value="<?=GetMessage("AUTH_AUTHORIZE")?>" class="login-btn" onclick="BX.addClass(this, 'wait');"/>
-			<a class="login-link-forgot-pass" href="<?=$arResult["AUTH_FORGOT_PASSWORD_URL"]?>"><?=GetMessage("AUTH_FORGOT_PASSWORD_2")?></a>
 		</div>
 	</form>
 </div>

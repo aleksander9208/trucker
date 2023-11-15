@@ -44,16 +44,6 @@ else
 	<input type="hidden" name="AUTH_FORM" value="Y" />
 	<input type="hidden" name="TYPE" value="OTP" />
 
-	<div class="log-header-box">
-		<div class="log-popup-header" style="text-align: left; display: inline-block; width:49%"><?=GetMessage("AUTH_OTP_PLEASE_AUTH")?></div>
-		<?if ($arParams["NOT_SHOW_LINKS"] != "Y"):?>
-			<div class="log-header-additional-wrap" style="width:50%;">
-				<noindex>
-					<?if (!IsModuleInstalled("bitrix24")):?><a href="<?=$arResult["AUTH_LOGIN_URL"]?>" rel="nofollow" class="log-header-additional-text"><?echo GetMessage("AUTH_OTP_AUTH_BACK")?></a><?endif?>
-				</noindex>
-			</div>
-		<?endif?>
-	</div>
 	<hr class="b_line_gray">
 	<?
 	ShowMessage($arParams["~AUTH_RESULT"]);

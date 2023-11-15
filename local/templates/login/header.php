@@ -16,7 +16,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 ?><!DOCTYPE html>
 <html>
 <head>
-	<title><?$APPLICATION->ShowTitle();?></title>
+	<title>Центр мониторинга перевозок</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="robots" content="noindex, nofollow" />
 	<?if (IsModuleInstalled("bitrix24")):?>
