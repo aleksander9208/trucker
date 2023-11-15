@@ -869,7 +869,6 @@ class TransportationList extends CBitrixComponent
             }
 
             if ($item['CHECKLIST_FORWARDER_VALUE'] === '1') {
-                $this->arResult['COUNT_ERROR'] = $error;
                 $errorStatusFor = '<span class="transit-error"></span>';
             } else {
                 $goodStatusFor = '<span class="transit-good"></span>';
@@ -919,7 +918,8 @@ class TransportationList extends CBitrixComponent
 
         $this->arResult['COUNT'] = $vitrina->getCount();
 
-        $error = $good = 0;
+        $error = 0;
+        $good = 0;
         foreach ($vitrina->fetchAll() as $item) {
             if ($item['STATUS_SHIPPING_VALUE'] === 'in_progress') {
                 $error++;
