@@ -34,6 +34,7 @@ class TransportationList extends CBitrixComponent
         $this->arResult['INFO_BAR_DOC'] = self::getDocuments();
         $this->arResult['INFO_BAR_DOC_FOR'] = self::getDocumentsFor();
         $this->arResult['FILTER_YEAR'] = self::getFilterYear();
+        $this->getPercent();
         $this->getRows();
 
     }
@@ -896,14 +897,21 @@ class TransportationList extends CBitrixComponent
         $this->arResult["NAV"] = $nav;
     }
 
-    protected function getPercent()
+    /**
+     * Расчет статистики
+     *
+     * @return void
+     * @throws LoaderException
+     */
+    protected function getPercent(): void
     {
+        Loader::includeModule('iblock');
+
         $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
-            'filter' => $this->arResult["FILTER"],
             'select' => [
                 'ID',
                 'NAME',
-                'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING',
+                'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING.VALUE',
             ],
             "order" => ['ID' => 'ASC'],
             "count_total" => true,
@@ -911,9 +919,23 @@ class TransportationList extends CBitrixComponent
 
         $this->arResult['COUNT'] = $vitrina->getCount();
 
+        $error = $good = 0;
+        foreach ($vitrina->fetchAll() as $item) {
+            if ($item['STATUS_SHIPPING_VALUE'] === 'in_progress') {
+                $error++;
+            }
+
+            if ($item['STATUS_SHIPPING_VALUE'] === 'completed') {
+                $good++;
+            }
+        }
+
+        $this->arResult['COUNT_ERROR'] = $error;
+        $this->arResult['COUNT_GOOD'] = $good;
+
         if ($this->arResult['COUNT'] > 0) {
-            $this->arResult['COUNT_GOOD_PERCENT'] = round($this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100, 2);
-            $this->arResult['COUNT_ERROR_PERCENT'] = round($this->arResult['COUNT_ERROR']/$this->arResult['COUNT'] * 100 , 2);
+            $this->arResult['COUNT_GOOD_PERCENT'] = $this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100;
+            $this->arResult['COUNT_ERROR_PERCENT'] = $this->arResult['COUNT_ERROR']/$this->arResult['COUNT'] * 100;
         }
     }
 

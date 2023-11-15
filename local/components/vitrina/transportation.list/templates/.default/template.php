@@ -95,7 +95,7 @@ if ($request->get('year')) {
         <div class="statistics_result">
             <div class="statistics-info">
                 <div class="statistics-title">
-                    <?= number_format($arResult["COUNT"], 0, '', ' ') ?>
+                    <?= $arResult["COUNT"] ?>
                 </div>
                 выполнено всего перевозок
             </div>
@@ -103,7 +103,7 @@ if ($request->get('year')) {
         <div class="statistics_good">
             <div class="statistics-info">
                 <div class="statistics-title">
-                    <?= number_format($arResult["COUNT_GOOD"], 0, '', ' ') ?>
+                    <?= $arResult["COUNT_GOOD"] ?>
                     <sup><span><?= $arResult['COUNT_GOOD_PERCENT'] ?>%</span></sup>
                 </div>
                 проверка по чек-листу пройдена
@@ -112,7 +112,7 @@ if ($request->get('year')) {
         <div class="statistics_error">
             <div class="statistics-info">
                 <div class="statistics-title">
-                    <?= number_format($arResult["COUNT_ERROR"], 0, '', ' ') ?>
+                    <?= $arResult["COUNT_ERROR"] ?>
                     <sup><span><?= $arResult['COUNT_ERROR_PERCENT'] ?>%</span></sup>
                 </div>
                 проверка по чек-листу не пройдена
