@@ -107,6 +107,12 @@ class ParserCarrier
         //Статус перевозки
         $properties['STATUS_SHIPPING'] = $this->carrier['status'];
 
+        if ($this->carrier['root'] === false) {
+            $properties = self::getChecksForwarder();
+        } else {
+            $properties = self::getChecks();
+        }
+
         foreach ($this->carrier['check_groups'] as $check_group) {
             $countChecks = count($check_group['checks']);
             $checksTrue = $checksFalse = 0;
@@ -148,11 +154,103 @@ class ParserCarrier
             }
         }
 
-        echo "<pre style='di3splay: none;' alt='arResult'>";
-        print_r($properties);
-        echo "</pre>";
-
         return $properties;
+    }
+
+    /**
+     * Возвращаем дополнительные свойства
+     * статусов, чеклистов для перевозчика
+     *
+     * @return array
+     */
+    protected static function getChecks(): array
+    {
+        return [
+            'CONTRACT_EXPEDITION_STATUS' => '',
+            'CONTRACT_TRANSPORTATION_STATUS' => '',
+            'CONTRACT_ORDER_ONE_TIME_STATUS' => '',
+            'DOCUMENTS_EPD_STATUS' => '',
+            'DOCUMENTS_EXPEDITOR_STATUS' => '',
+            'DOCUMENTS_EXPEDITOR_RECEIPT_STATUS' => '',
+            'DOCUMENTS_DRIVER_APPROVALS_STATUS' => '',
+            'DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS' => '',
+            'AUTOMATIC_PRICES_STATUS' => '',
+            'AUTOMATIC_GEO_MONITORING_STATUS' => '',
+            'ACCOUNTING_INVOICE_STATUS' => '',
+            'ACCOUNTING_ACT_ACCEPTANCE_STATUS' => '',
+            'ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS' => '',
+            'ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS' => '',
+            'ACCOUNTING_TAX_INVOICE_STATUS' => '',
+            'ACCOUNTING_UPD_STATUS' => '',
+            'DONKEY_STS_STATUS' => '',
+            'DONKEY_RENT_AGREEMENT_STATUS' => '',
+            'DONKEY_LEASING_COMPANY_STATUS' => '',
+            'DONKEY_MARRIAGE_CERTIFICATE_STATUS' => '',
+            'DONKEY_FREE_USAGE_STATUS' => '',
+            'TRAILER_STS_STATUS' => '',
+            'TRAILER_RENT_AGREEMENT_STATUS' => '',
+            'TRAILER_LEASING_COMPANY_STATUS' => '',
+            'TRAILER_MARRIAGE_CERTIFICATE_STATUS' => '',
+            'TRAILER_FREE_USAGE_STATUS' => '',
+            'TRAILER_SECONDARY_STS_STATUS' => '',
+            'TRAILER_SECONDARY_RENT_AGREEMENT_STATUS' => '',
+            'TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS' => '',
+            'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS' => '',
+            'TRAILER_SECONDARY_FREE_USAGE_STATUS' => '',
+            'TRUCK_STS_STATUS' => '',
+            'TRUCK_RENT_AGREEMENT_STATUS' => '',
+            'TRUCK_AGREEMENT_LEASING_COMPANY_STATUS' => '',
+            'TRUCK_MARRIAGE_CERTIFICATE_STATUS' => '',
+            'TRUCK_FREE_USAGE_STATUS' => '',
+        ];
+    }
+
+    /**
+     * Возвращаем дополнительные свойства
+     * статусов, чеклистов для экспедитора
+     *
+     * @return array
+     */
+    protected static function getChecksForwarder(): array
+    {
+        return [
+            'CONTRACT_EXPEDITION_FOR_STATUS' => '',
+            'CONTRACT_TRANSPORTATION_FOR_STATUS' => '',
+            'CONTRACT_ORDER_ONE_TIME_FOR_STATUS' => '',
+            'DOCUMENTS_EPD_FOR_STATUS' => '',
+            'DOCUMENTS_EXPEDITOR_FOR_STATUS' => '',
+            'DOCUMENTS_EXPEDITOR_RECEIPT_FOR_STATUS' => '',
+            'DOCUMENTS_DRIVER_APPROVALS_FOR_STATUS' => '',
+            'DOCUMENTS_APPLICATION_TRANSPORT_FOR_STATUS' => '',
+            'AUTOMATIC_PRICES_FOR_STATUS' => '',
+            'AUTOMATIC_GEO_MONITORING_FOR_STATUS' => '',
+            'ACCOUNTING_INVOICE_FOR_STATUS' => '',
+            'ACCOUNTING_ACT_ACCEPTANCE_FOR_STATUS' => '',
+            'ACCOUNTING_ACT_MULTIPLE_TRANSPORT_FOR_STATUS' => '',
+            'ACCOUNTING_TRANSPORTATION_REGISTRY_FOR_STATUS' => '',
+            'ACCOUNTING_TAX_INVOICE_FOR_STATUS' => '',
+            'ACCOUNTING_UPD_FOR_STATUS' => '',
+            'DONKEY_STS_FOR_STATUS' => '',
+            'DONKEY_RENT_FOR_STATUS' => '',
+            'DONKEY_LEASING_COMPANY_FOR_STATUS' => '',
+            'DONKEY_MARRIAGE_CERTIFICATE_FOR_STATUS' => '',
+            'DONKEY_FREE_USAGE_FOR_STATUS' => '',
+            'TRAILER_STS_FOR_STATUS' => '',
+            'TRAILER_RENT_AGREEMENT_FOR_STATUS' => '',
+            'TRAILER_LEASING_COMPANY_FOR_STATUS' => '',
+            'TRAILER_MARRIAGE_CERTIFICATE_FOR_STATUS' => '',
+            'TRAILER_FREE_USAGE_FOR_STATUS' => '',
+            'TRAILER_SECONDARY_STS_FOR_STATUS' => '',
+            'TRAILER_SECONDARY_RENT_AGREEMENT_FOR_STATUS' => '',
+            'TRAILER_SECONDARY_LEASING_COMPANY_FOR_STATUS' => '',
+            'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FOR_STATUS' => '',
+            'TRAILER_SECONDARY_FREE_USAGE_FOR_STATUS' => '',
+            'TRUCK_STS_FOR_STATUS' => '',
+            'TRUCK_RENT_AGREEMENT_FOR_STATUS' => '',
+            'TRUCK_AGREEMENT_LEASING_COMPANY_FOR_STATUS' => '',
+            'TRUCK_MARRIAGE_CERTIFICATE_FOR_STATUS' => '',
+            'TRUCK_FREE_USAGE_FOR_STATUS' => '',
+        ];
     }
 
     /**
@@ -181,92 +279,60 @@ class ParserCarrier
                 $properties['CONTRACT_CHECK'] = $checksTrue . '/' .$countChecks;
                 if ($group['name'] === 'transport_expedition_contract') {
                     $properties['CONTRACT_EXPEDITION_STATUS'] = $group['status'];
-                } else {
-                    $properties['CONTRACT_EXPEDITION_STATUS'] = '';
                 }
                 if ($group['name'] === 'transportation_contract') {
                     $properties['CONTRACT_TRANSPORTATION_STATUS'] = $group['status'];
-                } else {
-                    $properties['CONTRACT_TRANSPORTATION_STATUS'] = '';
                 }
                 if ($group['name'] === 'order_one_time_contract') {
                     $properties['CONTRACT_ORDER_ONE_TIME_STATUS'] = $group['status'];
-                } else {
-                    $properties['CONTRACT_ORDER_ONE_TIME_STATUS'] = '';
                 }
                 break;
             case 'execution_documents':
                 $properties['DOCUMENTS_CHECK'] = $checksTrue . '/' .$countChecks;
                 if ($group['name'] === 'epd') {
                     $properties['DOCUMENTS_EPD_STATUS'] = $group['status'];
-                } else {
-                    $properties['DOCUMENTS_EPD_STATUS'] = '';
                 }
                 if ($group['name'] === 'expeditor_order') {
                     $properties['DOCUMENTS_EXPEDITOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['DOCUMENTS_EXPEDITOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'expeditor_agent_receipt') {
                     $properties['DOCUMENTS_EXPEDITOR_RECEIPT_STATUS'] = $group['status'];
-                } else {
-                    $properties['DOCUMENTS_EXPEDITOR_RECEIPT_STATUS'] = '';
                 }
                 if ($group['name'] === 'driver_approvals') {
                     $properties['DOCUMENTS_DRIVER_APPROVALS_STATUS'] = $group['status'];
-                } else {
-                    $properties['DOCUMENTS_DRIVER_APPROVALS_STATUS'] = '';
                 }
                 if ($group['name'] === 'application_for_transportation') {
                     $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS'] = $group['status'];
-                } else {
-                    $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS'] = '';
                 }
                 break;
             case 'automatic_checks':
                 $properties['AUTOMATIC_CHECKS'] = $checksTrue . '/' .$countChecks;
                 if ($group['name'] === 'prices') {
                     $properties['AUTOMATIC_PRICES_STATUS'] = $group['status'];
-                } else {
-                    $properties['AUTOMATIC_PRICES_STATUS'] = '';
                 }
                 if ($group['name'] === 'geo_monitoring') {
                     $properties['AUTOMATIC_GEO_MONITORING_STATUS'] = $group['status'];
-                } else {
-                    $properties['AUTOMATIC_GEO_MONITORING_STATUS'] = '';
                 }
                 break;
             case 'accounting':
                 $properties['ACCOUNTING_CHECKS'] = $checksTrue . '/' .$countChecks;
                 if ($group['name'] === 'invoice') {
                     $properties['ACCOUNTING_INVOICE_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_INVOICE_STATUS'] = '';
                 }
                 if ($group['name'] === 'act_of_service_acceptance') {
                     $properties['ACCOUNTING_ACT_ACCEPTANCE_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_ACT_ACCEPTANCE_STATUS'] = '';
                 }
                 if ($group['name'] === 'act_of_service_acceptance_multiple_transportations') {
                     $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS'] = '';
                 }
                 if ($group['name'] === 'transportation_registry') {
                     $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS'] = '';
                 }
                 if ($group['name'] === 'tax_invoice') {
                     $properties['ACCOUNTING_TAX_INVOICE_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_TAX_INVOICE_STATUS'] = '';
                 }
                 if ($group['name'] === 'universal_transfer_document') {
                     $properties['ACCOUNTING_UPD_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_UPD_STATUS'] = '';
                 }
                 break;
             case 'vehicle_donkey':
@@ -274,28 +340,18 @@ class ParserCarrier
                 $properties['DONKEY_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['DONKEY_STS_STATUS'] = $group['status'];
-                } else {
-                    $properties['DONKEY_STS_STATUS'] = '';
                 }
                 if ($group['name'] === 'rent_agreement') {
                     $properties['DONKEY_RENT_AGREEMENT_STATUS'] = $group['status'];
-                } else {
-                    $properties['DONKEY_RENT_AGREEMENT_STATUS'] = '';
                 }
                 if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['DONKEY_LEASING_COMPANY_STATUS'] = $group['status'];
-                } else {
-                    $properties['DONKEY_LEASING_COMPANY_STATUS'] = '';
                 }
                 if ($group['name'] === 'marriage_certificate') {
                     $properties['DONKEY_MARRIAGE_CERTIFICATE_STATUS'] = $group['status'];
-                } else {
-                    $properties['DONKEY_MARRIAGE_CERTIFICATE_STATUS'] = '';
                 }
                 if ($group['name'] === 'free_usage_agreement') {
                     $properties['DONKEY_FREE_USAGE_STATUS'] = $group['status'];
-                } else {
-                    $properties['DONKEY_FREE_USAGE_STATUS'] = '';
                 }
                 break;
             case 'vehicle_main_trailer':
@@ -303,28 +359,18 @@ class ParserCarrier
                 $properties['TRAILER_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_STS_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_STS_STATUS'] = '';
                 }
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRAILER_RENT_AGREEMENT_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_RENT_AGREEMENT_STATUS'] = '';
                 }
                 if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRAILER_LEASING_COMPANY_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_LEASING_COMPANY_STATUS'] = '';
                 }
                 if ($group['name'] === 'marriage_certificate') {
                     $properties['TRAILER_MARRIAGE_CERTIFICATE_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_MARRIAGE_CERTIFICATE_STATUS'] = '';
                 }
                 if ($group['name'] === 'free_usage_agreement') {
                     $properties['TRAILER_FREE_USAGE_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_FREE_USAGE_STATUS'] = '';
                 }
                 break;
             case 'vehicle_secondary_trailer':
@@ -332,28 +378,18 @@ class ParserCarrier
                 $properties['TRAILER_SECONDARY_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_SECONDARY_STS_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_SECONDARY_STS_STATUS'] = '';
                 }
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS'] = '';
                 }
                 if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS'] = '';
                 }
                 if ($group['name'] === 'marriage_certificate') {
                     $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS'] = '';
                 }
                 if ($group['name'] === 'free_usage_agreement') {
                     $properties['TRAILER_SECONDARY_FREE_USAGE_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_SECONDARY_FREE_USAGE_STATUS'] = '';
                 }
                 break;
             case 'vehicle_truck':
@@ -361,28 +397,18 @@ class ParserCarrier
                 $properties['TRUCK_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRUCK_STS_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRUCK_STS_STATUS'] = '';
                 }
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRUCK_RENT_AGREEMENT_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRUCK_RENT_AGREEMENT_STATUS'] = '';
                 }
                 if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS'] = '';
                 }
                 if ($group['name'] === 'marriage_certificate') {
                     $properties['TRUCK_MARRIAGE_CERTIFICATE_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRUCK_MARRIAGE_CERTIFICATE_STATUS'] = '';
                 }
                 if ($group['name'] === 'free_usage_agreement') {
                     $properties['TRUCK_FREE_USAGE_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRUCK_FREE_USAGE_STATUS'] = '';
                 }
                 break;
         }
@@ -416,92 +442,60 @@ class ParserCarrier
                 $properties['CONTRACT_FOR_CHECK'] = $checksTrue . '/' .$countChecks;
                 if ($group['name'] === 'transport_expedition_contract') {
                     $properties['CONTRACT_EXPEDITION_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['CONTRACT_EXPEDITION_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'transportation_contract') {
                     $properties['CONTRACT_TRANSPORTATION_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['CONTRACT_TRANSPORTATION_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'order_one_time_contract') {
                     $properties['CONTRACT_ORDER_ONE_TIME_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['CONTRACT_ORDER_ONE_TIME_FOR_STATUS'] = '';
                 }
                 break;
             case 'execution_documents':
                 $properties['DOCUMENTS_FOR_CHECK'] = $checksTrue . '/' .$countChecks;
                 if ($group['name'] === 'epd') {
                     $properties['DOCUMENTS_EPD_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['DOCUMENTS_EPD_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'expeditor_order') {
                     $properties['DOCUMENTS_EXPEDITOR_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['DOCUMENTS_EXPEDITOR_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'expeditor_agent_receipt') {
                     $properties['DOCUMENTS_EXPEDITOR_RECEIPT_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['DOCUMENTS_EXPEDITOR_RECEIPT_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'driver_approvals') {
                     $properties['DOCUMENTS_DRIVER_APPROVALS_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['DOCUMENTS_DRIVER_APPROVALS_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'application_for_transportation') {
                     $properties['DOCUMENTS_APPLICATION_TRANSPORT_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['DOCUMENTS_APPLICATION_TRANSPORT_FOR_STATUS'] = '';
                 }
                 break;
             case 'automatic_checks':
                 $properties['AUTOMATIC_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
                 if ($group['name'] === 'prices') {
                     $properties['AUTOMATIC_PRICES_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['AUTOMATIC_PRICES_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'geo_monitoring') {
                     $properties['AUTOMATIC_GEO_MONITORING_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['AUTOMATIC_GEO_MONITORING_FOR_STATUS'] = '';
                 }
                 break;
             case 'accounting':
                 $properties['ACCOUNTING_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
                 if ($group['name'] === 'invoice') {
                     $properties['ACCOUNTING_INVOICE_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_INVOICE_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'act_of_service_acceptance') {
                     $properties['ACCOUNTING_ACT_ACCEPTANCE_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_ACT_ACCEPTANCE_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'act_of_service_acceptance_multiple_transportations') {
                     $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORT_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORT_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'transportation_registry') {
                     $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'tax_invoice') {
                     $properties['ACCOUNTING_TAX_INVOICE_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_TAX_INVOICE_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'universal_transfer_document') {
                     $properties['ACCOUNTING_UPD_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['ACCOUNTING_UPD_FOR_STATUS'] = '';
                 }
                 break;
             case 'vehicle_donkey':
@@ -509,28 +503,18 @@ class ParserCarrier
                 $properties['DONKEY_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['DONKEY_STS_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['DONKEY_STS_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'rent_agreement') {
                     $properties['DONKEY_RENT_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['DONKEY_RENT_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['DONKEY_LEASING_COMPANY_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['DONKEY_LEASING_COMPANY_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'marriage_certificate') {
                     $properties['DONKEY_MARRIAGE_CERTIFICATE_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['DONKEY_MARRIAGE_CERTIFICATE_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'free_usage_agreement') {
                     $properties['DONKEY_FREE_USAGE_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['DONKEY_FREE_USAGE_FOR_STATUS'] = '';
                 }
                 break;
             case 'vehicle_main_trailer':
@@ -538,28 +522,18 @@ class ParserCarrier
                 $properties['TRAILER_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_STS_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_STS_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRAILER_RENT_AGREEMENT_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_RENT_AGREEMENT_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRAILER_LEASING_COMPANY_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_LEASING_COMPANY_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'marriage_certificate') {
                     $properties['TRAILER_MARRIAGE_CERTIFICATE_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_MARRIAGE_CERTIFICATE_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'free_usage_agreement') {
                     $properties['TRAILER_FREE_USAGE_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_FREE_USAGE_FOR_STATUS'] = '';
                 }
                 break;
             case 'vehicle_secondary_trailer':
@@ -567,28 +541,18 @@ class ParserCarrier
                 $properties['TRAILER_SECONDARY_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_SECONDARY_STS_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_SECONDARY_STS_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRAILER_SECONDARY_RENT_AGREEMENT_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_SECONDARY_RENT_AGREEMENT_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRAILER_SECONDARY_LEASING_COMPANY_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_SECONDARY_LEASING_COMPANY_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'marriage_certificate') {
                     $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'free_usage_agreement') {
                     $properties['TRAILER_SECONDARY_FREE_USAGE_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRAILER_SECONDARY_FREE_USAGE_FOR_STATUS'] = '';
                 }
                 break;
             case 'vehicle_truck':
@@ -596,28 +560,18 @@ class ParserCarrier
                 $properties['TRUCK_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRUCK_STS_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRUCK_STS_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'rent_agreement') {
                     $properties['TRUCK_RENT_AGREEMENT_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRUCK_RENT_AGREEMENT_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'agreement_with_leasing_company') {
                     $properties['TRUCK_AGREEMENT_LEASING_COMPANY_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRUCK_AGREEMENT_LEASING_COMPANY_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'marriage_certificate') {
                     $properties['TRUCK_MARRIAGE_CERTIFICATE_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRUCK_MARRIAGE_CERTIFICATE_FOR_STATUS'] = '';
                 }
                 if ($group['name'] === 'free_usage_agreement') {
                     $properties['TRUCK_FREE_USAGE_FOR_STATUS'] = $group['status'];
-                } else {
-                    $properties['TRUCK_FREE_USAGE_FOR_STATUS'] = '';
                 }
                 break;
         }
