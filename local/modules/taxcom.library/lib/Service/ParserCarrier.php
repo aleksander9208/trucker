@@ -102,16 +102,16 @@ class ParserCarrier
      */
     public function getPropertyList(): array
     {
-        //Дата погрузки
-        $properties['DATE_SHIPMENT'] = $this->carrier['loading_date'];
-        //Статус перевозки
-        $properties['STATUS_SHIPPING'] = $this->carrier['status'];
-
         if ($this->carrier['root'] === false) {
             $properties = self::getChecksForwarder();
         } else {
             $properties = self::getChecks();
         }
+
+        //Дата погрузки
+        $properties['DATE_SHIPMENT'] = $this->carrier['loading_date'];
+        //Статус перевозки
+        $properties['STATUS_SHIPPING'] = $this->carrier['status'];
 
         foreach ($this->carrier['check_groups'] as $check_group) {
             $countChecks = count($check_group['checks']);
@@ -153,6 +153,10 @@ class ParserCarrier
                 $properties['CHECKLIST_CARRIER'] = true;
             }
         }
+
+        echo "<pre style='dis3play: none;' alt='arResult'>";
+        print_r($properties);
+        echo "</pre>";
 
         return $properties;
     }
