@@ -161,6 +161,7 @@ class ParserCarrier
      * @param array $properties
      * @param int $checksTrue
      * @param int $countChecks
+     * @param string|null $licensePlate
      * @return array
      */
     protected static function setChecks(
@@ -169,7 +170,7 @@ class ParserCarrier
         array $properties,
         int $checksTrue,
         int $countChecks,
-        string $licensePlate = '',
+        ?string $licensePlate = null
     ): array
     {
         switch ($name) {
@@ -323,6 +324,7 @@ class ParserCarrier
      * @param array $properties
      * @param int $checksTrue
      * @param int $countChecks
+     * @param string|null $licensePlate
      * @return array
      */
     protected static function setChecksForwarder(
@@ -331,7 +333,7 @@ class ParserCarrier
         array $properties,
         int $checksTrue,
         int $countChecks,
-        string $licensePlate = ''
+        ?string $licensePlate = null
     ): array
     {
         switch ($name) {
