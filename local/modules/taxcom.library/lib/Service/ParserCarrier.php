@@ -49,9 +49,9 @@ class ParserCarrier
             $element->update($id, $this->getFields($this->carrier, $idIblock, $this->json));
         }
 
-        $element::SetPropertyValuesEx($id, $idIblock, self::getPropertyList($this->carrier));
+        $element::SetPropertyValuesEx($id, $idIblock, $this->getPropertyList());
 
-        self::setLink($id, $this->carrier['check_groups'], $this->carrier['root']);
+        $this->setLink($id);
     }
 
     /**
@@ -79,7 +79,7 @@ class ParserCarrier
      */
     protected function getFields(array $carrier, int $idIblock, string $json): array
     {
-        if($this->carrier['root'] === true) {
+        if($this->carrier['root'] === false) {
             return [
                 "IBLOCK_ID" => $idIblock,
                 "NAME" => $carrier['execution_request_uid'],
@@ -99,78 +99,16 @@ class ParserCarrier
     /**
      * Возвращаем свойства элемента
      *
-     * @param array $carrier
      * @return array
      */
-    public static function getPropertyList(array $carrier): array
+    public function getPropertyList(): array
     {
         //Дата погрузки
-        $properties['DATE_SHIPMENT'] = $carrier['loading_date'];
+        $properties['DATE_SHIPMENT'] = $this->carrier['loading_date'];
         //Статус перевозки
-        $properties['STATUS_SHIPPING'] = $carrier['status'];
+        $properties['STATUS_SHIPPING'] = $this->carrier['status'];
 
-        if ($carrier['root'] === true) {
-            $properties['CHECKLIST_FORWARDER'] = true;
-
-            $shipping = self::getCarrier($carrier['execution_request_uid']);
-
-            $properties['CARRIER'] = $shipping['CARRIER_VALUE'];
-            $properties['CARRIER_INN'] = $shipping['CARRIER_INN_VALUE'];
-            $properties['CARGO_OWNER'] = $carrier['executor']['name'];
-            $properties['CARGO_OWNER_INN'] = $carrier['executor']['inn'];
-            $properties['FORWARDER'] = $carrier['customer']['name'];
-            $properties['FORWARDER_INN'] = $carrier['customer']['inn'];
-            //Чеклист данных перевозчика
-            $properties['CONTRACT_CHECK'] = $shipping['CONTRACT_CHECK_VALUE'];
-            $properties['DOCUMENTS_CHECK'] = $shipping['DOCUMENTS_CHECK_VALUE'];
-            $properties['AUTOMATIC_CHECKS'] = $shipping['AUTOMATIC_CHECKS_VALUE'];
-            $properties['ACCOUNTING_CHECKS'] = $shipping['ACCOUNTING_CHECKS_VALUE'];
-            $properties['DONKEY_CHECKS'] = $shipping['DONKEY_CHECKS_VALUE'];
-            $properties['TRAILER_CHECKS'] = $shipping['TRAILER_CHECKS_VALUE'];
-            $properties['TRAILER_SECONDARY_CHECKS'] = $shipping['TRAILER_SECONDARY_CHECKS_VALUE'];
-            $properties['TRUCK_CHECKS'] = $shipping['TRUCK_CHECKS_VALUE'];
-            //Статусы перевозчика
-            $properties['CONTRACT_EXPEDITION_STATUS'] = $shipping['CONTRACT_EXPEDITION_STATUS_VALUE'];
-            $properties['CONTRACT_TRANSPORTATION_STATUS'] = $shipping['CONTRACT_TRANSPORTATION_STATUS_VALUE'];
-            $properties['CONTRACT_ORDER_ONE_TIME_STATUS'] = $shipping['CONTRACT_ORDER_ONE_TIME_STATUS_VALUE'];
-            $properties['DOCUMENTS_EPD_STATUS'] = $shipping['DOCUMENTS_EPD_STATUS_VALUE'];
-            $properties['DOCUMENTS_EXPEDITOR_STATUS'] = $shipping['DOCUMENTS_EXPEDITOR_STATUS_VALUE'];
-            $properties['DOCUMENTS_EXPEDITOR_RECEIPT_STATUS'] = $shipping['DOCUMENTS_EXPEDITOR_RECEIPT_STATUS_VALUE'];
-            $properties['DOCUMENTS_DRIVER_APPROVALS_STATUS'] = $shipping['DOCUMENTS_DRIVER_APPROVALS_STATUS_VALUE'];
-            $properties['DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS'] = $shipping['DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS_VALUE'];
-            $properties['ACCOUNTING_INVOICE_STATUS'] = $shipping['ACCOUNTING_INVOICE_STATUS_VALUE'];
-            $properties['ACCOUNTING_ACT_ACCEPTANCE_STATUS'] = $shipping['ACCOUNTING_ACT_ACCEPTANCE_STATUS_VALUE'];
-            $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS'] = $shipping['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS_VALUE'];
-            $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS'] = $shipping['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS_VALUE'];
-            $properties['ACCOUNTING_TAX_INVOICE_STATUS'] = $shipping['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS_VALUE'];
-            $properties['ACCOUNTING_UPD_STATUS'] = $shipping['ACCOUNTING_UPD_STATUS_VALUE'];
-            $properties['DONKEY_STS_STATUS'] = $shipping['DONKEY_STS_STATUS_VALUE'];
-            $properties['DONKEY_RENT_AGREEMENT_STATUS'] = $shipping['DONKEY_RENT_AGREEMENT_STATUS_VALUE'];
-            $properties['TRAILER_STS_STATUS'] = $shipping['TRAILER_STS_STATUS_VALUE'];
-            $properties['TRAILER_RENT_AGREEMENT_STATUS'] = $shipping['TRAILER_RENT_AGREEMENT_STATUS_VALUE'];
-            $properties['TRAILER_SECONDARY_STS_STATUS'] = $shipping['TRAILER_SECONDARY_STS_STATUS_VALUE'];
-            $properties['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS'] = $shipping['TRAILER_SECONDARY_RENT_AGREEMENT_STATUS_VALUE'];
-            $properties['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS'] = $shipping['TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS_VALUE'];
-            $properties['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS'] = $shipping['TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS_VALUE'];
-            $properties['TRAILER_SECONDARY_FREE_USAGE_STATUS'] = $shipping['TRAILER_SECONDARY_FREE_USAGE_STATUS_VALUE'];
-            $properties['TRUCK_STS_STATUS'] = $shipping['TRUCK_STS_STATUS_VALUE'];
-            $properties['TRUCK_RENT_AGREEMENT_STATUS'] = $shipping['TRUCK_RENT_AGREEMENT_STATUS_VALUE'];
-            $properties['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS'] = $shipping['TRUCK_AGREEMENT_LEASING_COMPANY_STATUS_VALUE'];
-            $properties['TRUCK_MARRIAGE_CERTIFICATE_STATUS'] = $shipping['TRUCK_MARRIAGE_CERTIFICATE_STATUS_VALUE'];
-            $properties['TRUCK_FREE_USAGE_STATUS'] = $shipping['TRUCK_FREE_USAGE_STATUS_VALUE'];
-            //Номерные знаки перевозчика
-            $properties['DONKEY_LICENSE_PLATE'] = $shipping['DONKEY_LICENSE_PLATE_VALUE'];
-            $properties['TRAILER_LICENSE_PLATE'] = $shipping['TRAILER_LICENSE_PLATE_VALUE'];
-            $properties['TRAILER_SECONDARY_LICENSE_PLATE'] = $shipping['TRAILER_SECONDARY_LICENSE_PLATE_VALUE'];
-            $properties['TRUCK_LICENSE_PLATE'] = $shipping['TRUCK_LICENSE_PLATE_VALUE'];
-        } else {
-            $properties['CARRIER'] = $carrier['executor']['name'];
-            $properties['CARRIER_INN'] = $carrier['executor']['inn'];
-            $properties['CARGO_OWNER'] = $carrier['customer']['name'];
-            $properties['CARGO_OWNER_INN'] = $carrier['customer']['inn'];
-        }
-
-        foreach ($carrier['check_groups'] as $check_group) {
+        foreach ($this->carrier['check_groups'] as $check_group) {
             $countChecks = count($check_group['checks']);
             $checksTrue = $checksFalse = 0;
 
@@ -181,7 +119,7 @@ class ParserCarrier
                     $checksFalse++;
                 }
 
-                if ($carrier['root'] === true) {
+                if ($this->carrier['root'] === false) {
                     $properties = self::setChecksForwarder($check_group['name'], $checks, $properties, $checksTrue, $countChecks);
                 } else {
                     $properties = self::setChecks($check_group['name'], $checks, $properties, $checksTrue, $countChecks);
@@ -189,8 +127,24 @@ class ParserCarrier
             }
         }
 
-        if ($checksTrue === $checksFalse) {
-            $properties['CHECKLIST_CARRIER'] = true;
+        if ($this->carrier['root'] === false) {
+            if ($checksTrue === $checksFalse) {
+                $properties['CHECKLIST_FORWARDER'] = true;
+            }
+
+            $properties['CARRIER'] = $this->carrier['executor']['name'];
+            $properties['CARRIER_INN'] = $this->carrier['executor']['inn'];
+            $properties['FORWARDER'] = $this->carrier['customer']['name'];
+            $properties['FORWARDER_INN'] = $this->carrier['customer']['inn'];
+        } else {
+            $properties['CARRIER'] = $this->carrier['executor']['name'];
+            $properties['CARRIER_INN'] = $this->carrier['executor']['inn'];
+            $properties['CARGO_OWNER'] = $this->carrier['customer']['name'];
+            $properties['CARGO_OWNER_INN'] = $this->carrier['customer']['inn'];
+
+            if ($checksTrue === $checksFalse) {
+                $properties['CHECKLIST_CARRIER'] = true;
+            }
         }
 
         return $properties;
@@ -357,6 +311,17 @@ class ParserCarrier
         return $properties;
     }
 
+    /**
+     * Устанавливаем дополнительные свойства
+     * статусов, чеклистов для экспедитора
+     *
+     * @param string $name
+     * @param array $group
+     * @param array $properties
+     * @param int $checksTrue
+     * @param int $countChecks
+     * @return array
+     */
     protected static function setChecksForwarder(
         string $name,
         array $group,
@@ -529,11 +494,11 @@ class ParserCarrier
      * @return void
      * @throws Exception
      */
-    protected static function setLink($idElement, $groups, $root)
+    protected function setLink($idElement): void
     {
         Loader::includeModule("highloadblock");
 
-        if($root === true) {
+        if($this->carrier['root'] === false) {
             $nameHLBlock = 'FnsLinkDocumentsForwardes';
         } else {
             $nameHLBlock = 'FnsLinkDocuments';
@@ -541,7 +506,7 @@ class ParserCarrier
 
         $fields = [];
         
-        foreach ($groups as $group) {
+        foreach ($this->carrier['check_groups'] as $group) {
             foreach ($group['checks'] as $check) {
                 $nameLink = '';
                 $link = '';
@@ -610,64 +575,5 @@ class ParserCarrier
                 $entity_data_class::add($item);
             }
         }
-    }
-
-    /**
-     * Возвращаем грузовладельца
-     *
-     * @param string $name
-     * @return array
-     */
-    protected static function getCarrier(string $name): array
-    {
-        return \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
-            'filter' => ['NAME' => $name],
-            'select' => [
-                'ID',
-                'CARRIER_VALUE' => 'CARRIER.VALUE',
-                'CARRIER_INN_VALUE' => 'CARRIER_INN.VALUE',
-                'CONTRACT_CHECK_VALUE' => 'CONTRACT_CHECK.VALUE',
-                'DOCUMENTS_CHECK_VALUE' => 'DOCUMENTS_CHECK.VALUE',
-                'AUTOMATIC_CHECKS_VALUE' => 'AUTOMATIC_CHECKS.VALUE',
-                'ACCOUNTING_CHECKS_VALUE' => 'ACCOUNTING_CHECKS.VALUE',
-                'DONKEY_CHECKS_VALUE' => 'DONKEY_CHECKS.VALUE',
-                'TRAILER_CHECKS_VALUE' => 'TRAILER_CHECKS.VALUE',
-                'TRAILER_SECONDARY_CHECKS_VALUE' => 'TRAILER_SECONDARY_CHECKS.VALUE',
-                'TRUCK_CHECKS_VALUE' => 'TRUCK_CHECKS.VALUE',
-
-                'CONTRACT_EXPEDITION_STATUS_VALUE' => 'CONTRACT_EXPEDITION_STATUS.VALUE',
-                'CONTRACT_TRANSPORTATION_STATUS_VALUE' => 'CONTRACT_TRANSPORTATION_STATUS.VALUE',
-                'CONTRACT_ORDER_ONE_TIME_STATUS_VALUE' => 'CONTRACT_ORDER_ONE_TIME_STATUS.VALUE',
-                'DOCUMENTS_EPD_STATUS_VALUE' => 'DOCUMENTS_EPD_STATUS.VALUE',
-                'DOCUMENTS_EXPEDITOR_STATUS_VALUE' => 'DOCUMENTS_EXPEDITOR_STATUS.VALUE',
-                'DOCUMENTS_EXPEDITOR_RECEIPT_STATUS_VALUE' => 'DOCUMENTS_EXPEDITOR_RECEIPT_STATUS.VALUE',
-                'DOCUMENTS_DRIVER_APPROVALS_STATUS_VALUE' => 'DOCUMENTS_DRIVER_APPROVALS_STATUS.VALUE',
-                'DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS_VALUE' => 'DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS.VALUE',
-                'ACCOUNTING_INVOICE_STATUS_VALUE' => 'ACCOUNTING_INVOICE_STATUS.VALUE',
-                'ACCOUNTING_ACT_ACCEPTANCE_STATUS_VALUE' => 'ACCOUNTING_ACT_ACCEPTANCE_STATUS.VALUE',
-                'ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS_VALUE' => 'ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS.VALUE',
-                'ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS_VALUE' => 'ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS.VALUE',
-                'ACCOUNTING_TAX_INVOICE_STATUS_VALUE' => 'ACCOUNTING_TAX_INVOICE_STATUS.VALUE',
-                'ACCOUNTING_UPD_STATUS_VALUE' => 'ACCOUNTING_UPD_STATUS.VALUE',
-                'DONKEY_STS_STATUS_VALUE' => 'DONKEY_STS_STATUS.VALUE',
-                'DONKEY_RENT_AGREEMENT_STATUS_VALUE' => 'DONKEY_RENT_AGREEMENT_STATUS.VALUE',
-                'TRAILER_STS_STATUS_VALUE' => 'TRAILER_STS_STATUS.VALUE',
-                'TRAILER_RENT_AGREEMENT_STATUS_VALUE' => 'TRAILER_RENT_AGREEMENT_STATUS.VALUE',
-                'TRAILER_SECONDARY_STS_STATUS_VALUE' => 'TRAILER_SECONDARY_STS_STATUS.VALUE',
-                'TRAILER_SECONDARY_RENT_AGREEMENT_STATUS_VALUE' => 'TRAILER_SECONDARY_RENT_AGREEMENT_STATUS.VALUE',
-                'TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS_VALUE' => 'TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS.VALUE',
-                'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS_VALUE' => 'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS.VALUE',
-                'TRAILER_SECONDARY_FREE_USAGE_STATUS_VALUE' => 'TRAILER_SECONDARY_FREE_USAGE_STATUS.VALUE',
-                'TRUCK_STS_STATUS_VALUE' => 'TRUCK_STS_STATUS.VALUE',
-                'TRUCK_RENT_AGREEMENT_STATUS_VALUE' => 'TRUCK_RENT_AGREEMENT_STATUS.VALUE',
-                'TRUCK_AGREEMENT_LEASING_COMPANY_STATUS_VALUE' => 'TRUCK_AGREEMENT_LEASING_COMPANY_STATUS.VALUE',
-                'TRUCK_MARRIAGE_CERTIFICATE_STATUS_VALUE' => 'TRUCK_MARRIAGE_CERTIFICATE_STATUS.VALUE',
-                'TRUCK_FREE_USAGE_STATUS_VALUE' => 'TRUCK_FREE_USAGE_STATUS.VALUE',
-                'DONKEY_LICENSE_PLATE_VALUE' => 'DONKEY_LICENSE_PLATE.VALUE',
-                'TRAILER_LICENSE_PLATE_VALUE' => 'TRAILER_LICENSE_PLATE.VALUE',
-                'TRAILER_SECONDARY_LICENSE_PLATE_VALUE' => 'TRAILER_SECONDARY_LICENSE_PLATE.VALUE',
-                'TRUCK_LICENSE_PLATE_VALUE' => 'TRUCK_LICENSE_PLATE.VALUE',
-            ],
-        ])->fetch();
     }
 }

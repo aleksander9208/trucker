@@ -60,6 +60,7 @@ class Vitrina extends BaseController
                 'select' => [
                     'NAME',
                     'DATE_SHIPMENT_VALUE' => 'DATE_SHIPMENT.VALUE',
+                    'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING.VALUE',
                     'CARRIER_VALUE' => 'CARRIER.VALUE',
                     'CARRIER_INN_VALUE' => 'CARRIER_INN.VALUE',
                     'CARGO_OWNER_VALUE' => 'CARGO_OWNER.VALUE',
