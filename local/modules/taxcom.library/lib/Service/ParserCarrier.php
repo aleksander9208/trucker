@@ -120,9 +120,9 @@ class ParserCarrier
                 }
 
                 if ($this->carrier['root'] === false) {
-                    $properties = self::setChecksForwarder($check_group['name'], $checks, $properties, $checksTrue, $countChecks);
+                    $properties = self::setChecksForwarder($check_group['name'], $checks, $properties, $checksTrue, $countChecks, $check_group['meta']['license_plate']);
                 } else {
-                    $properties = self::setChecks($check_group['name'], $checks, $properties, $checksTrue, $countChecks);
+                    $properties = self::setChecks($check_group['name'], $checks, $properties, $checksTrue, $countChecks, $check_group['meta']['license_plate']);
                 }
             }
         }
@@ -168,7 +168,8 @@ class ParserCarrier
         array $group,
         array $properties,
         int $checksTrue,
-        int $countChecks
+        int $countChecks,
+        string $licensePlate = '',
     ): array
     {
         switch ($name) {
@@ -234,7 +235,7 @@ class ParserCarrier
                 break;
             case 'vehicle_donkey':
                 $properties['DONKEY_CHECKS'] = $checksTrue . '/' .$countChecks;
-                $properties['DONKEY_LICENSE_PLATE'] = $group['meta']['license_plate'];
+                $properties['DONKEY_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['DONKEY_STS_STATUS'] = $group['status'];
                 }
@@ -253,7 +254,7 @@ class ParserCarrier
                 break;
             case 'vehicle_main_trailer':
                 $properties['TRAILER_CHECKS'] = $checksTrue . '/' .$countChecks;
-                $properties['TRAILER_LICENSE_PLATE'] = $group['meta']['license_plate'];
+                $properties['TRAILER_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_STS_STATUS'] = $group['status'];
                 }
@@ -272,7 +273,7 @@ class ParserCarrier
                 break;
             case 'vehicle_secondary_trailer':
                 $properties['TRAILER_SECONDARY_CHECKS'] = $checksTrue . '/' .$countChecks;
-                $properties['TRAILER_SECONDARY_LICENSE_PLATE'] = $group['meta']['license_plate'];
+                $properties['TRAILER_SECONDARY_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_SECONDARY_STS_STATUS'] = $group['status'];
                 }
@@ -291,7 +292,7 @@ class ParserCarrier
                 break;
             case 'vehicle_truck':
                 $properties['TRUCK_CHECKS'] = $checksTrue . '/' .$countChecks;
-                $properties['TRUCK_LICENSE_PLATE'] = $group['meta']['license_plate'];
+                $properties['TRUCK_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRUCK_STS_STATUS'] = $group['status'];
                 }
@@ -329,7 +330,8 @@ class ParserCarrier
         array $group,
         array $properties,
         int $checksTrue,
-        int $countChecks
+        int $countChecks,
+        string $licensePlate = ''
     ): array
     {
         switch ($name) {
@@ -395,7 +397,7 @@ class ParserCarrier
                 break;
             case 'vehicle_donkey':
                 $properties['DONKEY_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
-                $properties['DONKEY_LICENSE_FOR_PLATE'] = $group['meta']['license_plate'];
+                $properties['DONKEY_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['DONKEY_STS_FOR_STATUS'] = $group['status'];
                 }
@@ -414,7 +416,7 @@ class ParserCarrier
                 break;
             case 'vehicle_main_trailer':
                 $properties['TRAILER_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
-                $properties['TRAILER_LICENSE_FOR_PLATE'] = $group['meta']['license_plate'];
+                $properties['TRAILER_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_STS_FOR_STATUS'] = $group['status'];
                 }
@@ -433,7 +435,7 @@ class ParserCarrier
                 break;
             case 'vehicle_secondary_trailer':
                 $properties['TRAILER_SECONDARY_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
-                $properties['TRAILER_SECONDARY_LICENSE_FOR_PLATE'] = $group['meta']['license_plate'];
+                $properties['TRAILER_SECONDARY_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_SECONDARY_STS_FOR_STATUS'] = $group['status'];
                 }
@@ -452,7 +454,7 @@ class ParserCarrier
                 break;
             case 'vehicle_truck':
                 $properties['TRUCK_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
-                $properties['TRUCK_LICENSE_FOR_PLATE'] = $group['meta']['license_plate'];
+                $properties['TRUCK_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRUCK_STS_FOR_STATUS'] = $group['status'];
                 }
