@@ -154,10 +154,6 @@ class ParserCarrier
             }
         }
 
-        echo "<pre style='dis3play: none;' alt='arResult'>";
-        print_r($properties);
-        echo "</pre>";
-
         return $properties;
     }
 
