@@ -865,7 +865,7 @@ class TransportationList extends CBitrixComponent
                 $this->arResult['COUNT_GOOD'] = $good;
                 $statueCarrier = '<span class="transit-good"></span>';
             } elseif($item['CHECKLIST_CARRIER_VALUE'] === '0') {
-                $statueCarrier = '<span class="transit-good"></span>';
+                $statueCarrier = '<span class="transit-error"></span>';
             } else {
                 $statueCarrier = '';
             }

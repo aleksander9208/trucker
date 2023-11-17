@@ -133,9 +133,9 @@ class ParserCarrier
         }
 
         if ($this->carrier['root'] === false) {
-            $properties['CHECKLIST_FORWARDER'] = false;
+            $properties['CHECKLIST_FORWARDER'] = 0;
             if ($checksTrue === $checksFalse) {
-                $properties['CHECKLIST_FORWARDER'] = true;
+                $properties['CHECKLIST_FORWARDER'] = 1;
             }
 
             $properties['CARRIER'] = $this->carrier['executor']['name'];
@@ -148,9 +148,9 @@ class ParserCarrier
             $properties['CARGO_OWNER'] = $this->carrier['customer']['name'];
             $properties['CARGO_OWNER_INN'] = $this->carrier['customer']['inn'];
 
-            $properties['CHECKLIST_CARRIER'] = false;
+            $properties['CHECKLIST_CARRIER'] = 0;
             if ($checksTrue === $checksFalse) {
-                $properties['CHECKLIST_CARRIER'] = true;
+                $properties['CHECKLIST_CARRIER'] = 1;
             }
         }
 
