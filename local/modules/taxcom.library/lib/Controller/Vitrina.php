@@ -293,6 +293,7 @@ class Vitrina extends BaseController
                 'TRAILER_LEASING_COMPANY_STATUS' => $shipping['TRAILER_LEASING_COMPANY_STATUS_VALUE'],
                 'TRAILER_MARRIAGE_CERTIFICATE_STATUS' => $shipping['TRAILER_MARRIAGE_CERTIFICATE_STATUS_VALUE'],
                 'TRAILER_FREE_USAGE_STATUS' => $shipping['TRAILER_FREE_USAGE_STATUS_VALUE'],
+                'AUTO_PRICES' => self::getPrice($id),
             ];
 
             $properties = self::getProperties($item['ID']);
@@ -303,6 +304,49 @@ class Vitrina extends BaseController
 
             return null;
         }
+    }
+
+    /**
+     * Возвращаем отклонение от
+     * рыночной стоимости
+     *
+     * @param int $id
+     * @return string|null
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    protected static function getPrice(int $id): ?string
+    {
+        $hlblockId = HL\HighloadBlockTable::getList([
+            'filter' => ['=NAME' => 'FnsLinkDocuments']
+        ])->fetch();
+
+        $entity_data_class = (HL\HighloadBlockTable::compileEntity($hlblockId))->getDataClass();
+
+        $price = $entity_data_class::getList([
+            "select" => ["*"],
+            "filter" => [
+                "UF_ID_ELEMENT" => $id,
+                "UF_GROUP_NAME" => 'prices',
+            ]
+        ])->fetch();
+
+        $hlblockIdFor = HL\HighloadBlockTable::getList([
+            'filter' => ['=NAME' => 'FnsLinkDocumentsForwardes']
+        ])->fetch();
+
+        $entity_data_class_for = (HL\HighloadBlockTable::compileEntity($hlblockIdFor))->getDataClass();
+
+        $priceFor = $entity_data_class_for::getList([
+            "select" => ["*"],
+            "filter" => [
+                "UF_ID_ELEMENT" => $id,
+                "UF_GROUP_NAME" => 'prices',
+            ]
+        ])->fetch();
+
+        return $price['UF_LINK'] ?: $priceFor['UF_LINK'] ?: null;
     }
 
     /**

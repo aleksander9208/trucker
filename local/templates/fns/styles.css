@@ -549,6 +549,14 @@ ul.subnav-content.uk-switcher.uk-margin {
     line-height: 1;
 }
 
+th.main-grid-cell-head  {
+    max-width: unset;
+}
+
+span.main-grid-head-title {
+    padding-right: 0;
+}
+
 .status-info_confirmation {
     color: #262626;
     border: 1px solid #EAEAEA;

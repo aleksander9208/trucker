@@ -345,7 +345,7 @@ $(document).ready(function () {
             $('#transport_file').hide();
             $("#list_file_transport_link").html('');
         }
-        /** Договор транспортной экспедиции */
+        /** Договор транспортной */
         if(carriage.CONTRACT_EXP_STATUS === 'passed') {
             $('#contract_link').show().removeClass().addClass('status-info_confirmation');
         } else if(carriage.CONTRACT_EXP_STATUS === 'in_progress') {
