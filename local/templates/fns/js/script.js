@@ -66,18 +66,18 @@ $(document).ready(function () {
                     /** Дата перевозки */
                     $('#carriage_date').html(day + '.' + month + '.' + year);
                     /** Рыночная цена */
-                    if (carriage.AUTO_PRICES != null) {
+                    if (carriage.AUTO_PRICES !== '') {
                         $('#deviation-price').show();
                         $('#carriage_deviation-price').html(carriage.AUTO_PRICES + '%');
                     }
-                    /** Статус перевозки */
-                    if (carriage.STATUS_SHIPPING === 'passed') {
-                        $('#status_shipping').html('Проверка пройдена').removeClass().addClass('bar-status-good');
-                    } else if(carriage.STATUS_SHIPPING === 'in_progress') {
-                        $('#status_shipping').html('Оформление документов').removeClass().addClass('bar-status');
-                    } else {
-                        $('#status_shipping').html('Проверка не пройдена').removeClass().addClass('bar-status-error');
-                    }
+                    // /** Статус перевозки */
+                    // if (carriage.STATUS_SHIPPING === 'passed') {
+                    //     $('#status_shipping').html('Проверка пройдена').removeClass().addClass('bar-status-good');
+                    // } else if(carriage.STATUS_SHIPPING === 'in_progress') {
+                    //     $('#status_shipping').html('Оформление документов').removeClass().addClass('bar-status');
+                    // } else {
+                    //     $('#status_shipping').html('Проверка не пройдена').removeClass().addClass('bar-status-error');
+                    // }
 
                     /** Грузовладелец */
                     if (carriage.CARGO != null) {
@@ -296,11 +296,12 @@ $(document).ready(function () {
     function contract(carriage) {
         /** Подписанные договоры */
         if (carriage.CONTRACT_CHECK != null) {
+            // detail-status_error - класс ошибки
             $('#contract').show();
             if (carriage.CONTRACT_CHECK_ERROR !== false) {
-                $('#detail_status-transportation').removeClass().addClass('detail-status_good').html(carriage.CONTRACT_CHECK);
+                $('#detail_status-transportation').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#detail_status-transportation').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.CONTRACT_CHECK);
+                $('#detail_status-transportation').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#detail_status-transportation').html('').removeClass();
@@ -430,9 +431,9 @@ $(document).ready(function () {
         if (carriage.CONTRACT_FOR_CHECK != null) {
             $('#contract_for').show();
             if (carriage.CONTRACT_FOR_CHECK_ERROR !== false) {
-                $('#detail_status-transportation_for').removeClass().addClass('detail-status_good').html(carriage.CONTRACT_FOR_CHECK);
+                $('#detail_status-transportation_for').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#detail_status-transportation_for').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.CONTRACT_FOR_CHECK);
+                $('#detail_status-transportation_for').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#detail_status-transportation_for').html('').removeClass();
@@ -566,9 +567,9 @@ $(document).ready(function () {
         if (carriage.DOCUMENTS_CHECK != null) {
             $('#execution_documents').show();
             if (carriage.DOCUMENTS_CHECK_ERROR !== false) {
-                $('#documents_check').removeClass().addClass('detail-status_good').html(carriage.DOCUMENTS_CHECK);
+                $('#documents_check').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#documents_check').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.DOCUMENTS_CHECK);
+                $('#documents_check').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#documents_check').html('').removeClass();
@@ -782,9 +783,9 @@ $(document).ready(function () {
         if (carriage.DOCUMENTS_FOR_CHECK != null) {
             $('#execution_documents_for').show();
             if (carriage.DOCUMENTS_FOR_CHECK_ERROR !== false) {
-                $('#documents_check_for').removeClass().addClass('detail-status_good').html(carriage.DOCUMENTS_FOR_CHECK);
+                $('#documents_check_for').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#documents_check_for').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.DOCUMENTS_FOR_CHECK);
+                $('#documents_check_for').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#documents_check_for').html('').removeClass();
@@ -1003,21 +1004,27 @@ $(document).ready(function () {
         if (carriage.AUTOMATIC_CHECKS != null) {
             $('#automatic').show();
             if (carriage.AUTOMATIC_CHECK_ERROR !== false) {
-                $('#auto_check').removeClass().addClass('detail-status_good').html(carriage.AUTOMATIC_CHECKS);
+                $('#auto_check').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#auto_check').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.AUTOMATIC_CHECKS);
+                $('#auto_check').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#auto_check').html('').removeClass();
         }
         /** Стоимость перевозки соответствует рыночным ценам */
         if(carriage.AUTOMATIC_PRICES_STATUS === 'passed') {
+            $('#prices_link .status-info_confirmation_title').html('Стоимость перевозки соответствует рыночной цены');
             $('#prices_link').show().removeClass().addClass('status-info_confirmation');
             $('#prices_file').show();
         } else if(carriage.AUTOMATIC_PRICES_STATUS === 'in_progress') {
+            $('#prices_link .status-info_confirmation_title').html('Стоимость перевозки в процессе получения');
             $('#prices_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
             $('#prices_file').hide();
         } else if(carriage.AUTOMATIC_PRICES_STATUS === 'failed') {
+            const price = carriage.AUTO_PRICES.split("/");
+            if (price[0]) {
+                $('#prices_link .status-info_confirmation_title').html('Стоимость перевозки ниже '+ price[0] +'% от рыночной цены');
+            }
             $('#prices_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
             $('#prices_file').hide();
         }
@@ -1038,21 +1045,27 @@ $(document).ready(function () {
         if (carriage.AUTOMATIC_FOR_CHECKS != null) {
             $('#automatic_for').show();
             if (carriage.AUTOMATIC_FOR_CHECKS_ERROR !== false) {
-                $('#auto_check_for').removeClass().addClass('detail-status_good').html(carriage.AUTOMATIC_FOR_CHECKS);
+                $('#auto_check_for').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#auto_check_for').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.AUTOMATIC_FOR_CHECKS);
+                $('#auto_check_for').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#auto_check_for').html('').removeClass();
         }
         /** Стоимость перевозки соответствует рыночным ценам */
         if(carriage.AUTOMATIC_PRICES_STATUS_FOR === 'passed') {
+            $('#prices_link_for .status-info_confirmation_title').html('Стоимость перевозки соответствует рыночной цены');
             $('#prices_link_for').show().removeClass().addClass('status-info_confirmation');
             $('#prices_file_for').show();
         } else if(carriage.AUTOMATIC_PRICES_STATUS_FOR === 'in_progress') {
+            $('#prices_link_for .status-info_confirmation_title').html('Стоимость перевозки в процессе получения');
             $('#prices_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
             $('#prices_file_for').hide();
         } else if(carriage.AUTOMATIC_PRICES_STATUS_FOR === 'failed') {
+            const price = carriage.AUTO_PRICES.split("/");
+            if (price[1]) {
+                $('#prices_link_for .status-info_confirmation_title').html('Стоимость перевозки ниже '+ price[1] +'% от рыночной цены');
+            }
             $('#prices_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
             $('#prices_file_for').hide();
         }
@@ -1076,9 +1089,9 @@ $(document).ready(function () {
         if (carriage.ACCOUNTING_CHECKS != null) {
             $('#accounting').show();
             if (carriage.ACCOUNTING_CHECKS_ERROR !== false) {
-                $('#accounting_check').removeClass().addClass('detail-status_good').html(carriage.ACCOUNTING_CHECKS);
+                $('#accounting_check').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#accounting_check').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.ACCOUNTING_CHECKS);
+                $('#accounting_check').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#accounting_check').html('').removeClass();
@@ -1333,9 +1346,9 @@ $(document).ready(function () {
         if (carriage.ACCOUNTING_FOR_CHECKS != null) {
             $('#accounting_for').show();
             if (carriage.ACCOUNTING_FOR_CHECKS_ERROR !== false) {
-                $('#accounting_check_for').removeClass().addClass('detail-status_good').html(carriage.ACCOUNTING_FOR_CHECKS);
+                $('#accounting_check_for').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#accounting_check_for').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.ACCOUNTING_FOR_CHECKS);
+                $('#accounting_check_for').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#accounting_check_for').html('').removeClass();
@@ -1596,9 +1609,9 @@ $(document).ready(function () {
         if (carriage.DONKEY_CHECKS != null) {
             $('#donkey').show();
             if (carriage.DONKEY_CHECKS_ERROR !== false) {
-                $('#donkey_check').removeClass().addClass('detail-status_good').html(carriage.DONKEY_CHECKS);
+                $('#donkey_check').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#donkey_check').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.DONKEY_CHECKS);
+                $('#donkey_check').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#donkey_check').html('').removeClass();
@@ -1822,9 +1835,9 @@ $(document).ready(function () {
         if (carriage.DONKEY_FOR_CHECKS != null) {
             $('#donkey_for').show();
             if (carriage.DONKEY_FOR_CHECKS_ERROR !== false) {
-                $('#donkey_check_for').removeClass().addClass('detail-status_good').html(carriage.DONKEY_FOR_CHECKS);
+                $('#donkey_check_for').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#donkey_check_for').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.DONKEY_FOR_CHECKS);
+                $('#donkey_check_for').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#donkey_check_for').html('').removeClass();
@@ -2052,9 +2065,9 @@ $(document).ready(function () {
         if (carriage.TRAILER_CHECKS != null) {
             $('#trailer').show();
             if (carriage.TRAILER_CHECKS_ERROR !== false) {
-                $('#trailer_check').removeClass().addClass('detail-status_good').html(carriage.TRAILER_CHECKS);
+                $('#trailer_check').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#trailer_check').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.TRAILER_CHECKS);
+                $('#trailer_check').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#trailer_check').html('').removeClass();
@@ -2276,9 +2289,9 @@ $(document).ready(function () {
         if (carriage.TRAILER_FOR_CHECKS != null) {
             $('#trailer_for').show();
             if (carriage.TRAILER_FOR_CHECKS_ERROR !== false) {
-                $('#trailer_check_for').removeClass().addClass('detail-status_good').html(carriage.TRAILER_FOR_CHECKS);
+                $('#trailer_check_for').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#trailer_check_for').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.TRAILER_FOR_CHECKS);
+                $('#trailer_check_for').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#trailer_check_for').html('').removeClass();
@@ -2503,9 +2516,9 @@ $(document).ready(function () {
         if (carriage.TRAILER_SECONDARY_CHECKS != null) {
             $('#trailer_sec').show();
             if (carriage.TRAILER_SECONDARY_CHECKS_ERROR !== false) {
-                $('#trailer_sec_check').removeClass().addClass('detail-status_good').html(carriage.TRAILER_SECONDARY_CHECKS);
+                $('#trailer_sec_check').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#trailer_sec_check').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.TRAILER_SECONDARY_CHECKS);
+                $('#trailer_sec_check').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#trailer_sec_check').html('').removeClass();
@@ -2732,9 +2745,9 @@ $(document).ready(function () {
         if (carriage.TRAILER_SECONDARY_FOR_CHECKS != null) {
             $('#trailer_sec_for').show();
             if (carriage.TRAILER_SECONDARY_FOR_CHECKS_ERROR !== false) {
-                $('#trailer_sec_check_for').removeClass().addClass('detail-status_good').html(carriage.TRAILER_SECONDARY_FOR_CHECKS);
+                $('#trailer_sec_check_for').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#trailer_sec_check_for').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.TRAILER_SECONDARY_FOR_CHECKS);
+                $('#trailer_sec_check_for').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#trailer_sec_check_for').html('').removeClass();
@@ -2963,9 +2976,9 @@ $(document).ready(function () {
         if (carriage.TRUCK_CHECKS != null) {
             $('#truck').show();
             if (carriage.TRUCK_CHECKS_ERROR !== false) {
-                $('#truck_check').removeClass().addClass('detail-status_good').html(carriage.TRUCK_CHECKS);
+                $('#truck_check').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#truck_check').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.TRUCK_CHECKS);
+                $('#truck_check').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#truck_check').html('').removeClass();
@@ -3185,9 +3198,9 @@ $(document).ready(function () {
         if (carriage.TRUCK_FOR_CHECKS != null) {
             $('#truck_for').show();
             if (carriage.TRUCK_FOR_CHECKS_ERROR !== false) {
-                $('#truck_check_for').removeClass().addClass('detail-status_good').html(carriage.TRUCK_FOR_CHECKS);
+                $('#truck_check_for').removeClass().addClass('detail-status_good').html('Выполнено');
             } else {
-                $('#truck_check_for').removeClass().addClass('detail-status_error').html('Выполнено ' + carriage.TRUCK_FOR_CHECKS);
+                $('#truck_check_for').removeClass().addClass('detail-status_expectation').html('На оформлении');
             }
         } else {
             $('#truck_check_for').html('').removeClass();

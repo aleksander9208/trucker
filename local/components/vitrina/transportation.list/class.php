@@ -1,15 +1,12 @@
 <?php
 
-use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Context;
 use Bitrix\Main\ErrorCollection;
 use Bitrix\Main\Grid\Options;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
-use Bitrix\Main\ObjectPropertyException;
-use Bitrix\Main\SystemException;
 use Bitrix\Main\UI\PageNavigation;
-use Bitrix\Highloadblock as HL;
+use Taxcom\Library\HLBlock\HLBlock;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
@@ -55,6 +52,9 @@ class TransportationList extends CBitrixComponent
      */
     public function executeComponent(): void
     {
+        Loader::includeModule('iblock');
+        Loader::includeModule('taxcom.library');
+
         $this->errors = new ErrorCollection();
 
         if ($this->errors->count() <= 0) {
@@ -793,8 +793,6 @@ class TransportationList extends CBitrixComponent
      */
     public function getRows(): void
     {
-        Loader::includeModule('iblock');
-
         $this->arResult["GRID_CODE"] = 'vitrina_grid';
 
         $gridOptions = new Options($this->arResult["GRID_CODE"]);
@@ -833,20 +831,35 @@ class TransportationList extends CBitrixComponent
             $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-12-31 23:59:59';
         }
 
+        if ($request->get('statistics') !== 'doc') {
+            $this->getFilterStatistics($request->get('statistics'));
+        }
+
+        $filter = $this->arResult["FILTER"];
+
+        if ($request->get('statistics') === 'doc') {
+            $filter = ['ID' => HLBlock::getIdNoDocument()];
+        }
+
         $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
-            'filter' => $this->arResult["FILTER"],
-            'select' => [
+            'filter' => $filter,
+            'select' =>  [
                 'ID',
                 'NAME',
-                'DATE_SHIPMENT_' => 'DATE_SHIPMENT',
-                'CARGO_OWNER_' => 'CARGO_OWNER',
-                'CARGO_OWNER_INN_' => 'CARGO_OWNER_INN',
-                'FORWARDER_' => 'FORWARDER',
-                'FORWARDER_INN_' => 'FORWARDER_INN',
-                'CARRIER_' => 'CARRIER',
-                'CARRIER_INN_' => 'CARRIER_INN',
-                'CHECKLIST_CARRIER_' => 'CHECKLIST_CARRIER',
-                'CHECKLIST_FORWARDER_' => 'CHECKLIST_FORWARDER',
+                'DATE_SHIPMENT_VALUE' => 'DATE_SHIPMENT.VALUE',
+                'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING.VALUE',
+                'CARRIER_VALUE' => 'CARRIER.VALUE',
+                'CARRIER_INN_VALUE' => 'CARRIER_INN.VALUE',
+                'CARGO_OWNER_VALUE' => 'CARGO_OWNER.VALUE',
+                'CARGO_OWNER_INN_VALUE' => 'CARGO_OWNER_INN.VALUE',
+                'FORWARDER_VALUE' => 'FORWARDER.VALUE',
+                'FORWARDER_INN_VALUE' => 'FORWARDER_INN.VALUE',
+                'CHECKLIST_CARRIER_VALUE' => 'CHECKLIST_CARRIER.VALUE',
+                'CHECKLIST_FORWARDER_VALUE' => 'CHECKLIST_FORWARDER.VALUE',
+                'AUTOMATIC_PRICES_STATUS_VALUE' => 'AUTOMATIC_PRICES_STATUS.VALUE',
+                'AUTOMATIC_GEO_MONITORING_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_STATUS.VALUE',
+                'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'AUTOMATIC_PRICES_FOR_STATUS.VALUE',
+                'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE',
             ],
             "offset" => $nav->getOffset(),
             "limit" => $nav->getLimit(),
@@ -856,13 +869,11 @@ class TransportationList extends CBitrixComponent
 
         $nav->setRecordCount($vitrina->getCount());
 
-        $good = $error = 0;
         foreach ($vitrina->fetchAll() as $item) {
-            $item['DEVIATION_MARKET_PRICE_VALUE'] = self::getPrice($item['ID']);
+            $item['DEVIATION_MARKET_PRICE_VALUE'] = HLBlock::getPrice($item['ID']);
             $date = explode('-', $item['DATE_SHIPMENT_VALUE']);
 
             if ($item['CHECKLIST_CARRIER_VALUE'] === '1') {
-                $this->arResult['COUNT_GOOD'] = $good;
                 $statueCarrier = '<span class="transit-good"></span>';
             } elseif($item['CHECKLIST_CARRIER_VALUE'] === '0') {
                 $statueCarrier = '<span class="transit-error"></span>';
@@ -870,6 +881,7 @@ class TransportationList extends CBitrixComponent
                 $statueCarrier = '';
             }
 
+//            <span class="transit-progress"></span>
             if ($item['CHECKLIST_FORWARDER_VALUE'] === '1') {
                 $statusFor = '<span class="transit-good"></span>';
             } elseif ($item['CHECKLIST_FORWARDER_VALUE'] === '0') {
@@ -891,9 +903,6 @@ class TransportationList extends CBitrixComponent
                     "CHECKLIST_FORWARDER" => $statusFor,
                 ],
             ];
-
-            $good++;
-            $error++;
         }
 
         $this->arResult["ROWS"] = $vitrinaList;
@@ -915,6 +924,12 @@ class TransportationList extends CBitrixComponent
                 'ID',
                 'NAME',
                 'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING.VALUE',
+                'CHECKLIST_CARRIER_VALUE' => 'CHECKLIST_CARRIER.VALUE',
+                'CHECKLIST_FORWARDER_VALUE' => 'CHECKLIST_FORWARDER.VALUE',
+                'AUTOMATIC_PRICES_STATUS_VALUE' => 'AUTOMATIC_PRICES_STATUS.VALUE',
+                'AUTOMATIC_GEO_MONITORING_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_STATUS.VALUE',
+                'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'AUTOMATIC_PRICES_FOR_STATUS.VALUE',
+                'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE',
             ],
             "order" => ['ID' => 'ASC'],
             "count_total" => true,
@@ -922,20 +937,40 @@ class TransportationList extends CBitrixComponent
 
         $this->arResult['COUNT'] = $vitrina->getCount();
 
-        $error = 0;
-        $good = 0;
+        $error = $good = $geo = $price = $doc = 0;
         foreach ($vitrina->fetchAll() as $item) {
-            if ($item['STATUS_SHIPPING_VALUE'] === 'false') {
+            if ($item['STATUS_SHIPPING_VALUE'] === 'completed') {
+                $good++;
+            }
+
+            if ($item['STATUS_SHIPPING_VALUE'] === 'false' ||
+                $item['STATUS_SHIPPING_VALUE'] === 'in_progress'
+            ) {
                 $error++;
             }
 
-            if ($item['STATUS_SHIPPING_VALUE'] === 'completed') {
-                $good++;
+            if (HLBlock::isDocument($item['ID'])) {
+                $doc++;
+            }
+
+            if ($item['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'] === 'failed' ||
+                $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'failed'
+            ) {
+                $geo++;
+            }
+
+            if ($item['AUTOMATIC_PRICES_STATUS_VALUE'] === 'failed' ||
+                $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'failed'
+            ) {
+                $price++;
             }
         }
 
         $this->arResult['COUNT_ERROR'] = $error;
         $this->arResult['COUNT_GOOD'] = $good;
+        $this->arResult['COUNT_ERROR_DOC'] = $doc;
+        $this->arResult['COUNT_ERROR_GEO'] = $geo;
+        $this->arResult['COUNT_ERROR_PRICE'] = $price;
 
         if ($this->arResult['COUNT'] > 0) {
             $this->arResult['COUNT_GOOD_PERCENT'] = $this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100;
@@ -1033,31 +1068,38 @@ class TransportationList extends CBitrixComponent
     }
 
     /**
-     * Возвращаем отклонение от
-     * рыночной стоимости
+     * Возвращаем фильтр по
+     * статистики
      *
-     * @param int $id
-     * @return string
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
+     * @param string|null $status
+     * @return void
      */
-    protected static function getPrice(int $id): string
+    protected function getFilterStatistics(string $status = null): void
     {
-        $hlblockId = HL\HighloadBlockTable::getList([
-            'filter' => ['=NAME' => 'FnsLinkDocuments']
-        ])->fetch();
-
-        $entity_data_class = (HL\HighloadBlockTable::compileEntity($hlblockId))->getDataClass();
-
-        $price = $entity_data_class::getList([
-            "select" => ["*"],
-            "filter" => [
-                "UF_ID_ELEMENT" => $id,
-                "UF_GROUP_NAME" => 'prices',
-            ]
-        ])->fetch();
-
-        return $price['UF_LINK'] ?: '';
+        switch ($status){
+            case 'total':
+                $this->arResult["FILTER"]['ACTIVE'] = 'Y';
+                break;
+            case 'good':
+                $this->arResult["FILTER"]['STATUS_SHIPPING_VALUE'] = 'passed';
+                break;
+            case 'error':
+                $this->arResult["FILTER"]['STATUS_SHIPPING_VALUE'] = 'failed';
+                break;
+            case 'geo':
+                $this->arResult["FILTER"][] = [
+                    'LOGIC' => "OR",
+                    'AUTOMATIC_GEO_MONITORING_STATUS_VALUE' => 'failed',
+                    'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'failed',
+                ];
+                break;
+            case 'price':
+                $this->arResult["FILTER"][] = [
+                    'LOGIC' => "OR",
+                    'AUTOMATIC_PRICES_STATUS_VALUE' => 'failed',
+                    'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'failed',
+                ];
+                break;
+        }
     }
 }

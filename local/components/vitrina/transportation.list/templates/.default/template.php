@@ -91,50 +91,68 @@ if ($request->get('year')) {
         ?>
     </div>
 
-    <div class="statistics">
+    <form class="statistics">
         <div class="statistics_result">
             <div class="statistics-info">
-                <div class="statistics-title">
-                    <?= $arResult["COUNT"] ?>
-                </div>
-                выполнено всего перевозок
+                <label class="statistics_checkbox">
+                    <input name="statistics" value="total" type="submit">
+                    <div class="statistics-title">
+                        <?= $arResult["COUNT"] ?>
+                    </div>
+                    выполнено всего перевозок
+                </label>
             </div>
         </div>
         <div class="statistics_good">
             <div class="statistics-info">
-                <div class="statistics-title">
-                    <?= $arResult["COUNT_GOOD"] ?>
-                    <sup><span><?= $arResult['COUNT_GOOD_PERCENT'] ?>%</span></sup>
-                </div>
-                проверка по чек-листу пройдена
+                <label class="statistics_checkbox">
+                    <input name="statistics" value="good" type="submit">
+                    <div class="statistics-title">
+                        <?= $arResult["COUNT_GOOD"] ?>
+                        <sup><span><?= $arResult['COUNT_GOOD_PERCENT'] ?>%</span></sup>
+                    </div>
+                    проверка по чек-листу пройдена
+                </label>
             </div>
         </div>
         <div class="statistics_error">
             <div class="statistics-info">
-                <div class="statistics-title">
-                    <?= $arResult["COUNT_ERROR"] ?>
-                    <sup><span><?= $arResult['COUNT_ERROR_PERCENT'] ?>%</span></sup>
-                </div>
-                проверка по чек-листу не пройдена
+                <label class="statistics_checkbox">
+                    <input name="statistics" value="error" type="submit">
+                    <div class="statistics-title">
+                        <?= $arResult["COUNT_ERROR"] ?>
+                        <sup><span><?= $arResult['COUNT_ERROR_PERCENT'] ?>%</span></sup>
+                    </div>
+                    проверка по чек-листу не пройдена
+                </label>
             </div>
-<!--            <div class="statistics_error-info">-->
-<!--                <div>-->
-<!--                    <span>129</span> с недостающими документами-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <span>57</span> нет подтверждения через геомониторинг-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <span>405</span> цена не соответствует рыночной-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="statistics_error-search">-->
-<!--                <label>-->
-<!--                    <span uk-icon="icon: search"></span>-->
-<!--                </label>-->
-<!--            </div>-->
+            <div class="statistics_error-info">
+                <div>
+                    <label class="statistics_checkbox">
+                        <input name="statistics" value="doc" type="submit">
+                        <span><?= $arResult["COUNT_ERROR_DOC"] ?></span> с недостающими документами
+                    </label>
+                </div>
+                <div>
+                    <label class="statistics_checkbox">
+                        <input name="statistics" value="geo" type="submit">
+                        <span><?= $arResult["COUNT_ERROR_GEO"] ?></span> нет подтверждения через геомониторинг
+                    </label>
+                </div>
+                <div>
+                    <label class="statistics_checkbox">
+                        <input name="statistics" value="price" type="submit">
+                        <span><?= $arResult["COUNT_ERROR_PRICE"] ?></span> цена не соответствует рыночной
+                    </label>
+                </div>
+            </div>
+            <div class="statistics_error-search">
+                <label>
+                    <span uk-icon="icon: search"></span>
+                </label>
+            </div>
         </div>
-    </div>
+    </form>
 
     <div class="filter_list">
 <!--        <div class="filter_list-top">-->
@@ -209,7 +227,7 @@ if ($request->get('year')) {
                 <div class="bar-title">
                     Перевозка <span id="carriage_id"></span>
                 </div>
-                <div class="bar-status" id="status_shipping"></div>
+<!--                <div class="bar-status" id="status_shipping"></div>-->
             </div>
 
             <div class="bar-content_date">

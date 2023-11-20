@@ -59,6 +59,10 @@ form.form_auth {
     gap: 8px;
 }
 
+.filter_checkbox {
+    cursor: pointer;
+}
+
 .filter_checkbox input {
     z-index: -1;
     opacity: 0;
@@ -102,6 +106,51 @@ form.form_auth {
 }
 
 .filter_checkbox input[type=checkbox]:checked:disabled + span {
+    background: #f7efdc;
+}
+
+.statistics_checkbox {
+    cursor: pointer;
+}
+
+.statistics_checkbox input {
+    z-index: -1;
+    opacity: 0;
+    display: block;
+    width: 0;
+    height: 0;
+}
+
+.statistics_checkbox span {
+    border: 1px solid rgba(217, 217, 217, 1);
+    border-radius: 4px;
+    text-align: center;
+    display: block;
+    font-size: 13px;
+    padding: 1px 0;
+}
+
+.statistics_checkbox input[type=checkbox]:checked + span {
+    background: rgba(0, 102, 255, 1);
+    color: #fff;
+}
+
+.statistics_checkbox:hover {
+    color: #666;
+}
+
+.statistics_checkbox input[type=checkbox]:active:not(:disabled) + span {
+    background: #d2c5ac;
+    color: #000;
+}
+
+.statistics_checkbox input[type=checkbox]:disabled + span {
+    background: #efefef;
+    color: #666;
+    cursor: default;
+}
+
+.statistics_checkbox input[type=checkbox]:checked:disabled + span {
     background: #f7efdc;
 }
 
@@ -192,6 +241,8 @@ form.form_auth {
     font-size: 14px;
     font-weight: 400;
     padding-left: 5px;
+    border: none;
+    border-radius: unset;
 }
 
 .statistics_error {
@@ -242,6 +293,8 @@ form.form_auth {
     padding-right: 2px;
     min-width: 28px;
     display: inline-block;
+    border: none;
+    border-radius: 0;
 }
 
 .statistics_error-search {
@@ -371,6 +424,12 @@ form.form_auth {
 
 .transit-error {
     background: url("images/error.svg") no-repeat;
+    width: 32px;
+    height: 20px;
+}
+
+.transit-progress {
+    background: url("images/progress.svg") no-repeat;
     width: 32px;
     height: 20px;
 }
@@ -539,6 +598,13 @@ ul.subnav-content.uk-switcher.uk-margin {
     line-height: 1;
     font-size: 12px;
     padding: 2px;
+}
+
+.detail-status_expectation {
+    color: #52C41A;
+    font-size: 12px;
+    padding: 0 3px;
+    line-height: 1;
 }
 
 .detail-status_error {
