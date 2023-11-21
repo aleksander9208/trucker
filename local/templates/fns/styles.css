@@ -520,6 +520,15 @@ span.deviation-price_percent {
     font-size: 16px;
 }
 
+.deviation-price_percent .icon-deviation_down {
+    color: unset;
+    display: inline-block;
+}
+
+.deviation-price_percent .uk-icon {
+    display: none;
+}
+
 .bar-content_members {
     color: #595959;
     margin-bottom: 4px;

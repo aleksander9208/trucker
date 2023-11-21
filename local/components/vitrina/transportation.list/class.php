@@ -870,8 +870,12 @@ class TransportationList extends CBitrixComponent
         $nav->setRecordCount($vitrina->getCount());
 
         foreach ($vitrina->fetchAll() as $item) {
-            $item['DEVIATION_MARKET_PRICE_VALUE'] = HLBlock::getPrice($item['ID']);
+            $deviation = HLBlock::getPrice($item['ID']);
             $date = explode('-', $item['DATE_SHIPMENT_VALUE']);
+
+            if($deviation !== '') {
+                $deviation = '<div class="icon-deviation_down"><span uk-icon="icon: arrow-down"></span>' . HLBlock::getPrice($item['ID']) . '</div>';
+            }
 
             if ($item['CHECKLIST_CARRIER_VALUE'] === '1') {
                 $statueCarrier = '<span class="transit-good"></span>';
@@ -898,7 +902,7 @@ class TransportationList extends CBitrixComponent
                     "CARGO_OWNER" => $item['CARGO_OWNER_VALUE'] . '<span>' . $item['CARGO_OWNER_INN_VALUE'] . '</span>',
                     "FORWARDER" => $item['FORWARDER_VALUE'] . '<span>' . $item['FORWARDER_INN_VALUE'] . '</span>',
                     "CARRIER" => $item['CARRIER_VALUE'] . '<span>' . $item['CARRIER_INN_VALUE'] . '</span>',
-                    "DEVIATION_FROM_PRICE" => $item['DEVIATION_MARKET_PRICE_VALUE'],
+                    "DEVIATION_FROM_PRICE" => $deviation,
                     "CHECKLIST_CARRIER" => $statueCarrier,
                     "CHECKLIST_FORWARDER" => $statusFor,
                 ],
