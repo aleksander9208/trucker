@@ -344,6 +344,7 @@ form.form_auth {
     font-size: 14px;
     padding: 4px 9px;
     margin-top: 3px;
+    cursor: pointer;
 }
 
 .filter_list-label input[type=checkbox]:checked + span {
@@ -353,6 +354,7 @@ form.form_auth {
 
 .focused_type span {
     box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    background: #fff;
 }
 
 .filter_list-label:hover {
@@ -691,9 +693,63 @@ span.status-info_confirmation_title {
     margin-bottom: 15px;
 }
 
+.company_list_title {
+    display: flex;
+    justify-content: space-between;
+    background: #FAFAFA;
+    padding: 6px 10px;
+    color: #262626;
+    font-size: 14px;
+}
+
+.company_title_info {
+    width: 20%;
+}
+
+.company_title_accordion {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+}
+
+.company_shipping_count {
+    color: #262626;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    margin-right: -28px;
+}
+
+.company_list {
+    color: #262626;
+    font-size: 14px;
+    width: 20%;
+}
+
+.company_list span {
+    display: block;
+    color: #595959;
+    font-weight: 300;
+}
+
+.company_statistic {
+    width: 55%;
+    height: 10px;
+    background: #DCDEE1;
+    border-radius: 10px;
+}
+
+.company_statistic_inner {
+    height: 100%;
+    background: #D75961;
+    transition: width 0.5s;
+    border-radius: 10px;
+}
+
 /**
 Удалить после окончание верстке
  */
-.main-grid-cell-head {
-    max-width: 144px;
-}
+/*.main-grid-cell-head {*/
+/*    max-width: 144px;*/
+/*}*/

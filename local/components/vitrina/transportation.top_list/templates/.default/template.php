@@ -11,21 +11,43 @@
  */
 
 use Bitrix\Main\Context;
+use Bitrix\Main\Page\Asset;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
 $request = Context::getCurrent()->getRequest();
+$flex = '';
 
 if ($request->get('year')) {
     $classFilterYear = 'focused';
 }
+
+if ($request->get('top')) {
+    $flex = 'style="display: flex;"';
+}
+
+if ($request->get('top') === 'cargo') {
+    $activeClassCargo = 'focused_type';
+    $titleStatistics = 'Грузовладелец';
+}
+
+if ($request->get('top') === 'carriers') {
+    $activeClassCar = 'focused_type';
+    $titleStatistics = 'Перевозчик';
+}
+
+if ($request->get('top') === 'forwarders') {
+    $activeClassFor = 'focused_type';
+    $titleStatistics = 'Экспедитор';
+}
+
 ?>
 <div class="uk-container uk-container-large">
 
     <div class="form_filter">
-        <form class="form_filter-date">
+        <form action="/" method="get" class="form_filter-date">
             <div class="form_cvartal">
                 <?php foreach ($arResult['FILTER_YEAR'] as $kvartal) {
                     $classFilterKvartal = '';
@@ -91,7 +113,7 @@ if ($request->get('year')) {
         ?>
     </div>
 
-    <form class="statistics">
+    <form action="/" method="get" class="statistics">
         <div class="statistics_result">
             <div class="statistics-info">
                 <label class="statistics_checkbox">
@@ -161,16 +183,16 @@ if ($request->get('year')) {
                     <input class="uk-checkbox" type="checkbox">
                     <span>Топ проблемных организаций</span>
                 </label>
-                <div class="filter_list-type-organizations">
-                    <label class="filter_list-label">
+                <div class="filter_list-type-organizations" <?= $flex ?>>
+                    <label class="filter_list-label <?= $activeClassCargo ?>">
                         <input class="uk-checkbox" name="top" value="cargo" type="submit">
                         <span>Грузовладельцы</span>
                     </label>
-                    <label class="filter_list-label">
+                    <label class="filter_list-label <?= $activeClassCar ?>">
                         <input class="uk-checkbox" name="top" value="carriers" type="submit">
                         <span>Перевозчики</span>
                     </label>
-                    <label class="filter_list-label">
+                    <label class="filter_list-label <?= $activeClassFor ?>">
                         <input class="uk-checkbox" name="top" value="forwarders" type="submit">
                         <span>Экспедиторы</span>
                     </label>
@@ -192,36 +214,70 @@ if ($request->get('year')) {
         </div>
     </div>
 
-    <?php
-    $APPLICATION->IncludeComponent(
-        'bitrix:main.ui.grid',
-        '',
-        [
-            'GRID_ID' => $arResult['GRID_CODE'],
-            'COLUMNS' => $arResult['COLUMNS'],
-            'ROWS' => $arResult['ROWS'],
-            "NAV_OBJECT" => $arResult["NAV"],
-            "SHOW_ROW_ACTIONS_MENU" => false,
-            "SHOW_ROW_CHECKBOXES" => true,
-            "SHOW_CHECK_ALL_CHECKBOXES" => true,
-            "SHOW_GRID_SETTINGS_MENU" => false,
-            "SHOW_NAVIGATION_PANEL" => true,
-            "SHOW_PAGINATION" => true,
-            "SHOW_SELECTED_COUNTER" => false,
-            "SHOW_TOTAL_COUNTER" => false,
-            "SHOW_PAGESIZE" => false,
-            "SHOW_ACTION_PANEL" => false,
-            "ALLOW_COLUMNS_SORT" => false,
-            "ALLOW_COLUMNS_RESIZE" => false,
-            "ALLOW_HORIZONTAL_SCROLL" => false,
-            "ALLOW_SORT" => false,
-            "ALLOW_PIN_HEADER" => false,
-            "AJAX_OPTION_HISTORY" => "N",
-            "AJAX_OPTION_JUMP" => false,
-            'AJAX_MODE' => 'N',
-        ]
-    );
-    ?>
+    <div class="top_company_list">
+        <div class="company_list_title">
+            <div class="company_title_info">
+                <?= $titleStatistics ?>
+            </div>
+            <div class="company_title_info">
+                Перевозок с проблемами
+            </div>
+        </div>
+        <ul uk-accordion>
+            <?php foreach ($arResult["ROWS"] as $row) {
+                $percent = $row['COUNT']/$row['SUM_COUNT'] * 100;
+            ?>
+                <li>
+                    <a class="uk-accordion-title " href="#">
+                        <div class="company_title_accordion">
+                            <div class="company_list">
+                                <?= $row['NAME'] ?>
+                                <span><?= $row['INN'] ?></span>
+                            </div>
+                            <div class="company_statistic">
+                                <div class="company_statistic_inner" style="width: <?= $percent ?>%"></div>
+<!--                                --><?php //= $row['SUM_COUNT'] ?><!--/--><?php //= $row['COUNT'] ?>
+                            </div>
+                            <div class="company_shipping_count company_title_info">
+                                <?= $row['COUNT'] ?>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="uk-accordion-content">
+                        <?php
+                        $APPLICATION->IncludeComponent(
+                            'bitrix:main.ui.grid',
+                            '',
+                            [
+                                'GRID_ID' => $arResult['GRID_CODE'],
+                                'COLUMNS' => $arResult['COLUMNS'],
+                                'ROWS' => $row['SHIPPING'],
+                                "SHOW_ROW_ACTIONS_MENU" => false,
+                                "SHOW_ROW_CHECKBOXES" => true,
+                                "SHOW_CHECK_ALL_CHECKBOXES" => true,
+                                "SHOW_GRID_SETTINGS_MENU" => false,
+                                "SHOW_NAVIGATION_PANEL" => true,
+                                "SHOW_PAGINATION" => true,
+                                "SHOW_SELECTED_COUNTER" => false,
+                                "SHOW_TOTAL_COUNTER" => false,
+                                "SHOW_PAGESIZE" => false,
+                                "SHOW_ACTION_PANEL" => false,
+                                "ALLOW_COLUMNS_SORT" => false,
+                                "ALLOW_COLUMNS_RESIZE" => false,
+                                "ALLOW_HORIZONTAL_SCROLL" => false,
+                                "ALLOW_SORT" => false,
+                                "ALLOW_PIN_HEADER" => false,
+                                "AJAX_OPTION_HISTORY" => "N",
+                                "AJAX_OPTION_JUMP" => false,
+                                'AJAX_MODE' => 'N',
+                            ]
+                        );
+                        ?>
+                    </div>
+                </li>
+            <?php } ?>
+        </ul>
+    </div>
 
     <div id="info-bar" uk-offcanvas="mode: slide; flip: true; overlay: true">
         <div class="canvas-bar_content uk-offcanvas-bar">
@@ -326,3 +382,9 @@ if ($request->get('year')) {
     </div>
 
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('.filter_top-organizations input').attr('checked',true);
+    });
+</script>
