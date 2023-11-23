@@ -16,7 +16,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 /**
  * Компонент вывода списка перевозок
  */
-class TransportationList extends CBitrixComponent
+class TransportationTopList extends CBitrixComponent
 {
     /** @var ErrorCollection $errors */
     public ErrorCollection $errors;
@@ -823,116 +823,13 @@ class TransportationList extends CBitrixComponent
 
         $request = Context::getCurrent()->getRequest();
 
-        $this->getFilterQuarter($request->get('kvartal'));
-
-        $this->getFilterMonth($request->get('month'));
-
-        if ($request->get('year')) {
-            $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-01-01 00:00:00';
-            $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-12-31 23:59:59';
-        }
-
-        if ($request->get('statistics') !== 'doc') {
-            $this->getFilterStatistics($request->get('statistics'));
-        }
-
-        $filter = $this->arResult["FILTER"];
-
-        if ($request->get('statistics') === 'doc') {
-            $filter = ['ID' => HLBlock::getIdNoDocument()];
-        }
-
-//        $vitrinaList = $this->getTopCompany($request->get('top'));
-
-//        die('234');
-
-//        $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
-//            'filter' => $filter,
-//            'select' =>  [
-//                'ID',
-//                'NAME',
-//                'DATE_SHIPMENT_VALUE' => 'DATE_SHIPMENT.VALUE',
-//                'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING.VALUE',
-//                'CARRIER_VALUE' => 'CARRIER.VALUE',
-//                'CARRIER_INN_VALUE' => 'CARRIER_INN.VALUE',
-//                'CARGO_OWNER_VALUE' => 'CARGO_OWNER.VALUE',
-//                'CARGO_OWNER_INN_VALUE' => 'CARGO_OWNER_INN.VALUE',
-//                'FORWARDER_VALUE' => 'FORWARDER.VALUE',
-//                'FORWARDER_INN_VALUE' => 'FORWARDER_INN.VALUE',
-//                'CHECKLIST_CARRIER_VALUE' => 'CHECKLIST_CARRIER.VALUE',
-//                'CHECKLIST_FORWARDER_VALUE' => 'CHECKLIST_FORWARDER.VALUE',
-//                'AUTOMATIC_PRICES_STATUS_VALUE' => 'AUTOMATIC_PRICES_STATUS.VALUE',
-//                'AUTOMATIC_GEO_MONITORING_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_STATUS.VALUE',
-//                'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'AUTOMATIC_PRICES_FOR_STATUS.VALUE',
-//                'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE',
-//            ],
-//            "offset" => $nav->getOffset(),
-//            "limit" => $nav->getLimit(),
-//            "order" => ['ID' => 'ASC'],
-//            "count_total" => true,
-//        ]);
-//
-//        $nav->setRecordCount($vitrina->getCount());
-//
-//        foreach ($vitrina->fetchAll() as $item) {
-//            $deviation = HLBlock::getPrice($item['ID']);
-//            $date = explode('-', $item['DATE_SHIPMENT_VALUE']);
-//
-//            if($deviation !== '') {
-//                $deviation = '<div class="icon-deviation_down"><span uk-icon="icon: arrow-down"></span>' . HLBlock::getPrice($item['ID']) . '</div>';
-//            }
-//
-//            if ($item['CHECKLIST_CARRIER_VALUE'] === '1') {
-//                $statueCarrier = '<span class="transit-good"></span>';
-//            } elseif($item['CHECKLIST_CARRIER_VALUE'] === '0') {
-//                $statueCarrier = '<span class="transit-error"></span>';
-//            } else {
-//                $statueCarrier = '';
-//            }
-//
-////            <span class="transit-progress"></span>
-//            if ($item['CHECKLIST_FORWARDER_VALUE'] === '1') {
-//                $statusFor = '<span class="transit-good"></span>';
-//            } elseif ($item['CHECKLIST_FORWARDER_VALUE'] === '0') {
-//                $statusFor = '<span class="transit-error"></span>';
-//            } else {
-//                $statusFor = '';
-//            }
-//
-//            $vitrinaList[] = [
-//                'data' => [
-//                    "ID" => $item['ID'],
-//                    "ID_TRANSPORTATION" => '<a href="#info-bar" class="info_bar-content" uk-toggle>' . $item['NAME'] . '</a>',
-//                    "DATE_SHIPMENT"  => $date[2] . '.' . $date[1] . '.' . $date[0],
-//                    "CARGO_OWNER" => $item['CARGO_OWNER_VALUE'] . '<span>' . $item['CARGO_OWNER_INN_VALUE'] . '</span>',
-//                    "FORWARDER" => $item['FORWARDER_VALUE'] . '<span>' . $item['FORWARDER_INN_VALUE'] . '</span>',
-//                    "CARRIER" => $item['CARRIER_VALUE'] . '<span>' . $item['CARRIER_INN_VALUE'] . '</span>',
-//                    "DEVIATION_FROM_PRICE" => $deviation,
-//                    "CHECKLIST_CARRIER" => $statueCarrier,
-//                    "CHECKLIST_FORWARDER" => $statusFor,
-//                ],
-//            ];
-//        }
-
-        $this->arResult["ROWS"] = $this->getTopCompany($request->get('top'));
-    }
-
-    /**
-     * Возвращаем массив составленный для
-     * вывода данных
-     *
-     * @param string $filterTop
-     * @return array
-     */
-    protected function getTopCompany(string $filterTop): array
-    {
         $filter = ['!CARGO_OWNER.VALUE' => '',];
         $select = [
             'CARGO_OWNER_VALUE' => 'CARGO_OWNER.VALUE',
             'CARGO_OWNER_INN_VALUE' => 'CARGO_OWNER_INN.VALUE',
         ];
 
-        if ($filterTop === 'forwarders') {
+        if ($request->get('top') === 'forwarders') {
             $filter = ['!FORWARDER.VALUE' => '',];
             $select = [
                 'FORWARDER_VALUE' => 'FORWARDER.VALUE',
@@ -940,7 +837,7 @@ class TransportationList extends CBitrixComponent
             ];
         }
 
-        if ($filterTop === 'carriers') {
+        if ($request->get('top') === 'carriers') {
             $filter = ['!CARRIER.VALUE' => '',];
             $select = [
                 'CARRIER_VALUE' => 'CARRIER.VALUE',
@@ -957,18 +854,18 @@ class TransportationList extends CBitrixComponent
 
         $top = [];
         foreach ($vitrinaTop as $item) {
-            $filterItemTop = $filterCompany = ['CARGO_OWNER.VALUE' => $item['CARGO_OWNER_VALUE']];
+            $filterItemTop = $filterCompany = ['CARGO_OWNER.VALUE' => $item['CARGO_OWNER_VALUE'], '!STATUS_SHIPPING.VALUE' => 'archived'];
             $topCompanyName = $item['CARGO_OWNER_VALUE'];
             $topCompanyInn = $item['CARGO_OWNER_INN_VALUE'];
 
-            if ($filterTop === 'forwarders') {
-                $filterItemTop = $filterCompany = ['FORWARDER.VALUE' => $item['FORWARDER_VALUE']];
+            if ($request->get('top') === 'forwarders') {
+                $filterItemTop = $filterCompany = ['FORWARDER.VALUE' => $item['FORWARDER_VALUE'], '!STATUS_SHIPPING.VALUE' => 'archived'];
                 $topCompanyName = $item['FORWARDER_VALUE'];
                 $topCompanyInn = $item['FORWARDER_INN_VALUE'];
             }
 
-            if ($filterTop === 'carriers') {
-                $filterItemTop = $filterCompany = ['CARRIER.VALUE' => $item['CARRIER_VALUE']];
+            if ($request->get('top') === 'carriers') {
+                $filterItemTop = $filterCompany = ['CARRIER.VALUE' => $item['CARRIER_VALUE'], '!STATUS_SHIPPING.VALUE' => 'archived'];
                 $topCompanyName = $item['CARRIER_VALUE'];
                 $topCompanyInn = $item['CARRIER_INN_VALUE'];
             }
@@ -1069,7 +966,7 @@ class TransportationList extends CBitrixComponent
                     'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'AUTOMATIC_PRICES_FOR_STATUS.VALUE',
                     'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE',
                 ],
-                "order" => ['ID' => 'ASC'],
+                "order" => ['DATE_SHIPMENT.VALUE' => 'DESC'],
                 "count_total" => true,
             ]);
 
@@ -1124,7 +1021,7 @@ class TransportationList extends CBitrixComponent
             ];
         }
 
-        return $top;
+        $this->arResult["ROWS"] = $top;
     }
 
     /**
@@ -1135,9 +1032,8 @@ class TransportationList extends CBitrixComponent
      */
     protected function getPercent(): void
     {
-        Loader::includeModule('iblock');
-
         $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
+            'filter' => ['!STATUS_SHIPPING.VALUE' => 'archived'],
             'select' => [
                 'ID',
                 'NAME',
@@ -1172,13 +1068,17 @@ class TransportationList extends CBitrixComponent
             }
 
             if ($item['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'failed'
+                $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'failed' ||
+                $item['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'] === 'in_progress' ||
+                $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'in_progress'
             ) {
                 $geo++;
             }
 
             if ($item['AUTOMATIC_PRICES_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'failed'
+                $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'failed' ||
+                $item['AUTOMATIC_PRICES_STATUS_VALUE'] === 'in_progress' ||
+                $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'in_progress'
             ) {
                 $price++;
             }
@@ -1193,131 +1093,6 @@ class TransportationList extends CBitrixComponent
         if ($this->arResult['COUNT'] > 0) {
             $this->arResult['COUNT_GOOD_PERCENT'] = $this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100;
             $this->arResult['COUNT_ERROR_PERCENT'] = round($this->arResult['COUNT_ERROR']/$this->arResult['COUNT'] * 100, 2);
-        }
-    }
-
-    /**
-     * Возвращаем фильтр по
-     * кварталам
-     *
-     * @param string|null $number
-     * @return void
-     */
-    protected function getFilterQuarter(string $number = null): void
-    {
-        switch ($number){
-            case '1':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-01-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-03-31 23:59:59';
-                break;
-            case '2':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-04-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-06-30 23:59:59';
-                break;
-            case '3':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-07-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-09-30 23:59:59';
-                break;
-            case '4':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-10-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-12-31 23:59:59';
-                break;
-        }
-    }
-
-    /**
-     * Возвращаем фильтр по
-     * месяцам
-     * @param string|null $month
-     * @return void
-     */
-    protected function getFilterMonth(string $month = null): void
-    {
-        switch ($month){
-            case 'january':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-01-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-01-31 23:59:59';
-                break;
-            case 'february':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-02-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-02-30 23:59:59';
-                break;
-            case 'march':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-03-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-03-31 23:59:59';
-                break;
-            case 'april':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-04-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-04-30 23:59:59';
-                break;
-            case 'may':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-05-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-05-31 23:59:59';
-                break;
-            case 'june':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-06-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-06-30 23:59:59';
-                break;
-            case 'july':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-07-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-07-31 23:59:59';
-                break;
-            case 'august':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-08-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-08-31 23:59:59';
-                break;
-            case 'september':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-09-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-09-30 23:59:59';
-                break;
-            case 'october':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-10-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-10-31 23:59:59';
-                break;
-            case 'november':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-11-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-11-30 23:59:59';
-                break;
-            case 'december':
-                $this->arResult["FILTER"]['>=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-12-01 00:00:00';
-                $this->arResult["FILTER"]['<=DATE_SHIPMENT_VALUE'] = $this->arResult['YEAR'] . '-12-31 23:59:59';
-                break;
-        }
-    }
-
-    /**
-     * Возвращаем фильтр по
-     * статистики
-     *
-     * @param string|null $status
-     * @return void
-     */
-    protected function getFilterStatistics(string $status = null): void
-    {
-        switch ($status){
-            case 'total':
-                $this->arResult["FILTER"]['ACTIVE'] = 'Y';
-                break;
-            case 'good':
-                $this->arResult["FILTER"]['STATUS_SHIPPING_VALUE'] = 'passed';
-                break;
-            case 'error':
-                $this->arResult["FILTER"]['STATUS_SHIPPING_VALUE'] = 'failed';
-                break;
-            case 'geo':
-                $this->arResult["FILTER"][] = [
-                    'LOGIC' => "OR",
-                    'AUTOMATIC_GEO_MONITORING_STATUS_VALUE' => 'failed',
-                    'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'failed',
-                ];
-                break;
-            case 'price':
-                $this->arResult["FILTER"][] = [
-                    'LOGIC' => "OR",
-                    'AUTOMATIC_PRICES_STATUS_VALUE' => 'failed',
-                    'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'failed',
-                ];
-                break;
         }
     }
 }

@@ -621,14 +621,16 @@ class ParserCarrier
                 $ufEdmAttachments = '';
 
                 foreach ($check['attachments'] as $attachment) {
-                    $nameLink = $attachment['name'];
-                    $link = $attachment['url'];
+                    $nameLink .= $attachment['name'] . ',';
+                    $link .= $attachment['id'] . ',';
                     $ufAttachments = true;
                     $ufEdmAttachments = false;
                 }
                 foreach ($check['edm_attachments'] as $edm_attachment) {
-                    $nameLink = $edm_attachment['name'];
-                    $link = $edm_attachment['original_file'];
+                    $name = explode('/', $edm_attachment['printed_form']);
+
+                    $nameLink .= end($name) . ',';
+                    $link .= $edm_attachment['id'] . ',';
                     $ufAttachments = false;
                     $ufEdmAttachments = true;
                 }
@@ -672,7 +674,6 @@ class ParserCarrier
                     "UF_ID_ELEMENT" => $idElement,
                     "UF_ID_GROUP" => $item['UF_ID_GROUP'],
                     "UF_GROUP_NAME" => $item['UF_GROUP_NAME'],
-                    "UF_NAME_LINK" => $item['UF_NAME_LINK'],
                 ]
             ])->Fetch();
 

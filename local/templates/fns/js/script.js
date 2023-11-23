@@ -1022,8 +1022,10 @@ $(document).ready(function () {
             $('#prices_file').hide();
         } else if(carriage.AUTOMATIC_PRICES_STATUS === 'failed') {
             const price = carriage.AUTO_PRICES.split("/");
-            if (price) {
+            if (price[0] !== '') {
                 $('#prices_link .status-info_confirmation_title').html('Стоимость перевозки ниже '+ price[0] +'% от рыночной цены');
+            } else {
+                $('#prices_link .status-info_confirmation_title').html('Стоимость перевозки не соответствует рыночным ценам');
             }
             $('#prices_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
             $('#prices_file').hide();
@@ -1063,11 +1065,14 @@ $(document).ready(function () {
             $('#prices_file_for').hide();
         } else if(carriage.AUTOMATIC_PRICES_STATUS_FOR === 'failed') {
             const price = carriage.AUTO_PRICES.split("/");
-            if (price) {
-                const priceFor = price[1] ? price[1] : price[0];
+            const priceFor = price[1] ? price[1] : price[0];
 
+            if (priceFor) {
                 $('#prices_link_for .status-info_confirmation_title').html('Стоимость перевозки ниже '+ priceFor +'% от рыночной цены');
+            } else {
+                $('#prices_link_for .status-info_confirmation_title').html('Стоимость перевозки не соответствует рыночным ценам');
             }
+
             $('#prices_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
             $('#prices_file_for').hide();
         }

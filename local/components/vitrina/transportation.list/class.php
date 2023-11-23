@@ -841,6 +841,8 @@ class TransportationList extends CBitrixComponent
             $filter = ['ID' => HLBlock::getIdNoDocument()];
         }
 
+        $filter['!STATUS_SHIPPING.VALUE'] = 'archived';
+
         $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
             'filter' => $filter,
             'select' =>  [
@@ -863,7 +865,7 @@ class TransportationList extends CBitrixComponent
             ],
             "offset" => $nav->getOffset(),
             "limit" => $nav->getLimit(),
-            "order" => ['ID' => 'ASC'],
+            "order" => ['DATE_SHIPMENT.VALUE' => 'DESC'],
             "count_total" => true,
         ]);
 
@@ -921,9 +923,8 @@ class TransportationList extends CBitrixComponent
      */
     protected function getPercent(): void
     {
-        Loader::includeModule('iblock');
-
         $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
+            'filter' => ['!STATUS_SHIPPING.VALUE' => 'archived'],
             'select' => [
                 'ID',
                 'NAME',
@@ -958,13 +959,17 @@ class TransportationList extends CBitrixComponent
             }
 
             if ($item['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'failed'
+                $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'failed' ||
+                $item['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'] === 'in_progress' ||
+                $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'in_progress'
             ) {
                 $geo++;
             }
 
             if ($item['AUTOMATIC_PRICES_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'failed'
+                $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'failed' ||
+                $item['AUTOMATIC_PRICES_STATUS_VALUE'] === 'in_progress' ||
+                $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'in_progress'
             ) {
                 $price++;
             }
