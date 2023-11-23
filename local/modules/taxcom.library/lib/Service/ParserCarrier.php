@@ -627,9 +627,10 @@ class ParserCarrier
                     $ufEdmAttachments = false;
                 }
                 foreach ($check['edm_attachments'] as $edm_attachment) {
-                    $name = explode('/', $edm_attachment['printed_form']);
-
-                    $nameLink .= end($name) . ',';
+                    if($edm_attachment['printed_form']) {
+                        $name = explode('/', $edm_attachment['printed_form']);
+                        $nameLink .= end($name) . ',';
+                    }
                     $link .= $edm_attachment['id'] . ',';
                     $ufAttachments = false;
                     $ufEdmAttachments = true;
