@@ -11,6 +11,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\UI\PageNavigation;
 use Bitrix\Highloadblock as HL;
 use Bitrix\Main\IO;
+use Bitrix\Main\Web\HttpClient;
 use CBXArchive;
 use Taxcom\Library\HLBlock\HLBlock;
 
@@ -346,26 +347,44 @@ class Vitrina extends BaseController
 
             $links = array_merge($links, $linksFor);
 
-            self::dirDel(Application::getDocumentRoot() . "/upload/tmp/");
-            $sDirTmpName = randString();
-            $sDirTmpPath = Application::getDocumentRoot() . "/upload/tmp/$sDirTmpName/";
+            $fileLink = [];
 
-            $file = new IO\File(Application::getDocumentRoot() . "/upload/tmp/$sDirTmpName/Не доступные ссылки.txt");
-            $arPackFiles[] = $file->getPath();
+            foreach ($links as $link) {
+                $idLink = array_diff(explode(',', $link['UF_LINK']), ['']);
+                $idName = array_diff(explode(',', $link['UF_NAME_LINK']), ['']);
 
-            foreach ($links as $k => $link) {
-                $fp = fopen($link['UF_LINK'], 'rb');
-                if (!$fp) {
-                    $file->putContents($link['UF_LINK'] . "\n", IO\File::APPEND);
-                } else {
-                    $arPackFiles[] = $link['UF_LINK'];
+                foreach ($idLink as $key => $item) {
+                    $fileLink[] = [
+                        'ID' => $idName[$key],
+                        'NAME' => $item,
+                    ];
                 }
             }
 
-            $packarc = CBXArchive::GetArchive($sDirTmpPath . "file.zip");
+            self::dirDel(Application::getDocumentRoot() . "/upload/file/" . $id);
+            $client = new HttpClient();
+            $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
+            foreach ($fileLink as $file) {
+                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/file/'. $id . '/' . $file['ID']);
+
+                $client->get('https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $file['NAME'] . '?file_role=PRINTABLE',);
+
+                if($client->getContentType() === 'application/pdf') {
+                    $client->download(
+                        'https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $file['NAME'] . '?file_role=PRINTABLE',
+                        Application::getDocumentRoot() . '/upload/file/'. $id . '/' . $file['ID']
+                    );
+                } else {
+                    file_put_contents($isFile->getPath(), file_get_contents($client->getResult()));
+
+                    $arPackFiles[] = $isFile->getPath();
+                }
+            }
+
+            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/file/file.zip");
             $packarc->Pack($arPackFiles);
 
-            return ['URL' => "/upload/tmp/$sDirTmpName/file.zip"];
+            return ['URL' => "/upload/file/file.zip"];
         } catch (\Exception $e) {
             $this->addError(new Error($e->getMessage(), $e->getCode()));
 
@@ -377,12 +396,11 @@ class Vitrina extends BaseController
      * Возвращаем архив файлов
      * по выбранным элементам
      *
+     * @param array $fields
      * @return array|null
      */
-    public function getArchivAction(): ?array
+    public function getArchiveAction(array $fields): ?array
     {
-
-        die('234');
         try {
             Loader::IncludeModule("highloadblock");
 
@@ -396,36 +414,102 @@ class Vitrina extends BaseController
             $links = $entity_data_class::getList([
                 "select" => ["UF_NAME_LINK", "UF_LINK"],
                 "filter" => [
-                    "UF_ID_ELEMENT" => $id,
+                    "UF_ID_ELEMENT" => $fields['ID'],
                     "!UF_LINK" => '',
                 ]
             ])->fetchAll();
 
-            self::dirDel(Application::getDocumentRoot() . "/upload/tmp/");
-            $sDirTmpName = randString();
-            $sDirTmpPath = Application::getDocumentRoot() . "/upload/tmp/$sDirTmpName/";
+            $hlblockIdFor = HL\HighloadBlockTable::getList([
+                'filter' => ['=NAME' => 'FnsLinkDocumentsForwardes']
+            ])->fetch();
 
-            $file = new IO\File(Application::getDocumentRoot() . "/upload/tmp/$sDirTmpName/Не доступные ссылки.txt");
-            $arPackFiles[] = $file->getPath();
+            $entity_data_class_for = (HL\HighloadBlockTable::compileEntity($hlblockIdFor))->getDataClass();
 
-            foreach ($links as $k => $link) {
-                $fp = fopen($link['UF_LINK'], 'rb');
-                if (!$fp) {
-                    $file->putContents($link['UF_LINK'] . "\n", IO\File::APPEND);
-                } else {
-                    $arPackFiles[] = $link['UF_LINK'];
+            $linksFor = $entity_data_class_for::getList([
+                "select" => ["UF_NAME_LINK", "UF_LINK"],
+                "filter" => [
+                    "UF_ID_ELEMENT" =>  $fields['ID'],
+                    "!UF_LINK" => '',
+                ]
+            ])->fetchAll();
+
+            $links = array_merge($links, $linksFor);
+
+            $fileLink = [];
+
+            foreach ($links as $link) {
+                $idLink = array_diff(explode(',', $link['UF_LINK']), ['']);
+                $idName = array_diff(explode(',', $link['UF_NAME_LINK']), ['']);
+
+                foreach ($idLink as $key => $item) {
+                    $fileLink[] = [
+                        'ID' => $idName[$key],
+                        'NAME' => $item,
+                    ];
                 }
             }
 
-            $packarc = CBXArchive::GetArchive($sDirTmpPath . "file.zip");
+            $client = new HttpClient();
+            $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
+            foreach ($fileLink as $file) {
+                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/file/archive/' . $file['ID']);
+
+                $client->get('https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $file['NAME'] . '?file_role=PRINTABLE',);
+
+                if($client->getContentType() === 'application/pdf') {
+                    $client->download(
+                        'https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $file['NAME'] . '?file_role=PRINTABLE',
+                        Application::getDocumentRoot() . '/upload/file/archive/' . $file['ID']
+                    );
+                } else {
+                    file_put_contents($isFile->getPath(), file_get_contents($client->getResult()));
+
+                    $arPackFiles[] = $isFile->getPath();
+                }
+            }
+
+            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/file/file.zip");
             $packarc->Pack($arPackFiles);
 
-            return ['URL' => "/upload/tmp/$sDirTmpName/file.zip"];
+            return ['URL' => "/upload/file/file.zip"];
         } catch (\Exception $e) {
             $this->addError(new Error($e->getMessage(), $e->getCode()));
 
             return null;
         }
+    }
+
+    /**
+     * Возвращаем ссылку на файл
+     *
+     * @param string $idFile
+     * @return string[]
+     */
+    public function getFileAction(string $idFile): array
+    {
+        $document = HLBlock::getInfoDocument($idFile);
+
+        $idLink = array_diff(explode(',', $document['UF_LINK']), ['']);
+        $idName = array_diff(explode(',', $document['UF_NAME_LINK']), ['']);
+        $client = new HttpClient();
+        $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
+
+        foreach ($idLink as $key => $link) {
+            $client->get('https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $link . '?file_role=PRINTABLE',);
+
+            if($client->getContentType() === 'application/pdf') {
+                $client->download(
+                    'https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $link . '?file_role=PRINTABLE',
+                    Application::getDocumentRoot() . '/upload/file/'. $idName[$key]
+                );
+
+                $url = Application::getDocumentRoot() . '/upload/file/'. $idName[$key];
+            } else {
+                $url = $client->getResult();
+            }
+        }
+
+        return ['URL' => $url];
     }
 
     /**

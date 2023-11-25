@@ -747,6 +747,10 @@ span.status-info_confirmation_title {
     border-radius: 10px;
 }
 
+#cheklist_file {
+    cursor: pointer;
+}
+
 /**
 Удалить после окончание верстке
  */

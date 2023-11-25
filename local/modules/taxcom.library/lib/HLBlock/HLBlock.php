@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Taxcom\Library\HLBlock;
 
 use Bitrix\Main\ArgumentException;
+use Bitrix\Main\Loader;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use Bitrix\Highloadblock as HL;
@@ -1014,5 +1015,45 @@ class HLBlock
         }
 
         return $properties;
+    }
+
+    /**
+     * Возвращаем информацию по документу
+     * по его ID
+     *
+     * @param string $id
+     * @return array
+     */
+    public static function getInfoDocument(string $id): array
+    {
+        Loader::includeModule('highloadblock');
+
+        $hlblockId = HL\HighloadBlockTable::getList([
+            'filter' => ['=NAME' => 'FnsLinkDocuments']
+        ])->fetch();
+
+        $entity_data_class = (HL\HighloadBlockTable::compileEntity($hlblockId))->getDataClass();
+
+        $links = $entity_data_class::getList([
+            "select" => ["*"],
+            "filter" => [
+                "UF_LINK" => '%' . $id . '%',
+            ]
+        ])->fetch();
+
+        $hlblockIdFor = HL\HighloadBlockTable::getList([
+            'filter' => ['=NAME' => 'FnsLinkDocumentsForwardes']
+        ])->fetch();
+
+        $entity_data_class_for = (HL\HighloadBlockTable::compileEntity($hlblockIdFor))->getDataClass();
+
+        $linksFor = $entity_data_class_for::getList([
+            "select" => ["*"],
+            "filter" => [
+                "UF_LINK" => '%' . $id . '%',
+            ]
+        ])->fetch();
+
+        return $links ?: $linksFor;
     }
 }

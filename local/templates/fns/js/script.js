@@ -133,6 +133,30 @@ $(document).ready(function () {
     });
 
     /**
+     * Скачиваем файл по чеклисту
+     */
+    $(document).on('click', '#cheklist_file', function () {
+        let idFile = $(this).attr('data-id');
+
+        BX.ajax({
+            url: '/api/v1/vhs/vitrina/file/' + idFile,
+            method: 'POST',
+            data: '',
+            timeout: 2000,
+            dataType: 'json',
+            onsuccess: function (response) {
+                if (response.status === 'success') {
+                    window.open(response.data.URL, "_blank");
+                }
+
+                if (response.status === 'error') {
+                    $('#error').html(response.errors[0].message);
+                }
+            },
+        });
+    });
+
+    /**
      * Скачиваем архив файлов одного
      * элемента
      */
@@ -158,20 +182,27 @@ $(document).ready(function () {
         });
     });
 
+    /**
+     * Скачиваем архив выбранных документов
+     */
     $(document).on('click', '#file_filter_download', function () {
-        // const id = $('#vitrina_grid_table').parents('.main-grid-row-checked').attr('data-id');
-        const id = $('#vitrina_grid_table').parent();
+        let id = [];
 
-        console.log('id')
-        console.log(id)
+        $('#vitrina_grid_table .main-grid-row-checked').each(function( index ) {
+            id.push($( this ).attr('data-id'));
+        });
+
         BX.ajax({
-            url: '/api/v1/vhs/vitrina/archiv/',
+            url: '/api/v1/vhs/archive/',
             method: 'POST',
-            data: '',
+            data: {
+                fields: {
+                    ID: id,
+                }
+            },
             timeout: 2000,
             dataType: 'json',
             onsuccess: function (response) {
-                console.log(response);
                 if (response.status === 'success') {
                     window.location.href = response.data.URL;
                 }
@@ -323,10 +354,10 @@ $(document).ready(function () {
 
                 $.each(carriage.CONTRACT_TRANSPORTATION_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_CONT_TRANSPORT_LINK[index] !== '') {
-                        CONT_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_TRANSPORT_LINK[index] + '</li>';
+                        CONT_TRANSPORT_LINK += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_CONT_TRANSPORT_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_CONT_TRANSPORT_LINK[index] === '') {
                     } else {
-                        CONT_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_TRANSPORT_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -334,7 +365,7 @@ $(document).ready(function () {
             if (carriage.CONTRACT_TRANSPORTATION_EDM_LINK != null) {
                 $.each(carriage.CONTRACT_TRANSPORTATION_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        CONT_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_TRANSPORT_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -363,10 +394,10 @@ $(document).ready(function () {
 
                 $.each(carriage.CONTRACT_EXPEDITION_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_CONT_EXP_LINK[index] !== '') {
-                        CONT_EXP_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_EXP_LINK[index] + '</li>';
+                        CONT_EXP_LINK += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_CONT_EXP_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_CONT_EXP_LINK[index] === '') {
                     } else {
-                        CONT_EXP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_EXP_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -374,7 +405,7 @@ $(document).ready(function () {
             if (carriage.CONTRACT_EXPEDITION_EDM_LINK != null) {
                 $.each(carriage.CONTRACT_EXPEDITION_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        CONT_EXP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_EXP_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -403,10 +434,10 @@ $(document).ready(function () {
 
                 $.each(carriage.CONTRACT_ORDER_ONE_TIME_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_CONT_ORDER_ONE_TIME[index] !== '') {
-                        CONT_ORDER_ONE_TIME += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_ORDER_ONE_TIME[index] + '</li>';
+                        CONT_ORDER_ONE_TIME += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_CONT_ORDER_ONE_TIME[index] + '</span></li>';
                     } else if (DESCRIPTION_CONT_ORDER_ONE_TIME[index] === '') {
                     } else {
-                        CONT_ORDER_ONE_TIME += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_ORDER_ONE_TIME += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -414,7 +445,7 @@ $(document).ready(function () {
             if (carriage.CONTRACT_ORDER_ONE_TIME_EDM_LINK != null) {
                 $.each(carriage.CONTRACT_ORDER_ONE_TIME_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        CONT_ORDER_ONE_TIME += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_ORDER_ONE_TIME += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -456,10 +487,10 @@ $(document).ready(function () {
 
                 $.each(carriage.CONTRACT_TRANSPORT_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_CONT_TRANSPORT_LINK_FOR[index] !== '') {
-                        CONT_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_TRANSPORT_LINK_FOR[index] + '</li>';
+                        CONT_TRANSPORT_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_CONT_TRANSPORT_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_CONT_TRANSPORT_LINK_FOR[index] === '') {
                     } else {
-                        CONT_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_TRANSPORT_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -467,7 +498,7 @@ $(document).ready(function () {
             if (carriage.CONTRACT_TRANSPORT_EDM_LINK_FOR != null) {
                 $.each(carriage.CONTRACT_TRANSPORT_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        CONT_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_TRANSPORT_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -496,10 +527,10 @@ $(document).ready(function () {
 
                 $.each(carriage.CONTRACT_EXP_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_CONT_EXP_LINK_FOR[index] !== '') {
-                        CONT_EXP_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_EXP_LINK_FOR[index] + '</li>';
+                        CONT_EXP_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_CONT_EXP_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_CONT_EXP_LINK_FOR[index] === '') {
                     } else {
-                        CONT_EXP_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_EXP_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -507,7 +538,7 @@ $(document).ready(function () {
             if (carriage.CONTRACT_EXP_EDM_LINK_FOR != null) {
                 $.each(carriage.CONTRACT_EXP_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        CONT_EXP_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_EXP_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -536,10 +567,10 @@ $(document).ready(function () {
 
                 $.each(carriage.CONTRACT_ORDER_ONE_TIME_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_CONT_ORDER_ONE_TIME_FOR[index] !== '') {
-                        CONT_ORDER_ONE_TIME_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_CONT_ORDER_ONE_TIME_FOR[index] + '</li>';
+                        CONT_ORDER_ONE_TIME_FOR += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_CONT_ORDER_ONE_TIME_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_CONT_ORDER_ONE_TIME_FOR[index] === '') {
                     } else {
-                        CONT_ORDER_ONE_TIME_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_ORDER_ONE_TIME_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -547,7 +578,7 @@ $(document).ready(function () {
             if (carriage.CONTRACT_ORDER_ONE_TIME_EDM_LINK_FOR != null) {
                 $.each(carriage.CONTRACT_ORDER_ONE_TIME_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        CONT_ORDER_ONE_TIME_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        CONT_ORDER_ONE_TIME_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -593,10 +624,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] !== '') {
-                        DOC_APP_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] + '</li>';
+                        DOC_APP_TRANSPORT_LINK += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_DOC_APP_TRANSPORT_LINK[index] === '') {
                     } else {
-                        DOC_APP_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank"> Файл ' + (index + 1) + '</li>';
+                        DOC_APP_TRANSPORT_LINK += '<li><span data-id="' + value + '" id="cheklist_file"> Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -604,7 +635,7 @@ $(document).ready(function () {
             if (carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK != null) {
                 $.each(carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DOC_APP_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_APP_TRANSPORT_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -633,10 +664,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DOCUMENTS_EPD_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DOC_EPD_LINK[index] !== '') {
-                        DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EPD_LINK[index] + '</li>';
+                        DOC_EPD_LINK += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_DOC_EPD_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_DOC_EPD_LINK[index] === '') {
                     } else {
-                        DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EPD_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -644,7 +675,7 @@ $(document).ready(function () {
             if (carriage.DOCUMENTS_EPD_EDM_LINK != null) {
                 $.each(carriage.DOCUMENTS_EPD_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DOC_EPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EPD_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -673,10 +704,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DOCUMENTS_DRIVER_APPROVALS_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DOC_DRIVER_APP_LINK[index] !== '') {
-                        DOC_DRIVER_APP_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_DRIVER_APP_LINK[index] + '</li>';
+                        DOC_DRIVER_APP_LINK += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_DOC_DRIVER_APP_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_DOC_DRIVER_APP_LINK[index] === '') {
                     } else {
-                        DOC_DRIVER_APP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_DRIVER_APP_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -684,7 +715,7 @@ $(document).ready(function () {
             if (carriage.DOCUMENTS_DRIVER_APPROVALS_EDM_LINK != null) {
                 $.each(carriage.DOCUMENTS_DRIVER_APPROVALS_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DOC_DRIVER_APP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_DRIVER_APP_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -713,10 +744,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DOCUMENTS_EXPEDITOR_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DOC_EXP_LINK[index] !== '') {
-                        DOC_EXP_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EXP_LINK[index] + '</li>';
+                        DOC_EXP_LINK += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_DOC_EXP_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_DOC_EXP_LINK[index] === '') {
                     } else {
-                        DOC_EXP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EXP_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -724,7 +755,7 @@ $(document).ready(function () {
             if (carriage.DOCUMENTS_EXPEDITOR_EDM_LINK != null) {
                 $.each(carriage.DOCUMENTS_EXPEDITOR_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DOC_EXP_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EXP_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -755,10 +786,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DOCUMENTS_EXPEDITOR_RECEIPT_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DOC_EXP_RECEIPT_LINK[index] !== '') {
-                        DOC_EXP_RECEIPT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EXP_RECEIPT_LINK[index] + '</li>';
+                        DOC_EXP_RECEIPT_LINK += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_DOC_EXP_RECEIPT_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_DOC_EXP_RECEIPT_LINK[index] === '') {
                     } else {
-                        DOC_EXP_RECEIPT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EXP_RECEIPT_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -766,7 +797,7 @@ $(document).ready(function () {
             if (carriage.DOCUMENTS_EXPEDITOR_RECEIPT_EDM_LINK != null) {
                 $.each(carriage.DOCUMENTS_EXPEDITOR_RECEIPT_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DOC_EXP_RECEIPT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EXP_RECEIPT_LINK += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -809,10 +840,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DOC_APP_TRANSPORT_LINK_FOR[index] !== '') {
-                        DOC_APP_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_APP_TRANSPORT_LINK_FOR[index] + '</li>';
+                        DOC_APP_TRANSPORT_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_DOC_APP_TRANSPORT_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_DOC_APP_TRANSPORT_LINK_FOR[index] === '') {
                     } else {
-                        DOC_APP_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank"> Файл ' + (index + 1) + '</li>';
+                        DOC_APP_TRANSPORT_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file"> Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -820,7 +851,7 @@ $(document).ready(function () {
             if (carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK_FOR != null) {
                 $.each(carriage.DOCUMENTS_APPLICATION_TRANSPORTATION_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DOC_APP_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_APP_TRANSPORT_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -849,10 +880,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DOCUMENTS_EPD_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DOC_EPD_LINK_FOR[index] !== '') {
-                        DOC_EPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EPD_LINK_FOR[index] + '</li>';
+                        DOC_EPD_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_DOC_EPD_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_DOC_EPD_LINK_FOR[index] === '') {
                     } else {
-                        DOC_EPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EPD_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -860,7 +891,7 @@ $(document).ready(function () {
             if (carriage.DOCUMENTS_EPD_EDM_LINK_FOR != null) {
                 $.each(carriage.DOCUMENTS_EPD_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DOC_EPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EPD_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -891,10 +922,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DOCUMENTS_DRIVER_APPROVALS_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DOC_DRIVER_APP_LINK_FOR[index] !== '') {
-                        DOC_DRIVER_APP_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_DRIVER_APP_LINK_FOR[index] + '</li>';
+                        DOC_DRIVER_APP_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_DOC_DRIVER_APP_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_DOC_DRIVER_APP_LINK_FOR[index] === '') {
                     } else {
-                        DOC_DRIVER_APP_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_DRIVER_APP_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -902,7 +933,7 @@ $(document).ready(function () {
             if (carriage.DOCUMENTS_DRIVER_APPROVALS_EDM_LINK_FOR != null) {
                 $.each(carriage.DOCUMENTS_DRIVER_APPROVALS_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DOC_DRIVER_APP_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_DRIVER_APP_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -931,10 +962,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DOCUMENTS_EXPEDITOR_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DOC_EXP_LINK_FOR[index] !== '') {
-                        DOC_EXP_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EXP_LINK_FOR[index] + '</li>';
+                        DOC_EXP_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_DOC_EXP_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_DOC_EXP_LINK_FOR[index] === '') {
                     } else {
-                        DOC_EXP_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EXP_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -942,7 +973,7 @@ $(document).ready(function () {
             if (carriage.DOCUMENTS_EXPEDITOR_EDM_LINK_FOR != null) {
                 $.each(carriage.DOCUMENTS_EXPEDITOR_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DOC_EXP_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EXP_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -973,10 +1004,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DOCUMENTS_EXPEDITOR_RECEIPT_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DOC_EXP_RECEIPT_LINK_FOR[index] !== '') {
-                        DOC_EXP_RECEIPT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DOC_EXP_RECEIPT_LINK_FOR[index] + '</li>';
+                        DOC_EXP_RECEIPT_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">' + DESCRIPTION_DOC_EXP_RECEIPT_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_DOC_EXP_RECEIPT_LINK_FOR[index] === '') {
                     } else {
-                        DOC_EXP_RECEIPT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EXP_RECEIPT_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -984,7 +1015,7 @@ $(document).ready(function () {
             if (carriage.DOCUMENTS_EXPEDITOR_RECEIPT_EDM_LINK_FOR != null) {
                 $.each(carriage.DOCUMENTS_EXPEDITOR_RECEIPT_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DOC_EXP_RECEIPT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DOC_EXP_RECEIPT_LINK_FOR += '<li><span data-id="' + value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1120,10 +1151,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_INVOICE_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_INVOICE_LINK[index] !== '') {
-                        ACC_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_INVOICE_LINK[index] + '</li>';
+                        ACC_INVOICE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_INVOICE_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_INVOICE_LINK[index] === '') {
                     } else {
-                        ACC_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_INVOICE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1131,7 +1162,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_INVOICE_EDM_LINK != null) {
                 $.each(carriage.ACCOUNTING_INVOICE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_INVOICE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1160,10 +1191,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_ACT_ACC_LINK[index] !== '') {
-                        ACC_ACT_ACC_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_ACT_ACC_LINK[index] + '</li>';
+                        ACC_ACT_ACC_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_ACT_ACC_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_ACT_ACC_LINK[index] === '') {
                     } else {
-                        ACC_ACT_ACC_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_ACT_ACC_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1171,7 +1202,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_ACT_ACCEPTANCE_EDM_LINK != null) {
                 $.each(carriage.ACCOUNTING_ACT_ACCEPTANCE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_ACT_ACC_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_ACT_ACC_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1202,10 +1233,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK[index] !== '') {
-                        ACC_ACT_MULTI_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK[index] + '</li>';
+                        ACC_ACT_MULTI_TRANSPORT_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK[index] === '') {
                     } else {
-                        ACC_ACT_MULTI_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_ACT_MULTI_TRANSPORT_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1213,7 +1244,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_EDM_LINK != null) {
                 $.each(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_ACT_MULTI_TRANSPORT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_ACT_MULTI_TRANSPORT_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1244,10 +1275,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_TRANSPORT_REG_LINK[index] !== '') {
-                        ACC_TRANSPORT_REG_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_TRANSPORT_REG_LINK[index] + '</li>';
+                        ACC_TRANSPORT_REG_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_TRANSPORT_REG_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_TRANSPORT_REG_LINK[index] === '') {
                     } else {
-                        ACC_TRANSPORT_REG_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_TRANSPORT_REG_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1255,7 +1286,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_EDM_LINK != null) {
                 $.each(carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_TRANSPORT_REG_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_TRANSPORT_REG_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1284,10 +1315,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_TAX_INVOICE_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_TAX_INVOICE_LINK[index] !== '') {
-                        ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_TAX_INVOICE_LINK[index] + '</li>';
+                        ACC_TAX_INVOICE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_TAX_INVOICE_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_TAX_INVOICE_LINK[index] === '') {
                     } else {
-                        ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_TAX_INVOICE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1295,7 +1326,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK != null) {
                 $.each(carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_TAX_INVOICE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_TAX_INVOICE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1325,10 +1356,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_UPD_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_UPD_LINK[index] !== '') {
-                        ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_UPD_LINK[index] + '</li>';
+                        ACC_UPD_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_UPD_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_UPD_LINK[index] === '') {
                     } else {
-                        ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_UPD_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1336,7 +1367,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_UPD_EDM_LINK != null) {
                 $.each(carriage.ACCOUNTING_UPD_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_UPD_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_UPD_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1377,10 +1408,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_INVOICE_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_INVOICE_LINK_FOR[index] !== '') {
-                        ACC_INVOICE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_INVOICE_LINK_FOR[index] + '</li>';
+                        ACC_INVOICE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_INVOICE_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_INVOICE_LINK_FOR[index] === '') {
                     } else {
-                        ACC_INVOICE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_INVOICE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1388,7 +1419,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_INVOICE_EDM_LINK_FOR != null) {
                 $.each(carriage.ACCOUNTING_INVOICE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_INVOICE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_INVOICE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1417,10 +1448,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] !== '') {
-                        ACC_ACT_ACC_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] + '</li>';
+                        ACC_ACT_ACC_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_ACT_ACC_LINK_FOR[index] === '') {
                     } else {
-                        ACC_ACT_ACC_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_ACT_ACC_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1428,7 +1459,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_ACT_ACCEPTANCE_EDM_LINK_FOR != null) {
                 $.each(carriage.ACCOUNTING_ACT_ACCEPTANCE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_ACT_ACC_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_ACT_ACC_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1460,10 +1491,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK_FOR[index] !== '') {
-                        ACC_ACT_MULTI_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK_FOR[index] + '</li>';
+                        ACC_ACT_MULTI_TRANSPORT_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_ACT_MULTI_TRANSPORT_LINK_FOR[index] === '') {
                     } else {
-                        ACC_ACT_MULTI_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_ACT_MULTI_TRANSPORT_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1471,7 +1502,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_EDM_LINK_FOR != null) {
                 $.each(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_ACT_MULTI_TRANSPORT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_ACT_MULTI_TRANSPORT_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1503,10 +1534,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_TRANSPORT_REG_LINK_FOR[index] !== '') {
-                        ACC_TRANSPORT_REG_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_TRANSPORT_REG_LINK_FOR[index] + '</li>';
+                        ACC_TRANSPORT_REG_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_TRANSPORT_REG_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_TRANSPORT_REG_LINK_FOR[index] === '') {
                     } else {
-                        ACC_TRANSPORT_REG_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_TRANSPORT_REG_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1514,7 +1545,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_EDM_LINK_FOR != null) {
                 $.each(carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_TRANSPORT_REG_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_TRANSPORT_REG_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1544,10 +1575,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_TAX_INVOICE_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_TAX_INVOICE_LINK_FOR[index] !== '') {
-                        ACC_TAX_INVOICE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_TAX_INVOICE_LINK_FOR[index] + '</li>';
+                        ACC_TAX_INVOICE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_TAX_INVOICE_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_TAX_INVOICE_LINK_FOR[index] === '') {
                     } else {
-                        ACC_TAX_INVOICE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_TAX_INVOICE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1555,7 +1586,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK_FOR != null) {
                 $.each(carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_TAX_INVOICE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_TAX_INVOICE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1585,10 +1616,10 @@ $(document).ready(function () {
 
                 $.each(carriage.ACCOUNTING_UPD_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_ACC_UPD_LINK_FOR[index] !== '') {
-                        ACC_UPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_ACC_UPD_LINK_FOR[index] + '</li>';
+                        ACC_UPD_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_UPD_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_UPD_LINK_FOR[index] === '') {
                     } else {
-                        ACC_UPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_UPD_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1596,7 +1627,7 @@ $(document).ready(function () {
             if (carriage.ACCOUNTING_UPD_EDM_LINK_FOR != null) {
                 $.each(carriage.ACCOUNTING_UPD_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        ACC_UPD_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        ACC_UPD_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1646,10 +1677,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DONKEY_STS_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DONKEY_STS_LINK[index] !== '') {
-                        DONKEY_STS_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_STS_LINK[index] + '</li>';
+                        DONKEY_STS_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_DONKEY_STS_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_DONKEY_STS_LINK[index] === '') {
                     } else {
-                        DONKEY_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_STS_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1657,7 +1688,7 @@ $(document).ready(function () {
             if (carriage.DONKEY_STS_EDM_LINK != null) {
                 $.each(carriage.DONKEY_STS_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DONKEY_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_STS_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1687,10 +1718,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DONKEY_RENT_AGREEMENT_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DONKEY_RENT_AGR_LINK[index] !== '') {
-                        DONKEY_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_RENT_AGR_LINK[index] + '</li>';
+                        DONKEY_RENT_AGR_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_DONKEY_RENT_AGR_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_RENT_AGR_LINK[index] === '') {
                     } else {
-                        DONKEY_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_RENT_AGR_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1698,7 +1729,7 @@ $(document).ready(function () {
             if (carriage.DONKEY_RENT_AGREEMENT_EDM_LINK != null) {
                 $.each(carriage.DONKEY_RENT_AGREEMENT_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DONKEY_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_RENT_AGR_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1729,10 +1760,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DONKEY_AGREEMENT_LEASING_COMPANY_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DONKEY_SEC_LEASING_COMPANY_LINK[index] !== '') {
-                        DONKEY_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_SEC_LEASING_COMPANY_LINK[index] + '</li>';
+                        DONKEY_SEC_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_DONKEY_SEC_LEASING_COMPANY_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_DONKEY_SEC_LEASING_COMPANY_LINK[index] === '') {
                     } else {
-                        DONKEY_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1740,7 +1771,7 @@ $(document).ready(function () {
             if (carriage.DONKEY_AGREEMENT_LEASING_COMPANY_EDM_LINK != null) {
                 $.each(carriage.DONKEY_AGREEMENT_LEASING_COMPANY_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DONKEY_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1772,10 +1803,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DONKEY_MARRIAGE_CERTIFICATE_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DONKEY_SEC_CERTIFICATE_LINK[index] !== '') {
-                        DONKEY_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_SEC_CERTIFICATE_LINK[index] + '</li>';
+                        DONKEY_SEC_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_DONKEY_SEC_CERTIFICATE_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_DONKEY_SEC_CERTIFICATE_LINK[index] === '') {
                     } else {
-                        DONKEY_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1783,7 +1814,7 @@ $(document).ready(function () {
             if (carriage.DONKEY_MARRIAGE_CERTIFICATE_EDM_LINK != null) {
                 $.each(carriage.DONKEY_MARRIAGE_CERTIFICATE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DONKEY_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1814,10 +1845,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DONKEY_FREE_USAGE_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DONKEY_SEC_FREE_USAGE_LINK[index] !== '') {
-                        DONKEY_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_SEC_FREE_USAGE_LINK[index] + '</li>';
+                        DONKEY_SEC_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_DONKEY_SEC_FREE_USAGE_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_DONKEY_SEC_FREE_USAGE_LINK[index] === '') {
                     } else {
-                        DONKEY_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1825,7 +1856,7 @@ $(document).ready(function () {
             if (carriage.DONKEY_FREE_USAGE_EDM_LINK != null) {
                 $.each(carriage.DONKEY_FREE_USAGE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DONKEY_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1872,10 +1903,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DONKEY_STS_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DONKEY_STS_LINK_FOR[index] !== '') {
-                        DONKEY_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_STS_LINK_FOR[index] + '</li>';
+                        DONKEY_STS_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_DONKEY_STS_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_DONKEY_STS_LINK_FOR[index] === '') {
                     } else {
-                        DONKEY_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_STS_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1883,7 +1914,7 @@ $(document).ready(function () {
             if (carriage.DONKEY_STS_EDM_LINK_FOR != null) {
                 $.each(carriage.DONKEY_STS_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DONKEY_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_STS_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1913,10 +1944,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DONKEY_RENT_AGREEMENT_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DONKEY_RENT_AGR_LINK_FOR[index] !== '') {
-                        DONKEY_RENT_AGR_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_RENT_AGR_LINK_FOR[index] + '</li>';
+                        DONKEY_RENT_AGR_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_DONKEY_RENT_AGR_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_RENT_AGR_LINK_FOR[index] === '') {
                     } else {
-                        DONKEY_RENT_AGR_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_RENT_AGR_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1924,7 +1955,7 @@ $(document).ready(function () {
             if (carriage.DONKEY_RENT_AGREEMENT_EDM_LINK_FOR != null) {
                 $.each(carriage.DONKEY_RENT_AGREEMENT_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DONKEY_RENT_AGR_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_RENT_AGR_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1956,10 +1987,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DONKEY_AGREEMENT_LEASING_COMPANY_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DONKEY_SEC_LEASING_COMPANY_LINK_FOR[index] !== '') {
-                        DONKEY_SEC_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_SEC_LEASING_COMPANY_LINK_FOR[index] + '</li>';
+                        DONKEY_SEC_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_DONKEY_SEC_LEASING_COMPANY_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_DONKEY_SEC_LEASING_COMPANY_LINK_FOR[index] === '') {
                     } else {
-                        DONKEY_SEC_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -1967,7 +1998,7 @@ $(document).ready(function () {
             if (carriage.DONKEY_AGREEMENT_LEASING_COMPANY_EDM_LINK_FOR != null) {
                 $.each(carriage.DONKEY_AGREEMENT_LEASING_COMPANY_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DONKEY_SEC_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -1999,10 +2030,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DONKEY_MARRIAGE_CERTIFICATE_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DONKEY_SEC_CERTIFICATE_LINK_FOR[index] !== '') {
-                        DONKEY_SEC_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_SEC_CERTIFICATE_LINK_FOR[index] + '</li>';
+                        DONKEY_SEC_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_DONKEY_SEC_CERTIFICATE_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_DONKEY_SEC_CERTIFICATE_LINK_FOR[index] === '') {
                     } else {
-                        DONKEY_SEC_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2010,7 +2041,7 @@ $(document).ready(function () {
             if (carriage.DONKEY_MARRIAGE_CERTIFICATE_EDM_LINK_FOR != null) {
                 $.each(carriage.DONKEY_MARRIAGE_CERTIFICATE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DONKEY_SEC_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2041,10 +2072,10 @@ $(document).ready(function () {
 
                 $.each(carriage.DESCRIPTION_DONKEY_SEC_FREE_USAGE_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_DONKEY_SEC_FREE_USAGE_LINK_FOR[index] !== '') {
-                        DONKEY_SEC_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_DONKEY_SEC_FREE_USAGE_LINK_FOR[index] + '</li>';
+                        DONKEY_SEC_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_DONKEY_SEC_FREE_USAGE_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_DONKEY_SEC_FREE_USAGE_LINK_FOR[index] === '') {
                     } else {
-                        DONKEY_SEC_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2052,7 +2083,7 @@ $(document).ready(function () {
             if (carriage.DONKEY_FREE_USAGE_EDM_LINK_FOR != null) {
                 $.each(carriage.DONKEY_FREE_USAGE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        DONKEY_SEC_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        DONKEY_SEC_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2102,10 +2133,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_STS_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_STS_LINK[index] !== '') {
-                        TRAILER_STS_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_STS_LINK[index] + '</li>';
+                        TRAILER_STS_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_STS_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_STS_LINK[index] === '') {
                     } else {
-                        TRAILER_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_STS_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2113,7 +2144,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_STS_EDM_LINK != null) {
                 $.each(carriage.TRAILER_STS_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_STS_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2142,10 +2173,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_RENT_AGREEMENT_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_RENT_AGR_LINK[index] !== '') {
-                        TRAILER_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_RENT_AGR_LINK[index] + '</li>';
+                        TRAILER_RENT_AGR_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_RENT_AGR_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_RENT_AGR_LINK[index] === '') {
                     } else {
-                        TRAILER_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_RENT_AGR_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2153,7 +2184,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_RENT_AGREEMENT_EDM_LINK != null) {
                 $.each(carriage.TRAILER_RENT_AGREEMENT_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_RENT_AGR_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_RENT_AGR_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2184,10 +2215,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_AGR_LEASING_COMPANY_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] !== '') {
-                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] === '') {
                     } else {
-                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2195,7 +2226,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_AGR_LEASING_COMPANY_EDM_LINK != null) {
                 $.each(carriage.TRAILER_AGR_LEASING_COMPANY_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2226,10 +2257,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_MARRIAGE_CERTIFICATE_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] !== '') {
-                        TRAILER_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] === '') {
                     } else {
-                        TRAILER_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2237,7 +2268,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_MARRIAGE_CERTIFICATE_EDM_LINK != null) {
                 $.each(carriage.TRAILER_MARRIAGE_CERTIFICATE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2268,10 +2299,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_FREE_USAGE_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] !== '') {
-                        TRAILER_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] === '') {
                     } else {
-                        TRAILER_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2279,7 +2310,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_FREE_USAGE_EDM_LINK != null) {
                 $.each(carriage.TRAILER_FREE_USAGE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2326,10 +2357,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_STS_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_STS_LINK_FOR[index] !== '') {
-                        TRAILER_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_STS_LINK_FOR[index] + '</li>';
+                        TRAILER_STS_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_STS_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_STS_LINK_FOR[index] === '') {
                     } else {
-                        TRAILER_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_STS_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2337,7 +2368,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_STS_EDM_LINK_FOR != null) {
                 $.each(carriage.TRAILER_STS_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_STS_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2366,10 +2397,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_RENT_AGREEMENT_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_RENT_AGR_LINK_FOR[index] !== '') {
-                        TRAILER_RENT_AGR_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_RENT_AGR_LINK_FOR[index] + '</li>';
+                        TRAILER_RENT_AGR_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_RENT_AGR_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_RENT_AGR_LINK_FOR[index] === '') {
                     } else {
-                        TRAILER_RENT_AGR_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_RENT_AGR_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2377,7 +2408,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_RENT_AGREEMENT_EDM_LINK_FOR != null) {
                 $.each(carriage.TRAILER_RENT_AGREEMENT_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_RENT_AGR_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_RENT_AGR_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2408,10 +2439,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_AGR_LEASING_COMPANY_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK_FOR[index] !== '') {
-                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK_FOR[index] + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK_FOR[index] === '') {
                     } else {
-                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2419,7 +2450,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_AGR_LEASING_COMPANY_EDM_LINK_FOR != null) {
                 $.each(carriage.TRAILER_AGR_LEASING_COMPANY_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2450,10 +2481,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_MARRIAGE_CERTIFICATE_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR[index] !== '') {
-                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR[index] + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR[index] === '') {
                     } else {
-                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2461,7 +2492,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_MARRIAGE_CERTIFICATE_EDM_LINK_FOR != null) {
                 $.each(carriage.TRAILER_MARRIAGE_CERTIFICATE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2492,10 +2523,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_FREE_USAGE_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR[index] !== '') {
-                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR[index] + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR[index] === '') {
                     } else {
-                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2503,7 +2534,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_FREE_USAGE_EDM_LINK_FOR != null) {
                 $.each(carriage.TRAILER_FREE_USAGE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2553,10 +2584,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_SECONDARY_STS_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_STS_LINK[index] !== '') {
-                        TRAILER_SEC_STS_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_STS_LINK[index] + '</li>';
+                        TRAILER_SEC_STS_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_STS_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_STS_LINK[index] === '') {
                     } else {
-                        TRAILER_SEC_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_STS_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2564,7 +2595,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_SECONDARY_STS_EDM_LINK != null) {
                 $.each(carriage.TRAILER_SECONDARY_STS_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_STS_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_STS_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2595,10 +2626,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_SECONDARY_RENT_AGREEMENT_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_RENT_LINK[index] !== '') {
-                        TRAILER_SEC_RENT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_RENT_LINK[index] + '</li>';
+                        TRAILER_SEC_RENT_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_RENT_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_RENT_LINK[index] === '') {
                     } else {
-                        TRAILER_SEC_RENT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_RENT_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2606,7 +2637,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_SECONDARY_RENT_AGREEMENT_EDM_LINK != null) {
                 $.each(carriage.TRAILER_SECONDARY_RENT_AGREEMENT_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_RENT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_RENT_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2638,10 +2669,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] !== '') {
-                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] === '') {
                     } else {
-                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2649,7 +2680,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_EDM_LINK != null) {
                 $.each(carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2681,10 +2712,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] !== '') {
-                        TRAILER_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK[index] === '') {
                     } else {
-                        TRAILER_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2692,7 +2723,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_EDM_LINK != null) {
                 $.each(carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2724,10 +2755,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_SECONDARY_FREE_USAGE_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] !== '') {
-                        TRAILER_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK[index] === '') {
                     } else {
-                        TRAILER_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2735,7 +2766,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_SECONDARY_FREE_USAGE_EDM_LINK != null) {
                 $.each(carriage.TRAILER_SECONDARY_FREE_USAGE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2784,10 +2815,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_SECONDARY_STS_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_STS_LINK_FOR[index] !== '') {
-                        TRAILER_SEC_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_STS_LINK_FOR[index] + '</li>';
+                        TRAILER_SEC_STS_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_STS_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_STS_LINK_FOR[index] === '') {
                     } else {
-                        TRAILER_SEC_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_STS_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2795,7 +2826,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_SECONDARY_STS_EDM_LINK_FOR != null) {
                 $.each(carriage.TRAILER_SECONDARY_STS_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_STS_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_STS_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2826,10 +2857,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_SECONDARY_RENT_AGREEMENT_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_RENT_LINK_FOR[index] !== '') {
-                        TRAILER_SEC_RENT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_RENT_LINK_FOR[index] + '</li>';
+                        TRAILER_SEC_RENT_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_RENT_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_RENT_LINK_FOR[index] === '') {
                     } else {
-                        TRAILER_SEC_RENT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_RENT_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2837,7 +2868,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_SECONDARY_RENT_AGREEMENT_EDM_LINK_FOR != null) {
                 $.each(carriage.TRAILER_SECONDARY_RENT_AGREEMENT_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_RENT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_RENT_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2868,10 +2899,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK_FOR[index] !== '') {
-                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK_FOR[index] + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_LEASING_COMPANY_LINK[index] === '') {
                     } else {
-                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2879,7 +2910,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_EDM_LINK_FOR != null) {
                 $.each(carriage.TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2910,10 +2941,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR[index] !== '') {
-                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR[index] + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_CERTIFICATE_LINK_FOR[index] === '') {
                     } else {
-                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2921,7 +2952,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_EDM_LINK_FOR != null) {
                 $.each(carriage.TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -2952,10 +2983,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRAILER_SECONDARY_FREE_USAGE_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR[index] !== '') {
-                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR[index] + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRAILER_SEC_FREE_USAGE_LINK_FOR[index] === '') {
                     } else {
-                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -2963,7 +2994,7 @@ $(document).ready(function () {
             if (carriage.TRAILER_SECONDARY_FREE_USAGE_EDM_LINK_FOR != null) {
                 $.each(carriage.TRAILER_SECONDARY_FREE_USAGE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRAILER_SEC_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -3013,10 +3044,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRUCK_STS_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRUCK_STS_LINK[index] !== '') {
-                        TRUCK_STS_LINKS += '<li><a href="' + value + '" target="_blank">Файл ' + DESCRIPTION_TRUCK_STS_LINK[index] + '</li>';
+                        TRUCK_STS_LINKS += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + DESCRIPTION_TRUCK_STS_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRUCK_STS_LINK[index] === '') {
                     } else {
-                        TRUCK_STS_LINKS += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_STS_LINKS += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -3024,7 +3055,7 @@ $(document).ready(function () {
             if (carriage.TRUCK_STS_EDM_LINK != null) {
                 $.each(carriage.TRUCK_STS_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRUCK_STS_LINKS += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_STS_LINKS += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -3053,10 +3084,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRUCK_RENT_AGREEMENT_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRUCK_RENT_LINK[index] !== '') {
-                        TRUCK_RENT_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_RENT_LINK[index] + '</li>';
+                        TRUCK_RENT_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRUCK_RENT_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRUCK_RENT_LINK[index] === '') {
                     } else {
-                        TRUCK_RENT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_RENT_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -3064,7 +3095,7 @@ $(document).ready(function () {
             if (carriage.TRUCK_RENT_AGREEMENT_EDM_LINK != null) {
                 $.each(carriage.TRUCK_RENT_AGREEMENT_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRUCK_RENT_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_RENT_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -3095,10 +3126,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRUCK_AGREEMENT_LEASING_COMPANY_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRUCK_LEASING_COMPANY_LINK[index] !== '') {
-                        TRUCK_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_LEASING_COMPANY_LINK[index] + '</li>';
+                        TRUCK_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRUCK_LEASING_COMPANY_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRUCK_LEASING_COMPANY_LINK[index] === '') {
                     } else {
-                        TRUCK_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -3106,7 +3137,7 @@ $(document).ready(function () {
             if (carriage.TRUCK_AGREEMENT_LEASING_COMPANY_EDM_LINK != null) {
                 $.each(carriage.TRUCK_AGREEMENT_LEASING_COMPANY_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRUCK_LEASING_COMPANY_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_LEASING_COMPANY_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -3137,10 +3168,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRUCK_MARRIAGE_CERTIFICATE_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRUCK_CERTIFICATE_LINK[index] !== '') {
-                        TRUCK_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_CERTIFICATE_LINK[index] + '</li>';
+                        TRUCK_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRUCK_CERTIFICATE_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRUCK_CERTIFICATE_LINK[index] === '') {
                     } else {
-                        TRUCK_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -3148,7 +3179,7 @@ $(document).ready(function () {
             if (carriage.TRUCK_MARRIAGE_CERTIFICATE_EDM_LINK != null) {
                 $.each(carriage.TRUCK_MARRIAGE_CERTIFICATE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRUCK_CERTIFICATE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_CERTIFICATE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -3177,10 +3208,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRUCK_FREE_USAGE_LINK.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRUCK_FREE_USAGE_LINK[index] !== '') {
-                        TRUCK_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_FREE_USAGE_LINK[index] + '</li>';
+                        TRUCK_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRUCK_FREE_USAGE_LINK[index] + '</span></li>';
                     } else if (DESCRIPTION_TRUCK_FREE_USAGE_LINK[index] === '') {
                     } else {
-                        TRUCK_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -3188,7 +3219,7 @@ $(document).ready(function () {
             if (carriage.TRUCK_FREE_USAGE_EDM_LINK != null) {
                 $.each(carriage.TRUCK_FREE_USAGE_EDM_LINK.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRUCK_FREE_USAGE_LINK += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_FREE_USAGE_LINK += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -3235,10 +3266,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRUCK_STS_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRUCK_STS_LINK_FOR[index] !== '') {
-                        TRUCK_STS_LINKS_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + DESCRIPTION_TRUCK_STS_LINK_FOR[index] + '</li>';
+                        TRUCK_STS_LINKS_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + DESCRIPTION_TRUCK_STS_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRUCK_STS_LINK_FOR[index] === '') {
                     } else {
-                        TRUCK_STS_LINKS_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_STS_LINKS_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -3246,7 +3277,7 @@ $(document).ready(function () {
             if (carriage.TRUCK_STS_EDM_LINK_FOR != null) {
                 $.each(carriage.TRUCK_STS_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRUCK_STS_LINKS_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_STS_LINKS_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -3275,10 +3306,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRUCK_RENT_AGREEMENT_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRUCK_RENT_LINK_FOR[index] !== '') {
-                        TRUCK_RENT_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_RENT_LINK_FOR[index] + '</li>';
+                        TRUCK_RENT_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRUCK_RENT_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRUCK_RENT_LINK[index] === '') {
                     } else {
-                        TRUCK_RENT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_RENT_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -3286,7 +3317,7 @@ $(document).ready(function () {
             if (carriage.TRUCK_RENT_AGREEMENT_EDM_LINK_FOR != null) {
                 $.each(carriage.TRUCK_RENT_AGREEMENT_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRUCK_RENT_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_RENT_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -3317,10 +3348,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRUCK_AGREEMENT_LEASING_COMPANY_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRUCK_LEASING_COMPANY_LINK_FOR[index] !== '') {
-                        TRUCK_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_LEASING_COMPANY_LINK_FOR[index] + '</li>';
+                        TRUCK_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRUCK_LEASING_COMPANY_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRUCK_LEASING_COMPANY_LINK_FOR[index] === '') {
                     } else {
-                        TRUCK_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -3328,7 +3359,7 @@ $(document).ready(function () {
             if (carriage.TRUCK_AGREEMENT_LEASING_COMPANY_EDM_LINK_FOR != null) {
                 $.each(carriage.TRUCK_AGREEMENT_LEASING_COMPANY_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRUCK_LEASING_COMPANY_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_LEASING_COMPANY_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -3359,10 +3390,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRUCK_MARRIAGE_CERTIFICATE_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRUCK_CERTIFICATE_LINK_FOR[index] !== '') {
-                        TRUCK_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_CERTIFICATE_LINK_FOR[index] + '</li>';
+                        TRUCK_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRUCK_CERTIFICATE_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRUCK_CERTIFICATE_LINK_FOR[index] === '') {
                     } else {
-                        TRUCK_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -3370,7 +3401,7 @@ $(document).ready(function () {
             if (carriage.TRUCK_MARRIAGE_CERTIFICATE_EDM_LINK_FOR != null) {
                 $.each(carriage.TRUCK_MARRIAGE_CERTIFICATE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRUCK_CERTIFICATE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_CERTIFICATE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
@@ -3399,10 +3430,10 @@ $(document).ready(function () {
 
                 $.each(carriage.TRUCK_FREE_USAGE_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRUCK_FREE_USAGE_LINK_FOR[index] !== '') {
-                        TRUCK_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">' + DESCRIPTION_TRUCK_FREE_USAGE_LINK_FOR[index] + '</li>';
+                        TRUCK_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRUCK_FREE_USAGE_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_TRUCK_FREE_USAGE_LINK_FOR[index] === '') {
                     } else {
-                        TRUCK_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
                 });
             }
@@ -3410,7 +3441,7 @@ $(document).ready(function () {
             if (carriage.TRUCK_FREE_USAGE_EDM_LINK_FOR != null) {
                 $.each(carriage.TRUCK_FREE_USAGE_EDM_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (value !== '') {
-                        TRUCK_FREE_USAGE_LINK_FOR += '<li><a href="' + value + '" target="_blank">Файл ' + (index + 1) + '</li>';
+                        TRUCK_FREE_USAGE_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
                     }
                 });
