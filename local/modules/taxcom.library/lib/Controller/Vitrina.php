@@ -367,7 +367,10 @@ class Vitrina extends BaseController
                 $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/'. $id . '/' . $file['ID']);
 
                 $client->get($file['NAME']);
-                if($client->getContentType() === 'application/pdf') {
+                if($client->getContentType() === 'application/pdf' ||
+                    $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                    $client->getContentType() === 'image/jpeg'
+                ) {
                     $client->download(
                         $file['NAME'],
                         Application::getDocumentRoot() . '/upload/file/'. $id . '/' . $file['ID']
@@ -454,7 +457,10 @@ class Vitrina extends BaseController
 
                 $client->get($file['NAME']);
 
-                if($client->getContentType() === 'application/pdf') {
+                if($client->getContentType() === 'application/pdf' ||
+                    $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                    $client->getContentType() === 'image/jpeg'
+                ) {
                     $client->download(
                         $file['NAME'],
                         Application::getDocumentRoot() . '/upload/file/archive/' . $file['ID']
@@ -490,7 +496,10 @@ class Vitrina extends BaseController
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
             $client->get($fields['LINK']);
 
-            if($client->getContentType() === 'application/pdf') {
+            if($client->getContentType() === 'application/pdf' ||
+                $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                $client->getContentType() === 'image/jpeg'
+            ) {
                 $client->download(
                     $fields['LINK'],
                     Application::getDocumentRoot() . '/upload/file/'. $fields['NAME']
