@@ -198,15 +198,15 @@ if ($request->get('top') === 'forwarders') {
                     </label>
                 </div>
             </form>
-            <div class="filter_list-top-error-transportation">
-                <span>Отображать проблемные перевозки</span>
-                <select class="uk-select">
-                    <option>Все</option>
-                    <option>C недостающими документами</option>
-                    <option>Нет подтверждения через геомониторинг</option>
-                    <option>Цена не соответствует рыночной</option>
-                </select>
-            </div>
+<!--            <div class="filter_list-top-error-transportation">-->
+<!--                <span>Отображать проблемные перевозки</span>-->
+<!--                <select class="uk-select">-->
+<!--                    <option>Все</option>-->
+<!--                    <option>C недостающими документами</option>-->
+<!--                    <option>Нет подтверждения через геомониторинг</option>-->
+<!--                    <option>Цена не соответствует рыночной</option>-->
+<!--                </select>-->
+<!--            </div>-->
         </div>
         <div class="filter_file-download" id="file_filter_download">
             <span uk-icon="icon: download"></span>

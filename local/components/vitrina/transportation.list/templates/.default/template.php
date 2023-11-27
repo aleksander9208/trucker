@@ -176,15 +176,28 @@ if ($request->get('year')) {
                     </label>
                 </div>
             </form>
-            <div class="filter_list-top-error-transportation">
+            <form class="filter_list-top-error-transportation">
+            <?php
+                if ($request->get('statistics') === 'doc') {
+                    $selectDoc = 'selected';
+                }
+
+                if ($request->get('statistics') === 'geo') {
+                    $selectGeo = 'selected';
+                }
+
+                if ($request->get('statistics') === 'price') {
+                    $selectPrice = 'selected';
+                }
+            ?>
                 <span>Отображать проблемные перевозки</span>
-                <select class="uk-select">
+                <select class="uk-select" name="statistics" onchange="this.form.submit()">
                     <option>Все</option>
-                    <option>C недостающими документами</option>
-                    <option>Нет подтверждения через геомониторинг</option>
-                    <option>Цена не соответствует рыночной</option>
+                    <option <?= $selectDoc ?> value="doc">C недостающими документами</option>
+                    <option <?= $selectGeo ?> value="geo">Нет подтверждения через геомониторинг</option>
+                    <option <?= $selectPrice ?> value="price">Цена не соответствует рыночной</option>
                 </select>
-            </div>
+            </form>
         </div>
         <div class="filter_file-download" id="file_filter_download">
             <span uk-icon="icon: download"></span>
