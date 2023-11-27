@@ -361,17 +361,15 @@ class Vitrina extends BaseController
                 }
             }
 
-            self::dirDel(Application::getDocumentRoot() . "/upload/file/" . $id);
             $client = new HttpClient();
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
             foreach ($fileLink as $file) {
-                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/file/'. $id . '/' . $file['ID']);
+                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/'. $id . '/' . $file['ID']);
 
-                $client->get('https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $file['NAME'] . '?file_role=PRINTABLE',);
-
+                $client->get($file['NAME']);
                 if($client->getContentType() === 'application/pdf') {
                     $client->download(
-                        'https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $file['NAME'] . '?file_role=PRINTABLE',
+                        $file['NAME'],
                         Application::getDocumentRoot() . '/upload/file/'. $id . '/' . $file['ID']
                     );
                 } else {
@@ -454,11 +452,11 @@ class Vitrina extends BaseController
             foreach ($fileLink as $file) {
                 $isFile = new IO\File(Application::getDocumentRoot() . '/upload/file/archive/' . $file['ID']);
 
-                $client->get('https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $file['NAME'] . '?file_role=PRINTABLE',);
+                $client->get($file['NAME']);
 
                 if($client->getContentType() === 'application/pdf') {
                     $client->download(
-                        'https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $file['NAME'] . '?file_role=PRINTABLE',
+                        $file['NAME'],
                         Application::getDocumentRoot() . '/upload/file/archive/' . $file['ID']
                     );
                 } else {
@@ -485,31 +483,30 @@ class Vitrina extends BaseController
      * @param string $idFile
      * @return string[]
      */
-    public function getFileAction(string $idFile): array
+    public function getFileAction(array $fields): ?array
     {
-        $document = HLBlock::getInfoDocument($idFile);
-
-        $idLink = array_diff(explode(',', $document['UF_LINK']), ['']);
-        $idName = array_diff(explode(',', $document['UF_NAME_LINK']), ['']);
-        $client = new HttpClient();
-        $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
-
-        foreach ($idLink as $key => $link) {
-            $client->get('https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $link . '?file_role=PRINTABLE',);
+        try {
+            $client = new HttpClient();
+            $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
+            $client->get($fields['LINK']);
 
             if($client->getContentType() === 'application/pdf') {
                 $client->download(
-                    'https://api-tms-master.stage.trucker.group/integrations/taxcom/v1/documents/' . $link . '?file_role=PRINTABLE',
-                    Application::getDocumentRoot() . '/upload/file/'. $idName[$key]
+                    $fields['LINK'],
+                    Application::getDocumentRoot() . '/upload/file/'. $fields['NAME']
                 );
 
-                $url = Application::getDocumentRoot() . '/upload/file/'. $idName[$key];
+                $url = '/upload/file/'. $fields['NAME'];
             } else {
                 $url = $client->getResult();
             }
-        }
 
-        return ['URL' => $url];
+            return ['URL' => $url];
+        } catch (\Exception $e) {
+            $this->addError(new Error($e->getMessage(), $e->getCode()));
+
+            return null;
+        }
     }
 
     /**

@@ -16,13 +16,12 @@ return function (RoutingConfigurator $routes) {
                     $routes
                         ->prefix('vitrina')
                         ->where('id', '\d+')
-                        ->where('idFile', '[^/]+')
                         ->group(function (RoutingConfigurator $routes) {
                             $routes->post('{id}', [Vitrina::class, 'getAction']);
                             $routes->post('archiv/{id}', [Vitrina::class, 'getFileArchivAction']);
-                            $routes->post('file/{idFile}', [Vitrina::class, 'getFileAction']);
                         });
 
+                    $routes->post('file', [Vitrina::class, 'getFileAction']);
                     $routes->post('archive', [Vitrina::class, 'getArchiveAction']);
                 });
         });

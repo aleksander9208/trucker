@@ -814,8 +814,11 @@ class TransportationList extends CBitrixComponent
             $this->arResult["FILTER"][] = [
                 'LOGIC' => "OR",
                 'NAME' => '%' . $filterData["FIND"] . '%',
+                'CARGO_OWNER_VALUE' => '%' . $filterData["FIND"] . '%',
                 'CARGO_OWNER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
+                'FORWARDER_VALUE' => '%' . $filterData["FIND"] . '%',
                 'FORWARDER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
+                'CARRIER_VALUE' => '%' . $filterData["FIND"] . '%',
                 'CARRIER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
             ];
         }

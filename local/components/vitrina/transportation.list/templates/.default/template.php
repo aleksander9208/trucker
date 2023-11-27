@@ -295,7 +295,7 @@ if ($request->get('year')) {
                                             <span class="status-info_confirmation_title"><?= $document['NAME'] ?></span>
 
                                             <div class="status-link_file" id="<?= $document['LINK_ID'] ?>" type="button">
-                                                <?php if($document['FILE']) { ?> Посмотреть <span uk-icon="icon: check;"></span><?php } ?>
+                                                <?php if($document['FILE']) { ?> Посмотреть<?php } ?><span uk-icon="icon: check;"></span>
                                             </div>
                                             <div uk-dropdown="mode: click" class="list_file_link" id="list_file_<?= $document['ID'] ?>"></div>
                                         </div>
@@ -323,7 +323,7 @@ if ($request->get('year')) {
                                             <span class="status-info_confirmation_title"><?= $document['NAME'] ?></span>
 
                                             <div class="status-link_file" id="<?= $document['LINK_ID'] ?>" type="button">
-                                                <?php if($document['FILE']) { ?> Посмотреть <span uk-icon="icon: check;"></span><?php } ?>
+                                                <?php if($document['FILE']) { ?> Посмотреть<?php } ?><span uk-icon="icon: check;"></span>
                                             </div>
                                             <div uk-dropdown="mode: click" class="list_file_link" id="list_file_<?= $document['ID'] ?>"></div>
                                         </div>

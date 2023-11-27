@@ -136,12 +136,15 @@ $(document).ready(function () {
      * Скачиваем файл по чеклисту
      */
     $(document).on('click', '#cheklist_file', function () {
-        let idFile = $(this).attr('data-id');
-
         BX.ajax({
-            url: '/api/v1/vhs/vitrina/file/' + idFile,
+            url: '/api/v1/vhs/file',
             method: 'POST',
-            data: '',
+            data: {
+                fields: {
+                    LINK: $(this).attr('data-id'),
+                    NAME: $(this).text(),
+                }
+            },
             timeout: 2000,
             dataType: 'json',
             onsuccess: function (response) {
@@ -193,7 +196,7 @@ $(document).ready(function () {
         });
 
         BX.ajax({
-            url: '/api/v1/vhs/archive/',
+            url: '/api/v1/vhs/archive',
             method: 'POST',
             data: {
                 fields: {
