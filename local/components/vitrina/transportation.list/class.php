@@ -985,7 +985,7 @@ class TransportationList extends CBitrixComponent
         $this->arResult['COUNT_ERROR_PRICE'] = $price;
 
         if ($this->arResult['COUNT'] > 0) {
-            $this->arResult['COUNT_GOOD_PERCENT'] = $this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100;
+            $this->arResult['COUNT_GOOD_PERCENT'] =  round($this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100, 2);
             $this->arResult['COUNT_ERROR_PERCENT'] = round($this->arResult['COUNT_ERROR']/$this->arResult['COUNT'] * 100, 2);
         }
     }
