@@ -622,16 +622,13 @@ class ParserCarrier
 
                 foreach ($check['attachments'] as $attachment) {
                     $nameLink .= $attachment['name'] . ',';
-                    $link .= $attachment['id'] . ',';
+                    $link .= $attachment['url'] . ',';
                     $ufAttachments = true;
                     $ufEdmAttachments = false;
                 }
                 foreach ($check['edm_attachments'] as $edm_attachment) {
-                    if($edm_attachment['printed_form']) {
-                        $name = explode('/', $edm_attachment['printed_form']);
-                        $nameLink .= end($name) . ',';
-                    }
-                    $link .= $edm_attachment['id'] . ',';
+                    $nameLink .= $attachment['id'] . ',';
+                    $link .= $edm_attachment['original_file'] . ',';
                     $ufAttachments = false;
                     $ufEdmAttachments = true;
                 }
