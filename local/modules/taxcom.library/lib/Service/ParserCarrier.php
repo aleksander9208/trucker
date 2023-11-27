@@ -110,8 +110,6 @@ class ParserCarrier
 
         //Дата погрузки
         $properties['DATE_SHIPMENT'] = $this->carrier['loading_date'];
-        //Статус перевозки
-        $properties['STATUS_SHIPPING'] = $this->carrier['status'];
 
         foreach ($this->carrier['check_groups'] as $check_group) {
             $countChecks = count($check_group['checks']);
@@ -147,6 +145,8 @@ class ParserCarrier
             $properties['CARRIER_INN'] = $this->carrier['executor']['inn'];
             $properties['CARGO_OWNER'] = $this->carrier['customer']['name'];
             $properties['CARGO_OWNER_INN'] = $this->carrier['customer']['inn'];
+            //Статус перевозки
+            $properties['STATUS_SHIPPING'] = $this->carrier['status'];
 
             $properties['CHECKLIST_CARRIER'] = 0;
             if ($checksTrue === $checksFalse) {
