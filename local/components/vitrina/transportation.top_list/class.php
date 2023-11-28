@@ -1033,6 +1033,10 @@ class TransportationTopList extends CBitrixComponent
             ];
         }
 
+        usort($top, function($a,$b){
+            return ($b['COUNT']-$a['COUNT']);
+        });
+
         $this->arResult["ROWS"] = $top;
     }
 

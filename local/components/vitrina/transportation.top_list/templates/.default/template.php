@@ -235,7 +235,7 @@ if ($request->get('top') === 'forwarders') {
                                 <span><?= $row['INN'] ?></span>
                             </div>
                             <div class="company_statistic">
-                                <div class="company_statistic_inner" style="width: <?= $percent ?>%"></div>
+                                <div class="company_statistic_inner" style="width: <?= $row['PERCENT'] ?>%"></div>
                             </div>
                             <div class="company_shipping_count company_title_info">
                                 <?= $row['COUNT'] ?>
