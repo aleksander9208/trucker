@@ -130,19 +130,18 @@ class ParserCarrier
             }
         }
 
+        $properties['CARRIER'] = $this->carrier['executor']['name'];
+        $properties['CARRIER_INN'] = $this->carrier['customer']['inn'];
+
         if ($this->carrier['root'] === false) {
             $properties['CHECKLIST_FORWARDER'] = 0;
             if ($checksTrue === $checksFalse) {
                 $properties['CHECKLIST_FORWARDER'] = 1;
             }
 
-            $properties['CARRIER'] = $this->carrier['customer']['name'];
-            $properties['CARRIER_INN'] = $this->carrier['customer']['inn'];
-            $properties['FORWARDER'] = $this->carrier['executor']['name'];
-            $properties['FORWARDER_INN'] = $this->carrier['executor']['inn'];
+            $properties['FORWARDER'] = $this->carrier['customer']['name'];
+            $properties['FORWARDER_INN'] = $this->carrier['customer']['inn'];
         } else {
-            $properties['CARRIER'] = $this->carrier['executor']['name'];
-            $properties['CARRIER_INN'] = $this->carrier['executor']['inn'];
             $properties['CARGO_OWNER'] = $this->carrier['customer']['name'];
             $properties['CARGO_OWNER_INN'] = $this->carrier['customer']['inn'];
 
