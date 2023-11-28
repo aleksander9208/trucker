@@ -12,6 +12,7 @@ use Bitrix\Main\UI\PageNavigation;
 use Bitrix\Highloadblock as HL;
 use Bitrix\Main\IO;
 use Bitrix\Main\Web\HttpClient;
+use Bitrix\Main\Web\MimeType;
 use CBXArchive;
 use Taxcom\Library\HLBlock\HLBlock;
 
@@ -488,8 +489,8 @@ class Vitrina extends BaseController
     /**
      * Возвращаем ссылку на файл
      *
-     * @param string $idFile
-     * @return string[]
+     * @param array $fields
+     * @return array|null
      */
     public function getFileAction(array $fields): ?array
     {
@@ -497,6 +498,16 @@ class Vitrina extends BaseController
             $client = new HttpClient();
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
             $client->get($fields['LINK']);
+
+            if (stripos($fields['NAME'], 'Файл') !== false) {
+                $type = $client->getContentType();
+                foreach (MimeType::getMimeTypeList() as $key => $item) {
+                    if($type === $item) {
+                        $fields['NAME'] .= '.' .$key;
+                        break;
+                    }
+                }
+            }
 
 //            if($client->getContentType() === 'application/pdf' ||
 //                $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
