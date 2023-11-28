@@ -145,9 +145,6 @@ class ParserCarrier
             $properties['CARRIER_INN'] = $this->carrier['executor']['inn'];
             $properties['CARGO_OWNER'] = $this->carrier['customer']['name'];
             $properties['CARGO_OWNER_INN'] = $this->carrier['customer']['inn'];
-            $properties['FORWARDER'] = '';
-            $properties['FORWARDER_INN'] = '';
-            $properties['CHECKLIST_FORWARDER'] = '';
 
             //Статус перевозки
             $properties['STATUS_SHIPPING'] = $this->carrier['status'];
