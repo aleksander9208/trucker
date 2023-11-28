@@ -78,7 +78,7 @@ class ParserCarrier
      */
     protected function getFields(int $idIblock, string $json): array
     {
-        if($this->carrier['root'] === false) {
+        if($this->carrier['root'] == false) {
             return [
                 "IBLOCK_ID" => $idIblock,
                 "NAME" => $this->carrier['execution_request_uid'],
@@ -102,7 +102,7 @@ class ParserCarrier
      */
     public function getPropertyList(): array
     {
-        if ($this->carrier['root'] === false) {
+        if ($this->carrier['root'] == false) {
             $properties = self::getChecksForwarder();
         } else {
             $properties = self::getChecks();
@@ -133,7 +133,7 @@ class ParserCarrier
         $properties['CARRIER'] = $this->carrier['executor']['name'];
         $properties['CARRIER_INN'] = $this->carrier['customer']['inn'];
 
-        if ($this->carrier['root'] === false) {
+        if ($this->carrier['root'] == false) {
             $properties['CHECKLIST_FORWARDER'] = 0;
             if ($checksTrue === $checksFalse) {
                 $properties['CHECKLIST_FORWARDER'] = 1;
