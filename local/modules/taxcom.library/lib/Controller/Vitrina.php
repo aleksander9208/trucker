@@ -364,23 +364,23 @@ class Vitrina extends BaseController
             $client = new HttpClient();
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
             foreach ($fileLink as $file) {
-                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/'. $id . '/' . $file['ID']);
+//                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/'. $id . '/' . $file['ID']);
 
                 $client->get($file['NAME']);
-                if($client->getContentType() === 'application/pdf' ||
-                    $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                    $client->getContentType() === 'image/jpeg' ||
-                    $client->getContentType() === 'application/octet-stream'
-                ) {
+//                if($client->getContentType() === 'application/pdf' ||
+//                    $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+//                    $client->getContentType() === 'image/jpeg' ||
+//                    $client->getContentType() === 'application/octet-stream'
+//                ) {
                     $client->download(
                         $file['NAME'],
                         Application::getDocumentRoot() . '/upload/file/'. $id . '/' . $file['ID']
                     );
-                } else {
-                    file_put_contents($isFile->getPath(), file_get_contents($client->getResult()));
-
-                    $arPackFiles[] = $isFile->getPath();
-                }
+//                } else {
+//                    file_put_contents($isFile->getPath(), file_get_contents($client->getResult()));
+//
+//                    $arPackFiles[] = $isFile->getPath();
+//                }
             }
 
             $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/file/file.zip");
@@ -454,24 +454,24 @@ class Vitrina extends BaseController
             $client = new HttpClient();
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
             foreach ($fileLink as $file) {
-                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/file/archive/' . $file['ID']);
+//                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/file/archive/' . $file['ID']);
 
                 $client->get($file['NAME']);
 
-                if($client->getContentType() === 'application/pdf' ||
-                    $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                    $client->getContentType() === 'image/jpeg' ||
-                    $client->getContentType() === 'application/octet-stream'
-                ) {
+//                if($client->getContentType() === 'application/pdf' ||
+//                    $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+//                    $client->getContentType() === 'image/jpeg' ||
+//                    $client->getContentType() === 'application/octet-stream'
+//                ) {
                     $client->download(
                         $file['NAME'],
                         Application::getDocumentRoot() . '/upload/file/archive/' . $file['ID']
                     );
-                } else {
-                    file_put_contents($isFile->getPath(), file_get_contents($client->getResult()));
-
-                    $arPackFiles[] = $isFile->getPath();
-                }
+//                } else {
+//                    file_put_contents($isFile->getPath(), file_get_contents($client->getResult()));
+//
+//                    $arPackFiles[] = $isFile->getPath();
+//                }
             }
 
             $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/file/file.zip");
@@ -498,20 +498,20 @@ class Vitrina extends BaseController
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
             $client->get($fields['LINK']);
 
-            if($client->getContentType() === 'application/pdf' ||
-                $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                $client->getContentType() === 'image/jpeg' ||
-                $client->getContentType() === 'application/octet-stream'
-            ) {
+//            if($client->getContentType() === 'application/pdf' ||
+//                $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+//                $client->getContentType() === 'image/jpeg' ||
+//                $client->getContentType() === 'application/octet-stream'
+//            ) {
                 $client->download(
                     $fields['LINK'],
                     Application::getDocumentRoot() . '/upload/file/'. $fields['NAME']
                 );
 
                 $url = '/upload/file/'. $fields['NAME'];
-            } else {
-                $url = $client->getResult();
-            }
+//            } else {
+//                $url = $client->getResult();
+//            }
 
             return ['URL' => $url];
         } catch (\Exception $e) {
