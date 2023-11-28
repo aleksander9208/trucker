@@ -136,10 +136,10 @@ class ParserCarrier
                 $properties['CHECKLIST_FORWARDER'] = 1;
             }
 
-            $properties['CARRIER'] = $this->carrier['executor']['name'];
-            $properties['CARRIER_INN'] = $this->carrier['executor']['inn'];
-            $properties['FORWARDER'] = $this->carrier['customer']['name'];
-            $properties['FORWARDER_INN'] = $this->carrier['customer']['inn'];
+            $properties['CARRIER'] = $this->carrier['customer']['name'];
+            $properties['CARRIER_INN'] = $this->carrier['customer']['inn'];
+            $properties['FORWARDER'] = $this->carrier['executor']['name'];
+            $properties['FORWARDER_INN'] = $this->carrier['executor']['inn'];
         } else {
             $properties['CARRIER'] = $this->carrier['executor']['name'];
             $properties['CARRIER_INN'] = $this->carrier['executor']['inn'];
