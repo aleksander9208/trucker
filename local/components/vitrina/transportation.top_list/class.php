@@ -845,6 +845,8 @@ class TransportationTopList extends CBitrixComponent
             ];
         }
 
+        $filter['!STATUS_SHIPPING.VALUE'] = 'archived';
+
         $vitrinaTop = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
             'filter' => $filter,
             'select' =>  $select,
@@ -944,6 +946,7 @@ class TransportationTopList extends CBitrixComponent
                 'TRAILER_LEASING_COMPANY_STATUS.VALUE' => 'failed',
                 'TRAILER_MARRIAGE_CERTIFICATE_STATUS.VALUE' => 'failed',
                 'TRAILER_FREE_USAGE_STATUS.VALUE' => 'failed',
+                '!STATUS_SHIPPING.VALUE' => 'archived',
             ];
 
             $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
@@ -1091,7 +1094,7 @@ class TransportationTopList extends CBitrixComponent
         $this->arResult['COUNT_ERROR_PRICE'] = $price;
 
         if ($this->arResult['COUNT'] > 0) {
-            $this->arResult['COUNT_GOOD_PERCENT'] = $this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100;
+            $this->arResult['COUNT_GOOD_PERCENT'] = round($this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100, 2);
             $this->arResult['COUNT_ERROR_PERCENT'] = round($this->arResult['COUNT_ERROR']/$this->arResult['COUNT'] * 100, 2);
         }
     }

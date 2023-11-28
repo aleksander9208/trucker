@@ -369,7 +369,8 @@ class Vitrina extends BaseController
                 $client->get($file['NAME']);
                 if($client->getContentType() === 'application/pdf' ||
                     $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                    $client->getContentType() === 'image/jpeg'
+                    $client->getContentType() === 'image/jpeg' ||
+                    $client->getContentType() === 'application/octet-stream'
                 ) {
                     $client->download(
                         $file['NAME'],
@@ -459,7 +460,8 @@ class Vitrina extends BaseController
 
                 if($client->getContentType() === 'application/pdf' ||
                     $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                    $client->getContentType() === 'image/jpeg'
+                    $client->getContentType() === 'image/jpeg' ||
+                    $client->getContentType() === 'application/octet-stream'
                 ) {
                     $client->download(
                         $file['NAME'],
@@ -498,7 +500,8 @@ class Vitrina extends BaseController
 
             if($client->getContentType() === 'application/pdf' ||
                 $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                $client->getContentType() === 'image/jpeg'
+                $client->getContentType() === 'image/jpeg' ||
+                $client->getContentType() === 'application/octet-stream'
             ) {
                 $client->download(
                     $fields['LINK'],

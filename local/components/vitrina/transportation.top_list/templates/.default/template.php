@@ -99,17 +99,17 @@ if ($request->get('top') === 'forwarders') {
         </form>
 
         <?php
-        $APPLICATION->IncludeComponent(
-            'bitrix:main.ui.filter',
-            '',
-        [
-            'FILTER_ID' => $arResult["GRID_CODE"],
-            'GRID_ID' => $arResult["GRID_CODE"],
-            'FILTER' => [],
-            'ENABLE_LIVE_SEARCH' => false,
-            'ENABLE_LABEL' => false,
-            'VALUE_REQUIRED_MODE' => false
-        ]);
+//        $APPLICATION->IncludeComponent(
+//            'bitrix:main.ui.filter',
+//            '',
+//        [
+//            'FILTER_ID' => $arResult["GRID_CODE"],
+//            'GRID_ID' => $arResult["GRID_CODE"],
+//            'FILTER' => [],
+//            'ENABLE_LIVE_SEARCH' => false,
+//            'ENABLE_LABEL' => false,
+//            'VALUE_REQUIRED_MODE' => false
+//        ]);
         ?>
     </div>
 
