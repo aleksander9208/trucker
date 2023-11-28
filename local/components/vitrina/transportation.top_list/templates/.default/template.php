@@ -236,7 +236,6 @@ if ($request->get('top') === 'forwarders') {
                             </div>
                             <div class="company_statistic">
                                 <div class="company_statistic_inner" style="width: <?= $percent ?>%"></div>
-<!--                                --><?php //= $row['SUM_COUNT'] ?><!--/--><?php //= $row['COUNT'] ?>
                             </div>
                             <div class="company_shipping_count company_title_info">
                                 <?= $row['COUNT'] ?>
@@ -249,9 +248,10 @@ if ($request->get('top') === 'forwarders') {
                             'bitrix:main.ui.grid',
                             '',
                             [
-                                'GRID_ID' => $arResult['GRID_CODE'],
+                                'GRID_ID' => $row['GRID_CODE'],
                                 'COLUMNS' => $arResult['COLUMNS'],
                                 'ROWS' => $row['SHIPPING'],
+                                "NAV_OBJECT" => $row["NAV"],
                                 "SHOW_ROW_ACTIONS_MENU" => false,
                                 "SHOW_ROW_CHECKBOXES" => true,
                                 "SHOW_CHECK_ALL_CHECKBOXES" => true,

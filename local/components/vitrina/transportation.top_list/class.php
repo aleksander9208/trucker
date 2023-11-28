@@ -794,37 +794,11 @@ class TransportationTopList extends CBitrixComponent
      */
     public function getRows(): void
     {
-        $this->arResult["GRID_CODE"] = 'vitrina_grid';
-
-        $gridOptions = new Options($this->arResult["GRID_CODE"]);
-        $sort = $gridOptions->GetSorting([
-            'sort' => ["ID" => "DESC"],
-            'vars' => ["by" => "by", "order" => "order"]
-        ]);
-
-        $navParams = $gridOptions->GetNavParams();
-        $nav = new PageNavigation($this->arResult["GRID_CODE"]);
-        $nav->allowAllRecords(false)->setPageSize(10)->initFromUri();
-
-        $filterOption = new Bitrix\Main\UI\Filter\Options($this->arResult["GRID_CODE"]);
-        $filterData = $filterOption->getFilter([]);
-
-        $this->arResult["FILTER"] = [];
-
-        if ($filterData["FILTER_APPLIED"]) {
-            $this->arResult["FILTER"][] = [
-                'LOGIC' => "OR",
-                'NAME' => '%' . $filterData["FIND"] . '%',
-                'CARGO_OWNER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
-                'FORWARDER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
-                'CARRIER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
-            ];
-        }
-
         $request = Context::getCurrent()->getRequest();
 
         $filter = ['!CARGO_OWNER.VALUE' => '',];
         $select = [
+            'ID',
             'CARGO_OWNER_VALUE' => 'CARGO_OWNER.VALUE',
             'CARGO_OWNER_INN_VALUE' => 'CARGO_OWNER_INN.VALUE',
         ];
@@ -832,6 +806,7 @@ class TransportationTopList extends CBitrixComponent
         if ($request->get('top') === 'forwarders') {
             $filter = ['!FORWARDER.VALUE' => '',];
             $select = [
+                'ID',
                 'FORWARDER_VALUE' => 'FORWARDER.VALUE',
                 'FORWARDER_INN_VALUE' => 'FORWARDER_INN.VALUE',
             ];
@@ -840,6 +815,7 @@ class TransportationTopList extends CBitrixComponent
         if ($request->get('top') === 'carriers') {
             $filter = ['!CARRIER.VALUE' => '',];
             $select = [
+                'ID',
                 'CARRIER_VALUE' => 'CARRIER.VALUE',
                 'CARRIER_INN_VALUE' => 'CARRIER_INN.VALUE',
             ];
@@ -856,6 +832,33 @@ class TransportationTopList extends CBitrixComponent
 
         $top = [];
         foreach ($vitrinaTop as $item) {
+            $gridCode = 'vitrina_grid_' . $item['ID'];
+
+            $gridOptions = new Options($gridCode);
+            $sort = $gridOptions->GetSorting([
+                'sort' => ["ID" => "DESC"],
+                'vars' => ["by" => "by", "order" => "order"]
+            ]);
+
+            $navParams = $gridOptions->GetNavParams();
+            $nav = new PageNavigation($gridCode);
+            $nav->allowAllRecords(false)->setPageSize(10)->initFromUri();
+//
+//            $filterOption = new Bitrix\Main\UI\Filter\Options($this->arResult["GRID_CODE"]);
+//            $filterData = $filterOption->getFilter([]);
+//
+//            $this->arResult["FILTER"] = [];
+//
+//            if ($filterData["FILTER_APPLIED"]) {
+//                $this->arResult["FILTER"][] = [
+//                    'LOGIC' => "OR",
+//                    'NAME' => '%' . $filterData["FIND"] . '%',
+//                    'CARGO_OWNER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
+//                    'FORWARDER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
+//                    'CARRIER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
+//                ];
+//            }
+
             $filterItemTop = $filterCompany = ['CARGO_OWNER.VALUE' => $item['CARGO_OWNER_VALUE'], '!STATUS_SHIPPING.VALUE' => 'archived'];
             $topCompanyName = $item['CARGO_OWNER_VALUE'];
             $topCompanyInn = $item['CARGO_OWNER_INN_VALUE'];
@@ -969,9 +972,13 @@ class TransportationTopList extends CBitrixComponent
                     'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'AUTOMATIC_PRICES_FOR_STATUS.VALUE',
                     'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE',
                 ],
+                "offset" => $nav->getOffset(),
+                "limit" => $nav->getLimit(),
                 "order" => ['DATE_SHIPMENT.VALUE' => 'DESC'],
                 "count_total" => true,
             ]);
+
+            $nav->setRecordCount($vitrina->getCount());
 
             $vitrinaList = [];
 
@@ -1018,9 +1025,11 @@ class TransportationTopList extends CBitrixComponent
             $top[$topCompanyInn] = [
                 'NAME' => $topCompanyName,
                 'INN' => $topCompanyInn,
+                'GRID_CODE' => $gridCode,
                 'SUM_COUNT' => Vitrina::getCountElement($filterCompany),
                 'COUNT' => $vitrina->getCount(),
                 'SHIPPING' => $vitrinaList,
+                'NAV' => $nav,
             ];
         }
 
