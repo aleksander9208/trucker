@@ -1608,6 +1608,7 @@ $(document).ready(function () {
                     if (DESCRIPTION_ACC_UPD_LINK_FOR[index] !== '') {
                         ACC_UPD_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_UPD_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_UPD_LINK_FOR[index] === '') {
+                        $('#upd_file_for').hide();
                     } else {
                         ACC_UPD_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
@@ -1619,6 +1620,7 @@ $(document).ready(function () {
                     if (value !== '') {
                         ACC_UPD_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
+                        $('#upd_file_for').hide();
                     }
                 });
             }
