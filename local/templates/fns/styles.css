@@ -412,6 +412,12 @@ form.form_auth {
     padding: 5px 11px;
     background: rgba(0, 102, 255, 1);
     color: #fff;
+    cursor: pointer;
+}
+
+.filter_file-download:hover {
+    background: #fff;
+    color: #000;
 }
 
 .main-grid-cell-content span {
