@@ -1056,7 +1056,9 @@ class TransportationTopList extends CBitrixComponent
 
         $error = $good = $geo = $price = $doc = 0;
         foreach ($vitrina->fetchAll() as $item) {
-            if ($item['STATUS_SHIPPING_VALUE'] === 'completed') {
+            if ($item['CHECKLIST_CARRIER_VALUE'] === '1' &&
+                $item['CHECKLIST_FORWARDER_VALUE'] === '1'
+            ) {
                 $good++;
             }
 

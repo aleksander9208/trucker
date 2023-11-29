@@ -409,9 +409,9 @@ form.form_auth {
 .filter_file-download {
     border: 1px solid rgba(217, 217, 217, 1);
     border-radius: 4px;
-    color: rgba(191, 191, 191, 1);
-    background: rgb(241 240 240);
     padding: 5px 11px;
+    background: rgba(0, 102, 255, 1);
+    color: #fff;
 }
 
 .main-grid-cell-content span {
@@ -749,6 +749,12 @@ span.status-info_confirmation_title {
 
 #cheklist_file {
     cursor: pointer;
+}
+
+.vitrina_error {
+    margin: 10px 0;
+    color: red;
+    font-size: 16px;
 }
 
 /**

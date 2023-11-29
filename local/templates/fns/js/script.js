@@ -200,8 +200,12 @@ $(document).ready(function () {
         let id = [];
 
         $('#vitrina_grid_table .main-grid-row-checked').each(function( index ) {
-            id.push($( this ).attr('data-id'));
+            id.push($(this).attr('data-id'));
         });
+
+        if(id.length === 0) {
+            $('.vitrina_error').html('Выберите перевозки для скачивания').delay(5000).slideUp(300);
+        }
 
         BX.ajax({
             url: '/api/v1/vhs/archive',
@@ -3293,7 +3297,7 @@ $(document).ready(function () {
                 $.each(carriage.TRUCK_RENT_AGREEMENT_LINK_FOR.VALUE.split(","), function (index, value) {
                     if (DESCRIPTION_TRUCK_RENT_LINK_FOR[index] !== '') {
                         TRUCK_RENT_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_TRUCK_RENT_LINK_FOR[index] + '</span></li>';
-                    } else if (DESCRIPTION_TRUCK_RENT_LINK[index] === '') {
+                    } else if (DESCRIPTION_TRUCK_RENT_LINK_FOR[index] === '') {
                     } else {
                         TRUCK_RENT_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }

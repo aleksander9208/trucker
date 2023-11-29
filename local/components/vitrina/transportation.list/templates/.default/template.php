@@ -205,6 +205,7 @@ if ($request->get('year')) {
         </div>
     </div>
 
+    <div class="vitrina_error"></div>
     <?php
     $APPLICATION->IncludeComponent(
         'bitrix:main.ui.grid',

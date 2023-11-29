@@ -41,7 +41,6 @@ class ExportMessageKafkaConsumer
         $rk->setLogLevel(LOG_DEBUG);
         $rk->addBrokers(self::BROKER);
 
-
         $topicConf = new TopicConf();
         $topicConf->set("auto.commit.enable", 'false');
         $topicConf->set('offset.store.method', 'file');
@@ -51,7 +50,6 @@ class ExportMessageKafkaConsumer
 
         for ($partition = 0; $partition <= 4; $partition++) {
             $topic->consumeStart($partition, RD_KAFKA_OFFSET_STORED);
-
 
             while(true) {
                 $msg = $topic->consume($partition, 1000);
