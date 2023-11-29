@@ -387,7 +387,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_transport_link").html(CONT_TRANSPORT_LINK);
-            $('#transport_file').show();
+            if (CONT_TRANSPORT_LINK.length === 0) {
+                $('#transport_file').hide();
+            } else {
+                $('#transport_file').show();
+            }
         } else {
             $('#transport_file').hide();
             $("#list_file_transport_link").html('');
@@ -427,7 +431,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_contract_link").html(CONT_EXP_LINK);
-            $('#contract_file').show();
+            if (CONT_EXP_LINK.length === 0) {
+                $('#contract_file').hide();
+            } else {
+                $('#contract_file').show();
+            }
         } else {
             $('#contract_file').hide();
             $("#list_file_contract_link").html();
@@ -467,7 +475,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_one_time_link").html(CONT_ORDER_ONE_TIME);
-            $('#one_time_file').show();
+            if (CONT_ORDER_ONE_TIME.length === 0) {
+                $('#one_time_file').hide();
+            } else {
+                $('#one_time_file').show();
+            }
         } else {
             $('#one_time_file').hide();
             $("#list_file_one_time_link").html();
@@ -520,7 +532,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_transport_link_for").html(CONT_TRANSPORT_LINK_FOR);
-            $('#transport_file_for').show();
+            if (CONT_TRANSPORT_LINK_FOR.length === 0) {
+                $('#transport_file_for').hide();
+            } else {
+                $('#transport_file_for').show();
+            }
         } else {
             $('#transport_file_for').hide();
             $("#list_file_transport_link_for").html('');
@@ -560,7 +576,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_contract_link_for").html(CONT_EXP_LINK_FOR);
-            $('#contract_file_for').show();
+            if (CONT_EXP_LINK_FOR.length === 0) {
+                $('#contract_file_for').hide();
+            } else {
+                $('#contract_file_for').show();
+            }
         } else {
             $('#contract_file_for').hide();
             $("#list_file_contract_link_for").html();
@@ -600,7 +620,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_one_time_link_for").html(CONT_ORDER_ONE_TIME_FOR);
-            $('#one_time_file_for').show();
+            if (CONT_ORDER_ONE_TIME_FOR.length === 0) {
+                $('#one_time_file_for').hide();
+            } else {
+                $('#one_time_file_for').show();
+            }
         } else {
             $('#one_time_file_for').hide();
             $("#list_file_one_time_link_for").html();
@@ -657,7 +681,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_documents_link").html(DOC_APP_TRANSPORT_LINK);
-            $('#documents_file').show();
+            if (DOC_APP_TRANSPORT_LINK.length === 0) {
+                $('#documents_file').hide();
+            } else {
+                $('#documents_file').show();
+            }
         } else {
             $('#documents_file').hide();
             $("#list_file_one_time_link").html();
@@ -697,7 +725,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_epd_link").html(DOC_EPD_LINK);
-            $('#epd_file').show();
+            if (DOC_EPD_LINK.length === 0) {
+                $('#epd_file').hide();
+            } else {
+                $('#epd_file').show();
+            }
         } else {
             $('#epd_file').hide();
             $("#list_file_epd_link").html();
@@ -737,7 +769,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_driver_link").html(DOC_DRIVER_APP_LINK);
-            $('#driver_file').show();
+            if (DOC_DRIVER_APP_LINK.length === 0) {
+                $('#driver_file').hide();
+            } else {
+                $('#driver_file').show();
+            }
         } else {
             $('#driver_file').hide();
             $("#list_file_driver_link").html('');
@@ -777,7 +813,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_exp_link").html(DOC_EXP_LINK);
-            $('#exp_file').show();
+            if (DOC_EXP_LINK.length === 0) {
+                $('#exp_file').hide();
+            } else {
+                $('#exp_file').show();
+            }
         } else {
             $('#exp_file').hide();
             $("#list_file_exp_link").html('');
@@ -819,7 +859,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_receipt_link").html(DOC_EXP_RECEIPT_LINK);
-            $('#receipt_file').show();
+            if (DOC_EXP_RECEIPT_LINK.length === 0) {
+                $('#receipt_file').hide();
+            } else {
+                $('#receipt_file').show();
+            }
         } else {
             $('#receipt_file').hide();
             $("#list_file_receipt_link").html();
@@ -873,7 +917,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_documents_link_for").html(DOC_APP_TRANSPORT_LINK_FOR);
-            $('#documents_file_for').show();
+            if (DOC_APP_TRANSPORT_LINK_FOR.length === 0) {
+                $('#documents_file_for').hide();
+            } else {
+                $('#documents_file_for').show();
+            }
         } else {
             $('#documents_file_for').hide();
             $("#list_file_one_time_link_for").html();
@@ -913,7 +961,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_epd_link_for").html(DOC_EPD_LINK_FOR);
-            $('#epd_file_for').show();
+            if (DOC_EPD_LINK_FOR.length === 0) {
+                $('#epd_file_for').hide();
+            } else {
+                $('#epd_file_for').show();
+            }
         } else {
             $('#epd_file_for').hide();
             $("#list_file_epd_link_for").html();
@@ -955,7 +1007,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_driver_link_for").html(DOC_DRIVER_APP_LINK_FOR);
-            $('#driver_file_for').show();
+            if (DOC_DRIVER_APP_LINK_FOR.length === 0) {
+                $('#driver_file_for').hide();
+            } else {
+                $('#driver_file_for').show();
+            }
         } else {
             $('#driver_file_for').hide();
             $("#list_file_driver_link_for").html('');
@@ -995,7 +1051,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_exp_link_for").html(DOC_EXP_LINK_FOR);
-            $('#exp_file_for').show();
+            if (DOC_EXP_LINK_FOR.length === 0) {
+                $('#exp_file_for').hide();
+            } else {
+                $('#exp_file_for').show();
+            }
         } else {
             $('#exp_file_for').hide();
             $("#list_file_exp_link_for").html('');
@@ -1037,7 +1097,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_receipt_link_for").html(DOC_EXP_RECEIPT_LINK_FOR);
-            $('#receipt_file_for').show();
+            if (DOC_EXP_RECEIPT_LINK_FOR.length === 0) {
+                $('#receipt_file_for').hide();
+            } else {
+                $('#receipt_file_for').show();
+            }
         } else {
             $('#receipt_file_for').hide();
             $("#list_file_receipt_link_for").html();
@@ -1182,7 +1246,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_invoice_link").html(ACC_INVOICE_LINK);
-            $('#invoice_file').show();
+            if (ACC_INVOICE_LINK.length === 0) {
+                $('#invoice_file').hide();
+            } else {
+                $('#invoice_file').show();
+            }
         } else {
             $('#invoice_file').hide();
             $("#list_file_invoice_link").html();
@@ -1220,7 +1288,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_act_link").html(ACC_ACT_ACC_LINK);
-            $('#act_file').show();
+            if (ACC_ACT_ACC_LINK.length === 0) {
+                $('#act_file').hide();
+            } else {
+                $('#act_file').show();
+            }
         } else {
             $('#act_file').hide();
             $("#list_file_act_link").html();
@@ -1260,7 +1332,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_multi_link").html(ACC_ACT_MULTI_TRANSPORT_LINK);
-            $('#multi_file').show();
+            if (ACC_ACT_MULTI_TRANSPORT_LINK.length === 0) {
+                $('#multi_file').hide();
+            } else {
+                $('#multi_file').show();
+            }
         } else {
             $('#multi_file').hide();
             $("#list_file_multi_link").html();
@@ -1300,7 +1376,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_reg_link").html(ACC_TRANSPORT_REG_LINK);
-            $('#reg_file').show();
+            if (ACC_TRANSPORT_REG_LINK.length === 0) {
+                $('#reg_file').hide();
+            } else {
+                $('#reg_file').show();
+            }
         } else {
             $('#reg_file').hide();
             $("#list_file_reg_link").html();
@@ -1338,7 +1418,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_tax_link").html(ACC_TAX_INVOICE_LINK);
-            $('#tax_file').show();
+            if (ACC_TAX_INVOICE_LINK.length === 0) {
+                $('#tax_file').hide();
+            } else {
+                $('#tax_file').show();
+            }
         } else {
             $('#tax_file').hide();
             $("#list_file_tax_link").html();
@@ -1377,7 +1461,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_upd_link").html(ACC_UPD_LINK);
-            $('#upd_file').show();
+            if (ACC_UPD_LINK.length === 0) {
+                $('#upd_file').hide();
+            } else {
+                $('#upd_file').show();
+            }
         } else {
             $('#upd_file').hide();
             $("#list_file_upd_link").html();
@@ -1427,7 +1515,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_invoice_link_for").html(ACC_INVOICE_LINK_FOR);
-            $('#invoice_file_for').show();
+            if (ACC_INVOICE_LINK_FOR.length === 0) {
+                $('#invoice_file_for').hide();
+            } else {
+                $('#invoice_file_for').show();
+            }
         } else {
             $('#invoice_file_for').hide();
             $("#list_file_invoice_link_for").html();
@@ -1465,7 +1557,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_act_link_for").html(ACC_ACT_ACC_LINK_FOR);
-            $('#act_file_for').show();
+            if (ACC_ACT_ACC_LINK_FOR.length === 0) {
+                $('#act_file_for').hide();
+            } else {
+                $('#act_file_for').show();
+            }
         } else {
             $('#act_file_for').hide();
             $("#list_file_act_link_for").html();
@@ -1506,7 +1602,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_multi_link_for").html(ACC_ACT_MULTI_TRANSPORT_LINK_FOR);
-            $('#multi_file_for').show();
+            if (ACC_ACT_MULTI_TRANSPORT_LINK_FOR.length === 0) {
+                $('#multi_file_for').hide();
+            } else {
+                $('#multi_file_for').show();
+            }
         } else {
             $('#multi_file_for').hide();
             $("#list_file_multi_link_for").html();
@@ -1547,7 +1647,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_reg_link_for").html(ACC_TRANSPORT_REG_LINK_FOR);
-            $('#reg_file_for').show();
+            if (ACC_TRANSPORT_REG_LINK_FOR.length === 0) {
+                $('#reg_file_for').hide();
+            } else {
+                $('#reg_file_for').show();
+            }
         } else {
             $('#reg_file_for').hide();
             $("#list_file_reg_link_for").html();
@@ -1586,7 +1690,11 @@ $(document).ready(function () {
             }
 
             $("#list_file_tax_link_for").html(ACC_TAX_INVOICE_LINK_FOR);
-            $('#tax_file_for').show();
+            if (ACC_TAX_INVOICE_LINK_FOR.length === 0) {
+                $('#tax_file_for').hide();
+            } else {
+                $('#tax_file_for').show();
+            }
         } else {
             $('#tax_file_for').hide();
             $("#list_file_tax_link_for").html();
@@ -1608,7 +1716,6 @@ $(document).ready(function () {
                     if (DESCRIPTION_ACC_UPD_LINK_FOR[index] !== '') {
                         ACC_UPD_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">' + DESCRIPTION_ACC_UPD_LINK_FOR[index] + '</span></li>';
                     } else if (DESCRIPTION_ACC_UPD_LINK_FOR[index] === '') {
-                        $('#upd_file_for').hide();
                     } else {
                         ACC_UPD_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     }
@@ -1620,13 +1727,16 @@ $(document).ready(function () {
                     if (value !== '') {
                         ACC_UPD_LINK_FOR += '<li><span data-id="' +  value + '" id="cheklist_file">Файл ' + (index + 1) + '</span></li>';
                     } else if (value === '') {
-                        $('#upd_file_for').hide();
                     }
                 });
             }
 
             $("#list_file_upd_link_for").html(ACC_UPD_LINK_FOR);
-            $('#upd_file_for').show();
+            if (ACC_UPD_LINK_FOR.length === 0) {
+                $('#upd_file_for').hide();
+            } else {
+                $('#upd_file_for').show();
+            }
         } else {
             $('#upd_file_for').hide();
             $("#list_file_upd_link_for").html();

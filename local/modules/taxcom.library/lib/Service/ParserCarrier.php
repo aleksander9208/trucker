@@ -686,21 +686,19 @@ class ParserCarrier
 
         $entity_data_class = (HL\HighloadBlockTable::compileEntity($hlblockId))->getDataClass();
 
-        foreach ($fields as $item) {
-            $data = $entity_data_class::getList([
-                "select" => ["*"],
-                "filter" => [
-                    "UF_ID_ELEMENT" => $idElement,
-                    "UF_ID_GROUP" => $item['UF_ID_GROUP'],
-                    "UF_GROUP_NAME" => $item['UF_GROUP_NAME'],
-                ]
-            ])->Fetch();
+        $data = $entity_data_class::getList([
+            "select" => ["ID"],
+            "filter" => [
+                "UF_ID_ELEMENT" => $idElement,
+            ]
+        ])->fetchAll();
 
-            if ($data) {
-                $entity_data_class::update($data['ID'], $item);
-            } else {
-                $entity_data_class::add($item);
-            }
+        foreach ($data as $datum) {
+            $entity_data_class::delete($datum['ID']);
+        }
+
+        foreach ($fields as $item) {
+            $entity_data_class::add($item);
         }
     }
 }
