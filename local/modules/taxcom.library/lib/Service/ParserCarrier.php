@@ -133,7 +133,9 @@ class ParserCarrier
 
         $element = Vitrina::getElement($id);
 
-        $jsonTrue = json_decode($element['DETAIL_TEXT'], true);
+        if ($element['DETAIL_TEXT']) {
+            $jsonTrue = json_decode($element['DETAIL_TEXT'], true);
+        }
         if ($element['PREVIEW_TEXT']) {
             $jsonFalse = json_decode($element['PREVIEW_TEXT'], true);
         }
