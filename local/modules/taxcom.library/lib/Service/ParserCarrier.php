@@ -9,6 +9,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Highloadblock as HL;
 use CIBlockElement;
 use Exception;
+use Taxcom\Library\Helper\Vitrina;
 
 /**
  * Парсер сохранения перевозки
@@ -49,12 +50,7 @@ class ParserCarrier
             $element->update($id, $this->getFields($idIblock, $this->json));
         }
 
-        echo "<pre style='dis3play: none;' alt='arResult'>";
-        print_r($this->getPropertyList());
-        echo "</pre>";
-
-        die('24');
-        $element::SetPropertyValuesEx($id, $idIblock, $this->getPropertyList());
+        $element::SetPropertyValuesEx($id, $idIblock, $this->getPropertyList((int) $id));
 
         $this->setLink($id);
     }
@@ -103,9 +99,10 @@ class ParserCarrier
     /**
      * Возвращаем свойства элемента
      *
+     * @param int|null $id
      * @return array
      */
-    public function getPropertyList(): array
+    public function getPropertyList(?int $id = null): array
     {
         if ($this->carrier['root'] === false) {
             $properties = self::getChecksForwarder();
@@ -116,46 +113,65 @@ class ParserCarrier
         //Дата погрузки
         $properties['DATE_SHIPMENT'] = $this->carrier['loading_date'];
 
+        $checksTrue = $checksFalse = 0;
+
         foreach ($this->carrier['check_groups'] as $check_group) {
-            $countChecks = count($check_group['checks']);
-            $checksTrue = $checksFalse = 0;
+            if ($check_group['passed'] === true) {
+                $checksTrue++;
+            } else {
+                $checksFalse++;
+            }
 
             foreach ($check_group['checks'] as $checks) {
-                if ($checks['status'] === 'passed') {
-                    $checksTrue++;
-                } else {
-                    $checksFalse++;
-                }
-
                 if ($this->carrier['root'] === false) {
-                    $properties = self::setChecksForwarder($check_group['name'], $checks, $properties, $checksTrue, $countChecks, $check_group['meta']['license_plate']);
+                    $properties = self::setChecksForwarder($check_group['name'], $checks, $properties, (int) $check_group['passed'], $check_group['meta']['license_plate']);
                 } else {
-                    $properties = self::setChecks($check_group['name'], $checks, $properties, $checksTrue, $countChecks, $check_group['meta']['license_plate']);
+                    $properties = self::setChecks($check_group['name'], $checks, $properties, (int) $check_group['passed'], $check_group['meta']['license_plate']);
                 }
             }
         }
 
-        $properties['CARRIER'] = $this->carrier['executor']['name'];
-        $properties['CARRIER_INN'] = $this->carrier['customer']['inn'];
+        $element = Vitrina::getElement($id);
+
+        $jsonTrue = json_decode($element['DETAIL_TEXT'], true);
+        $jsonFalse = json_decode($element['PREVIEW_TEXT'], true);
+
+        if ($jsonTrue) {
+            $properties['CARRIER'] = $jsonTrue['executor']['name'];
+            $properties['CARRIER_INN'] = $jsonTrue['customer']['inn'];
+            $properties['CARGO_OWNER'] = $jsonTrue['customer']['name'];
+            $properties['CARGO_OWNER_INN'] = $jsonTrue['customer']['inn'];
+        }
+
+        if ($jsonFalse) {
+            $properties['CARRIER'] = $jsonFalse['executor']['name'];
+            $properties['CARRIER_INN'] = $jsonFalse['customer']['inn'];
+            $properties['CARGO_OWNER'] = $jsonTrue['customer']['name'];
+            $properties['CARGO_OWNER_INN'] = $jsonTrue['customer']['inn'];
+            $properties['FORWARDER'] = $jsonFalse['customer']['name'];
+            $properties['FORWARDER_INN'] = $jsonFalse['customer']['inn'];
+        }
 
         if ($this->carrier['root'] === false) {
             $properties['CHECKLIST_FORWARDER'] = 0;
-            if ($checksTrue === $checksFalse) {
+            if ($checksTrue > $checksFalse) {
                 $properties['CHECKLIST_FORWARDER'] = 1;
             }
 
-            $properties['FORWARDER'] = $this->carrier['customer']['name'];
-            $properties['FORWARDER_INN'] = $this->carrier['customer']['inn'];
+            if ($checksFalse > 0) {
+                $properties['CHECKLIST_FORWARDER'] = 2;
+            }
         } else {
-            $properties['CARGO_OWNER'] = $this->carrier['customer']['name'];
-            $properties['CARGO_OWNER_INN'] = $this->carrier['customer']['inn'];
-
             //Статус перевозки
             $properties['STATUS_SHIPPING'] = $this->carrier['status'];
 
             $properties['CHECKLIST_CARRIER'] = 0;
-            if ($checksTrue === $checksFalse) {
+            if ($checksTrue > $checksFalse) {
                 $properties['CHECKLIST_CARRIER'] = 1;
+            }
+
+            if ($checksFalse > 0) {
+                $properties['CHECKLIST_CARRIER'] = 2;
             }
         }
 
@@ -265,8 +281,7 @@ class ParserCarrier
      * @param string $name
      * @param array $group
      * @param array $properties
-     * @param int $checksTrue
-     * @param int $countChecks
+     * @param int $status
      * @param string|null $licensePlate
      * @return array
      */
@@ -274,14 +289,13 @@ class ParserCarrier
         string $name,
         array $group,
         array $properties,
-        int $checksTrue,
-        int $countChecks,
+        int $status = 0,
         ?string $licensePlate = null
     ): array
     {
         switch ($name) {
             case 'contract':
-                $properties['CONTRACT_CHECK'] = $checksTrue . '/' .$countChecks;
+                $properties['CONTRACT_CHECK'] = $status;
                 if ($group['name'] === 'transport_expedition_contract') {
                     $properties['CONTRACT_EXPEDITION_STATUS'] = $group['status'];
                 }
@@ -293,7 +307,7 @@ class ParserCarrier
                 }
                 break;
             case 'execution_documents':
-                $properties['DOCUMENTS_CHECK'] = $checksTrue . '/' .$countChecks;
+                $properties['DOCUMENTS_CHECK'] = $status;
                 if ($group['name'] === 'epd') {
                     $properties['DOCUMENTS_EPD_STATUS'] = $group['status'];
                 }
@@ -311,7 +325,7 @@ class ParserCarrier
                 }
                 break;
             case 'automatic_checks':
-                $properties['AUTOMATIC_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['AUTOMATIC_CHECKS'] = $status;
                 if ($group['name'] === 'prices') {
                     $properties['AUTOMATIC_PRICES_STATUS'] = $group['status'];
                 }
@@ -320,28 +334,28 @@ class ParserCarrier
                 }
                 break;
             case 'accounting':
-                $properties['ACCOUNTING_CHECKS'] = $checksTrue . '/' .$countChecks;
-                if ($group['name'] === 'invoice') {
+                $properties['ACCOUNTING_CHECKS'] = $status;
+                if ($group['name'] === 'invoice' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_INVOICE_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'act_of_service_acceptance') {
+                if ($group['name'] === 'act_of_service_acceptance' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_ACT_ACCEPTANCE_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'act_of_service_acceptance_multiple_transportations') {
+                if ($group['name'] === 'act_of_service_acceptance_multiple_transportations' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'transportation_registry') {
+                if ($group['name'] === 'transportation_registry' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'tax_invoice') {
+                if ($group['name'] === 'tax_invoice' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_TAX_INVOICE_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'universal_transfer_document') {
+                if ($group['name'] === 'universal_transfer_document' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_UPD_STATUS'] = $group['status'];
                 }
                 break;
             case 'vehicle_donkey':
-                $properties['DONKEY_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['DONKEY_CHECKS'] = $status;
                 $properties['DONKEY_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['DONKEY_STS_STATUS'] = $group['status'];
@@ -360,7 +374,7 @@ class ParserCarrier
                 }
                 break;
             case 'vehicle_main_trailer':
-                $properties['TRAILER_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['TRAILER_CHECKS'] = $status;
                 $properties['TRAILER_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_STS_STATUS'] = $group['status'];
@@ -379,7 +393,7 @@ class ParserCarrier
                 }
                 break;
             case 'vehicle_secondary_trailer':
-                $properties['TRAILER_SECONDARY_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['TRAILER_SECONDARY_CHECKS'] = $status;
                 $properties['TRAILER_SECONDARY_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_SECONDARY_STS_STATUS'] = $group['status'];
@@ -398,7 +412,7 @@ class ParserCarrier
                 }
                 break;
             case 'vehicle_truck':
-                $properties['TRUCK_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['TRUCK_CHECKS'] = $status;
                 $properties['TRUCK_LICENSE_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRUCK_STS_STATUS'] = $group['status'];
@@ -428,8 +442,7 @@ class ParserCarrier
      * @param string $name
      * @param array $group
      * @param array $properties
-     * @param int $checksTrue
-     * @param int $countChecks
+     * @param int $status
      * @param string|null $licensePlate
      * @return array
      */
@@ -437,14 +450,13 @@ class ParserCarrier
         string $name,
         array $group,
         array $properties,
-        int $checksTrue,
-        int $countChecks,
+        int $status = 0,
         ?string $licensePlate = null
     ): array
     {
         switch ($name) {
             case 'contract':
-                $properties['CONTRACT_FOR_CHECK'] = $checksTrue . '/' .$countChecks;
+                $properties['CONTRACT_FOR_CHECK'] = $status;
                 if ($group['name'] === 'transport_expedition_contract') {
                     $properties['CONTRACT_EXPEDITION_FOR_STATUS'] = $group['status'];
                 }
@@ -456,7 +468,7 @@ class ParserCarrier
                 }
                 break;
             case 'execution_documents':
-                $properties['DOCUMENTS_FOR_CHECK'] = $checksTrue . '/' .$countChecks;
+                $properties['DOCUMENTS_FOR_CHECK'] = $status;
                 if ($group['name'] === 'epd') {
                     $properties['DOCUMENTS_EPD_FOR_STATUS'] = $group['status'];
                 }
@@ -474,7 +486,7 @@ class ParserCarrier
                 }
                 break;
             case 'automatic_checks':
-                $properties['AUTOMATIC_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['AUTOMATIC_FOR_CHECKS'] = $status;
                 if ($group['name'] === 'prices') {
                     $properties['AUTOMATIC_PRICES_FOR_STATUS'] = $group['status'];
                 }
@@ -483,28 +495,28 @@ class ParserCarrier
                 }
                 break;
             case 'accounting':
-                $properties['ACCOUNTING_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
-                if ($group['name'] === 'invoice') {
+                $properties['ACCOUNTING_FOR_CHECKS'] = $status;
+                if ($group['name'] === 'invoice' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_INVOICE_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'act_of_service_acceptance') {
+                if ($group['name'] === 'act_of_service_acceptance' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_ACT_ACCEPTANCE_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'act_of_service_acceptance_multiple_transportations') {
+                if ($group['name'] === 'act_of_service_acceptance_multiple_transportations' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORT_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'transportation_registry') {
+                if ($group['name'] === 'transportation_registry' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'tax_invoice') {
+                if ($group['name'] === 'tax_invoice' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_TAX_INVOICE_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'universal_transfer_document') {
+                if ($group['name'] === 'universal_transfer_document' && $group['status'] !== 'failed') {
                     $properties['ACCOUNTING_UPD_FOR_STATUS'] = $group['status'];
                 }
                 break;
             case 'vehicle_donkey':
-                $properties['DONKEY_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['DONKEY_FOR_CHECKS'] = $status;
                 $properties['DONKEY_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['DONKEY_STS_FOR_STATUS'] = $group['status'];
@@ -523,7 +535,7 @@ class ParserCarrier
                 }
                 break;
             case 'vehicle_main_trailer':
-                $properties['TRAILER_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['TRAILER_FOR_CHECKS'] = $status;
                 $properties['TRAILER_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_STS_FOR_STATUS'] = $group['status'];
@@ -542,7 +554,7 @@ class ParserCarrier
                 }
                 break;
             case 'vehicle_secondary_trailer':
-                $properties['TRAILER_SECONDARY_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['TRAILER_SECONDARY_FOR_CHECKS'] = $status;
                 $properties['TRAILER_SECONDARY_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRAILER_SECONDARY_STS_FOR_STATUS'] = $group['status'];
@@ -561,7 +573,7 @@ class ParserCarrier
                 }
                 break;
             case 'vehicle_truck':
-                $properties['TRUCK_FOR_CHECKS'] = $checksTrue . '/' .$countChecks;
+                $properties['TRUCK_FOR_CHECKS'] = $status;
                 $properties['TRUCK_LICENSE_FOR_PLATE'] = $licensePlate;
                 if ($group['name'] === 'sts') {
                     $properties['TRUCK_STS_FOR_STATUS'] = $group['status'];

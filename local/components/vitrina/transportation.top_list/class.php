@@ -991,20 +991,19 @@ class TransportationTopList extends CBitrixComponent
                 }
 
                 if ($shipping['CHECKLIST_CARRIER_VALUE'] === '1') {
-                    $statueCarrier = '<span class="transit-good"></span>';
-                } elseif($item['CHECKLIST_CARRIER_VALUE'] === '0') {
-                    $statueCarrier = '<span class="transit-error"></span>';
+                    $statusCarrier = '<span class="transit-good"></span>';
+                } elseif($shipping['CHECKLIST_CARRIER_VALUE'] === '0') {
+                    $statusCarrier = '<span class="transit-error"></span>';
                 } else {
-                    $statueCarrier = '';
+                    $statusCarrier = '<span class="transit-progress"></span>';
                 }
 
-//            <span class="transit-progress"></span>
                 if ($shipping['CHECKLIST_FORWARDER_VALUE'] === '1') {
                     $statusFor = '<span class="transit-good"></span>';
                 } elseif ($shipping['CHECKLIST_FORWARDER_VALUE'] === '0') {
                     $statusFor = '<span class="transit-error"></span>';
                 } else {
-                    $statusFor = '';
+                    $statusFor = '<span class="transit-progress"></span>';
                 }
 
                 $vitrinaList[] = [
@@ -1016,7 +1015,7 @@ class TransportationTopList extends CBitrixComponent
                         "FORWARDER" => $shipping['FORWARDER_VALUE'] . '<span>' . $shipping['FORWARDER_INN_VALUE'] . '</span>',
                         "CARRIER" => $shipping['CARRIER_VALUE'] . '<span>' . $shipping['CARRIER_INN_VALUE'] . '</span>',
                         "DEVIATION_FROM_PRICE" => $deviation,
-                        "CHECKLIST_CARRIER" => $statueCarrier,
+                        "CHECKLIST_CARRIER" => $statusCarrier,
                         "CHECKLIST_FORWARDER" => $statusFor,
                     ],
                 ];

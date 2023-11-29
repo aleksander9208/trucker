@@ -45,4 +45,23 @@ class Vitrina
 
         return $vitrina->getCount();
     }
+
+    /**
+     * Возвращаем данные элемента
+     *
+     * @param int $id
+     * @return array
+     */
+    public static function getElement(int $id): array
+    {
+        $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
+            'filter' => ['ID' => $id],
+            'select' => [
+                'PREVIEW_TEXT',
+                'DETAIL_TEXT',
+            ],
+        ]);
+
+        return $vitrina->fetch();
+    }
 }
