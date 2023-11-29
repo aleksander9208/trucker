@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Taxcom\Library\Service;
 
+use Exception;
 use JsonException;
 use RdKafka\Conf;
 use RdKafka\Consumer;
@@ -27,7 +28,7 @@ class ExportMessageKafkaConsumer
      * Экспорт писем
      *
      * @return void
-     * @throws JsonException
+     * @throws JsonException|Exception
      */
     public function export(): void
     {
@@ -43,13 +44,7 @@ class ExportMessageKafkaConsumer
 
         $topicConf = new TopicConf();
         $topicConf->set("auto.commit.enable", 'false');
-        ##$topicConf->set("enable.auto.offset.store", "true");
-        #$topicConf->set("auto.commit.interval.ms", 0);
-        #$topicConf->set("offset.store.sync.interval.ms", -1);
-        #$topicConf->set("offset.store.method", 'broker');
-        #$topicConf->set("request.required.acks", 1);
         $topicConf->set('offset.store.method', 'file');
-        #$topicConf->set('offset.store.path', sys_get_temp_dir());
         $topicConf->set("auto.offset.reset", 'smallest');
 
         $topic = $rk->newTopic(self::TOPIC, $topicConf);
@@ -70,9 +65,7 @@ class ExportMessageKafkaConsumer
                     $carrier = json_decode($msg->payload, true,);
 
                     if (is_array($carrier)) {
-
                         (new ParserCarrier($carrier, $msg->payload))->isParser();
-
                     }
                     $topic->offsetStore($msg->partition, ($msg->offset+1) );
                 } else {

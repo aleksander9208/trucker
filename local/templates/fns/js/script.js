@@ -1146,12 +1146,10 @@ $(document).ready(function () {
             $('#accounting_check').html('').removeClass();
         }
         /** Счёт */
-        if(carriage.ACCOUNTING_INVOICE_STATUS === 'passed') {
+        if (carriage.ACCOUNTING_INVOICE_STATUS === 'passed' && carriage.ACCOUNTING_CHECKS === '1') {
             $('#invoice_link').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_INVOICE_STATUS === 'in_progress') {
+        } else if (carriage.ACCOUNTING_CHECKS === '0') {
             $('#invoice_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_INVOICE_STATUS === 'false') {
-            $('#invoice_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
 
         if (carriage.ACCOUNTING_INVOICE_LINK != null || carriage.ACCOUNTING_INVOICE_EDM_LINK != null) {
@@ -1186,12 +1184,10 @@ $(document).ready(function () {
             $("#list_file_invoice_link").html();
         }
         /** Акт о приемке выполненных работ по услуге */
-        if(carriage.ACCOUNTING_ACT_ACCEPTANCE_STATUS === 'passed') {
+        if (carriage.ACCOUNTING_ACT_ACCEPTANCE_STATUS === 'passed'  && carriage.ACCOUNTING_CHECKS === '1') {
             $('#act_link').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_ACT_ACCEPTANCE_STATUS === 'in_progress') {
+        } else if (carriage.ACCOUNTING_CHECKS === '0') {
             $('#act_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_ACT_ACCEPTANCE_STATUS === 'false') {
-            $('#act_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
 
         if (carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK != null || carriage.ACCOUNTING_ACT_ACCEPTANCE_EDM_LINK != null) {
@@ -1226,12 +1222,10 @@ $(document).ready(function () {
             $("#list_file_act_link").html();
         }
         /** Акт о приемке выполненных работ, включающий несколько перевозок */
-        if(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORT_STATUS === 'passed') {
+        if (carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORT_STATUS === 'passed' && carriage.ACCOUNTING_CHECKS === '1') {
             $('#multi_link').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORT_STATUS === 'in_progress') {
+        } else if (carriage.ACCOUNTING_CHECKS === '0') {
             $('#multi_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORT_STATUS === 'false') {
-            $('#multi_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
 
         if (carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK != null ||
@@ -1268,12 +1262,10 @@ $(document).ready(function () {
             $("#list_file_multi_link").html();
         }
         /** Реестр на перевозки */
-        if(carriage.ACCOUNTING_TRANSPORT_REGISTRY_STATUS === 'passed') {
+        if (carriage.ACCOUNTING_TRANSPORT_REGISTRY_STATUS === 'passed' && carriage.ACCOUNTING_CHECKS === '1') {
             $('#reg_link').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_TRANSPORT_REGISTRY_STATUS === 'in_progress') {
+        } else if (carriage.ACCOUNTING_CHECKS === '0') {
             $('#reg_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_TRANSPORT_REGISTRY_STATUS === 'false') {
-            $('#reg_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
 
         if (carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_LINK != null ||
@@ -1310,12 +1302,10 @@ $(document).ready(function () {
             $("#list_file_reg_link").html();
         }
         /** Счёт-фактура */
-        if(carriage.ACCOUNTING_TAX_INVOICE_STATUS === 'passed') {
+        if (carriage.ACCOUNTING_TAX_INVOICE_STATUS === 'passed' && carriage.ACCOUNTING_CHECKS === '1') {
             $('#tax_link').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_TAX_INVOICE_STATUS === 'in_progress') {
+        } else if (carriage.ACCOUNTING_CHECKS === '0') {
             $('#tax_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_TAX_INVOICE_STATUS === 'false') {
-            $('#tax_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
 
         if (carriage.ACCOUNTING_TAX_INVOICE_LINK != null || carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK != null) {
@@ -1351,12 +1341,10 @@ $(document).ready(function () {
         }
 
         /** УПД */
-        if(carriage.ACCOUNTING_UPD_STATUS === 'passed') {
+        if (carriage.ACCOUNTING_UPD_STATUS === 'passed' && carriage.ACCOUNTING_CHECKS === '1') {
             $('#upd_link').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_UPD_STATUS === 'in_progress') {
+        } else if (carriage.ACCOUNTING_CHECKS === '0') {
             $('#upd_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_UPD_STATUS === 'false') {
-            $('#upd_link').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
 
         if (carriage.ACCOUNTING_UPD_LINK != null || carriage.ACCOUNTING_UPD_EDM_LINK != null) {
@@ -1403,12 +1391,10 @@ $(document).ready(function () {
             $('#accounting_check_for').html('').removeClass();
         }
         /** Счёт */
-        if(carriage.ACCOUNTING_INVOICE_STATUS_FOR === 'passed') {
+        if (carriage.ACCOUNTING_INVOICE_STATUS_FOR === 'passed' && carriage.ACCOUNTING_FOR_CHECKS === '1') {
             $('#invoice_link_for').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_INVOICE_STATUS_FOR === 'in_progress') {
+        } else if (carriage.ACCOUNTING_FOR_CHECKS === '0') {
             $('#invoice_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_INVOICE_STATUS_FOR === 'false') {
-            $('#invoice_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
 
         if (carriage.ACCOUNTING_INVOICE_LINK_FOR != null || carriage.ACCOUNTING_INVOICE_EDM_LINK_FOR != null) {
@@ -1443,12 +1429,10 @@ $(document).ready(function () {
             $("#list_file_invoice_link_for").html();
         }
         /** Акт о приемке выполненных работ по услуге */
-        if(carriage.ACCOUNTING_ACT_ACCEPTANCE_STATUS_FOR === 'passed') {
+        if (carriage.ACCOUNTING_ACT_ACCEPTANCE_STATUS_FOR === 'passed' && carriage.ACCOUNTING_FOR_CHECKS === '1') {
             $('#act_link_for').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_ACT_ACCEPTANCE_STATUS_FOR === 'in_progress') {
+        } else if (carriage.ACCOUNTING_FOR_CHECKS === '0') {
             $('#act_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_ACT_ACCEPTANCE_STATUS_FOR === 'false') {
-            $('#act_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
 
         if (carriage.ACCOUNTING_ACT_ACCEPTANCE_LINK_FOR != null || carriage.ACCOUNTING_ACT_ACCEPTANCE_EDM_LINK_FOR != null) {
@@ -1484,12 +1468,10 @@ $(document).ready(function () {
         }
 
         /** Акт о приемке выполненных работ, включающий несколько перевозок */
-        if(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORT_STATUS_FOR === 'passed') {
+        if (carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORT_STATUS_FOR === 'passed' && carriage.ACCOUNTING_FOR_CHECKS === '1') {
             $('#multi_link_for').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORT_STATUS_FOR === 'in_progress') {
+        } else if (carriage.ACCOUNTING_FOR_CHECKS === '0') {
             $('#multi_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORT_STATUS_FOR === 'false') {
-            $('#multi_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
 
         if (carriage.ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_LINK_FOR != null ||
@@ -1527,12 +1509,10 @@ $(document).ready(function () {
         }
 
         /** Реестр на перевозки */
-        if(carriage.ACCOUNTING_TRANSPORT_REGISTRY_STATUS_FOR === 'passed') {
+        if (carriage.ACCOUNTING_TRANSPORT_REGISTRY_STATUS_FOR === 'passed' && carriage.ACCOUNTING_FOR_CHECKS === '1') {
             $('#reg_link_for').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_TRANSPORT_REGISTRY_STATUS_FOR === 'in_progress') {
+        } else if (carriage.ACCOUNTING_FOR_CHECKS === '0') {
             $('#reg_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_TRANSPORT_REGISTRY_STATUS_FOR === 'false') {
-            $('#reg_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
 
         if (carriage.ACCOUNTING_TRANSPORTATION_REGISTRY_LINK_FOR != null  ||
@@ -1570,12 +1550,10 @@ $(document).ready(function () {
         }
 
         /** Счёт-фактура */
-        if(carriage.ACCOUNTING_TAX_INVOICE_STATUS_FOR === 'passed') {
+        if (carriage.ACCOUNTING_TAX_INVOICE_STATUS_FOR === 'passed' && carriage.ACCOUNTING_FOR_CHECKS === '1') {
             $('#tax_link_for').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_TAX_INVOICE_STATUS_FOR === 'in_progress') {
+        } else if (carriage.ACCOUNTING_FOR_CHECKS === '0') {
             $('#tax_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_TAX_INVOICE_STATUS_FOR === 'false') {
-            $('#tax_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
 
         if (carriage.ACCOUNTING_TAX_INVOICE_LINK_FOR != null || carriage.ACCOUNTING_TAX_INVOICE_EDM_LINK_FOR != null) {
@@ -1611,14 +1589,11 @@ $(document).ready(function () {
         }
 
         /** УПД */
-        if(carriage.ACCOUNTING_UPD_STATUS_FOR === 'passed') {
+        if (carriage.ACCOUNTING_UPD_STATUS_FOR === 'passed' && carriage.ACCOUNTING_FOR_CHECKS === '1') {
             $('#upd_link_for').show().removeClass().addClass('status-info_confirmation');
-        } else if(carriage.ACCOUNTING_UPD_STATUS_FOR === 'in_progress') {
+        } else if (carriage.ACCOUNTING_FOR_CHECKS === '0') {
             $('#upd_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_progress');
-        } else if(carriage.ACCOUNTING_UPD_STATUS_FOR === 'false') {
-            $('#upd_link_for').show().removeClass().addClass('status-info_confirmation status-info_confirmation_error');
         }
-
         if (carriage.ACCOUNTING_UPD_LINK_FOR != null || carriage.ACCOUNTING_UPD_EDM_LINK_FOR != null) {
             let ACC_UPD_LINK_FOR = '';
 

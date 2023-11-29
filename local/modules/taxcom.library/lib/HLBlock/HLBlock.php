@@ -92,7 +92,7 @@ class HLBlock
             "select" => ["UF_ID_ELEMENT", "UF_ID_GROUP", "UF_LINK"],
             "filter" => [
                 "UF_ID_ELEMENT" => $id,
-                "!UF_ID_GROUP" => 'automatic_checks',
+                "!UF_ID_GROUP" => ['automatic_checks', 'accounting'],
                 "UF_LINK" => '',
             ]
         ])->fetchAll();
@@ -107,7 +107,7 @@ class HLBlock
             "select" => ["UF_ID_ELEMENT", "UF_ID_GROUP", "UF_LINK"],
             "filter" => [
                 "UF_ID_ELEMENT" => $id,
-                "!UF_ID_GROUP" => 'automatic_checks',
+                "!UF_ID_GROUP" => ['automatic_checks', 'accounting'],
                 "UF_LINK" => '',
             ]
         ])->fetchAll();

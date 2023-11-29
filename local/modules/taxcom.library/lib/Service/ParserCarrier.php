@@ -339,22 +339,22 @@ class ParserCarrier
                 break;
             case 'accounting':
                 $properties['ACCOUNTING_CHECKS'] = $status;
-                if ($group['name'] === 'invoice' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'invoice' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_INVOICE_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'act_of_service_acceptance' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'act_of_service_acceptance' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_ACT_ACCEPTANCE_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'act_of_service_acceptance_multiple_transportations' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'act_of_service_acceptance_multiple_transportations' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORTATIONS_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'transportation_registry' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'transportation_registry' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'tax_invoice' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'tax_invoice' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_TAX_INVOICE_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'universal_transfer_document' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'universal_transfer_document' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_UPD_STATUS'] = $group['status'];
                 }
                 break;
@@ -500,22 +500,22 @@ class ParserCarrier
                 break;
             case 'accounting':
                 $properties['ACCOUNTING_FOR_CHECKS'] = $status;
-                if ($group['name'] === 'invoice' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'invoice' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_INVOICE_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'act_of_service_acceptance' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'act_of_service_acceptance' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_ACT_ACCEPTANCE_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'act_of_service_acceptance_multiple_transportations' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'act_of_service_acceptance_multiple_transportations' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_ACT_MULTIPLE_TRANSPORT_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'transportation_registry' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'transportation_registry' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_TRANSPORTATION_REGISTRY_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'tax_invoice' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'tax_invoice' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_TAX_INVOICE_FOR_STATUS'] = $group['status'];
                 }
-                if ($group['name'] === 'universal_transfer_document' && $group['status'] !== 'failed') {
+                if ($group['name'] === 'universal_transfer_document' && $group['status'] === 'passed') {
                     $properties['ACCOUNTING_UPD_FOR_STATUS'] = $group['status'];
                 }
                 break;
