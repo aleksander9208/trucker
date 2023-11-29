@@ -134,7 +134,9 @@ class ParserCarrier
         $element = Vitrina::getElement($id);
 
         $jsonTrue = json_decode($element['DETAIL_TEXT'], true);
-        $jsonFalse = json_decode($element['PREVIEW_TEXT'], true);
+        if ($element['PREVIEW_TEXT']) {
+            $jsonFalse = json_decode($element['PREVIEW_TEXT'], true);
+        }
 
         if ($jsonTrue) {
             $properties['CARRIER'] = $jsonTrue['executor']['name'];
