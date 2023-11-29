@@ -142,14 +142,14 @@ class ParserCarrier
 
         if ($jsonTrue) {
             $properties['CARRIER'] = $jsonTrue['executor']['name'];
-            $properties['CARRIER_INN'] = $jsonTrue['customer']['inn'];
+            $properties['CARRIER_INN'] = $jsonTrue['executor']['inn'];
             $properties['CARGO_OWNER'] = $jsonTrue['customer']['name'];
             $properties['CARGO_OWNER_INN'] = $jsonTrue['customer']['inn'];
         }
 
         if ($jsonFalse) {
             $properties['CARRIER'] = $jsonFalse['executor']['name'];
-            $properties['CARRIER_INN'] = $jsonFalse['customer']['inn'];
+            $properties['CARRIER_INN'] = $jsonFalse['executor']['inn'];
             $properties['CARGO_OWNER'] = $jsonTrue['customer']['name'];
             $properties['CARGO_OWNER_INN'] = $jsonTrue['customer']['inn'];
             $properties['FORWARDER'] = $jsonFalse['customer']['name'];
