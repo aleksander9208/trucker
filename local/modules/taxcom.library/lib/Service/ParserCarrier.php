@@ -697,11 +697,7 @@ class ParserCarrier
             ])->Fetch();
 
             if ($data) {
-                if ($item['UF_LINK'] === '') {
-                    $entity_data_class::delete($data['ID']);
-                } else {
-                    $entity_data_class::update($data['ID'], $item);
-                }
+                $entity_data_class::update($data['ID'], $item);
             } else {
                 $entity_data_class::add($item);
             }
