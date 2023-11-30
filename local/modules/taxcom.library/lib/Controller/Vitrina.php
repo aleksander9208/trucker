@@ -328,6 +328,7 @@ class Vitrina extends BaseController
                 "select" => ["UF_NAME_LINK", "UF_LINK"],
                 "filter" => [
                     "UF_ID_ELEMENT" => $id,
+                    "!UF_ID_GROUP" => ['automatic_checks'],
                     "!UF_LINK" => '',
                 ]
             ])->fetchAll();
@@ -342,6 +343,7 @@ class Vitrina extends BaseController
                 "select" => ["UF_NAME_LINK", "UF_LINK"],
                 "filter" => [
                     "UF_ID_ELEMENT" => $id,
+                    "!UF_ID_GROUP" => ['automatic_checks'],
                     "!UF_LINK" => '',
                 ]
             ])->fetchAll();
@@ -364,24 +366,16 @@ class Vitrina extends BaseController
 
             $client = new HttpClient();
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
-            foreach ($fileLink as $file) {
-//                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/'. $id . '/' . $file['ID']);
+            foreach ($fileLink as $key => $file) {
+                $name = $file['ID'] ?: 'Файл ' .$key;
+                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/'. $id . '/' . $name .'.pdf');
 
-                $client->get($file['NAME']);
-//                if($client->getContentType() === 'application/pdf' ||
-//                    $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-//                    $client->getContentType() === 'image/jpeg' ||
-//                    $client->getContentType() === 'application/octet-stream'
-//                ) {
-                    $client->download(
-                        $file['NAME'],
-                        Application::getDocumentRoot() . '/upload/file/'. $id . '/' . $file['ID']
-                    );
-//                } else {
-//                    file_put_contents($isFile->getPath(), file_get_contents($client->getResult()));
-//
-//                    $arPackFiles[] = $isFile->getPath();
-//                }
+                $client->download(
+                    $file['NAME'],
+                    $isFile->getPath()
+                );
+
+                $arPackFiles[] = $isFile->getPath();
             }
 
             $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/file_". $id .".zip");
@@ -415,9 +409,10 @@ class Vitrina extends BaseController
             $entity_data_class = (HL\HighloadBlockTable::compileEntity($hlblockId))->getDataClass();
 
             $links = $entity_data_class::getList([
-                "select" => ["UF_NAME_LINK", "UF_LINK"],
+                "select" => ["UF_NAME_LINK", "UF_LINK", "UF_ID_ELEMENT"],
                 "filter" => [
                     "UF_ID_ELEMENT" => $fields['ID'],
+                    "!UF_ID_GROUP" => ['automatic_checks'],
                     "!UF_LINK" => '',
                 ]
             ])->fetchAll();
@@ -429,9 +424,10 @@ class Vitrina extends BaseController
             $entity_data_class_for = (HL\HighloadBlockTable::compileEntity($hlblockIdFor))->getDataClass();
 
             $linksFor = $entity_data_class_for::getList([
-                "select" => ["UF_NAME_LINK", "UF_LINK"],
+                "select" => ["UF_NAME_LINK", "UF_LINK", "UF_ID_ELEMENT"],
                 "filter" => [
                     "UF_ID_ELEMENT" =>  $fields['ID'],
+                    "!UF_ID_GROUP" => ['automatic_checks'],
                     "!UF_LINK" => '',
                 ]
             ])->fetchAll();
@@ -448,37 +444,29 @@ class Vitrina extends BaseController
                     $fileLink[] = [
                         'ID' => $idName[$key],
                         'NAME' => $item,
+                        'ID_ELEMENT' => $link['UF_ID_ELEMENT'],
                     ];
                 }
             }
 
             $client = new HttpClient();
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
-            foreach ($fileLink as $file) {
-//                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/file/archive/' . $file['ID']);
+            foreach ($fileLink as $key => $file) {
+                $name = $file['ID'] ?: 'Файл ' .$key;
+                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/archive/'. $fileLink['ID_ELEMENT'] . '/' . $name .'.pdf');
 
-                $client->get($file['NAME']);
+                $client->download(
+                    $file['NAME'],
+                    $isFile->getPath()
+                );
 
-//                if($client->getContentType() === 'application/pdf' ||
-//                    $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-//                    $client->getContentType() === 'image/jpeg' ||
-//                    $client->getContentType() === 'application/octet-stream'
-//                ) {
-                    $client->download(
-                        $file['NAME'],
-                        Application::getDocumentRoot() . '/upload/file/archive/' . $file['ID']
-                    );
-//                } else {
-//                    file_put_contents($isFile->getPath(), file_get_contents($client->getResult()));
-//
-//                    $arPackFiles[] = $isFile->getPath();
-//                }
+                $arPackFiles[] = $isFile->getPath();
             }
 
-            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/file_". $fields['ID'] .".zip");
+            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/file_archive.zip");
             $packarc->Pack($arPackFiles);
 
-            return ['URL' => "/upload/tmp/file_". $fields['ID'] .".zip"];
+            return ['URL' => "/upload/tmp/file_archive.zip"];
         } catch (\Exception $e) {
             $this->addError(new Error($e->getMessage(), $e->getCode()));
 

@@ -1062,8 +1062,8 @@ class TransportationTopList extends CBitrixComponent
                 $good++;
             }
 
-            if ($item['STATUS_SHIPPING_VALUE'] === 'false' ||
-                $item['STATUS_SHIPPING_VALUE'] === 'in_progress'
+            if ($item['CHECKLIST_CARRIER_VALUE'] !== '1' &&
+                $item['CHECKLIST_FORWARDER_VALUE'] !== '1'
             ) {
                 $error++;
             }
@@ -1096,7 +1096,7 @@ class TransportationTopList extends CBitrixComponent
         $this->arResult['COUNT_ERROR_PRICE'] = $price;
 
         if ($this->arResult['COUNT'] > 0) {
-            $this->arResult['COUNT_GOOD_PERCENT'] = round($this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100, 2);
+            $this->arResult['COUNT_GOOD_PERCENT'] =  round($this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100, 2);
             $this->arResult['COUNT_ERROR_PERCENT'] = round($this->arResult['COUNT_ERROR']/$this->arResult['COUNT'] * 100, 2);
         }
     }
