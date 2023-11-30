@@ -57,6 +57,7 @@ class Vitrina
         $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
             'filter' => ['ID' => $id],
             'select' => [
+                'NAME',
                 'PREVIEW_TEXT',
                 'DETAIL_TEXT',
             ],

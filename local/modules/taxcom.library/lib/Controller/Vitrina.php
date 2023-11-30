@@ -364,11 +364,13 @@ class Vitrina extends BaseController
                 }
             }
 
+            $elementName = \Taxcom\Library\Helper\Vitrina::getElement($id);
+
             $client = new HttpClient();
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
             foreach ($fileLink as $key => $file) {
                 $name = $file['ID'] ?: 'Файл ' .$key;
-                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/'. $id . '/' . $name .'.pdf');
+                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/'. $elementName['NAME'] . '/' . $name .'.pdf');
 
                 $client->download(
                     $file['NAME'],
@@ -378,13 +380,13 @@ class Vitrina extends BaseController
                 $arPackFiles[] = $isFile->getPath();
             }
 
-            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/file_". $id .".zip");
+            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/". $elementName['NAME'] .".zip");
             $packarc->SetOptions(Array(
-                "REMOVE_PATH" => Application::getDocumentRoot() . "/upload/tmp/". $id . "/",
+                "REMOVE_PATH" => Application::getDocumentRoot() . "/upload/tmp/". $elementName['NAME'] . "/",
             ));
             $packarc->Pack($arPackFiles);
 
-            return ['URL' => "/upload/tmp/file_". $id .".zip"];
+            return ['URL' => "/upload/tmp/". $elementName['NAME'] .".zip"];
         } catch (\Exception $e) {
             $this->addError(new Error($e->getMessage(), $e->getCode()));
 
@@ -442,12 +444,13 @@ class Vitrina extends BaseController
             foreach ($links as $link) {
                 $idLink = array_diff(explode(',', $link['UF_LINK']), ['']);
                 $idName = array_diff(explode(',', $link['UF_NAME_LINK']), ['']);
+                $elementName = \Taxcom\Library\Helper\Vitrina::getElement((int) $link['UF_ID_ELEMENT']);
 
                 foreach ($idLink as $key => $item) {
                     $fileLink[] = [
                         'ID' => $idName[$key],
                         'NAME' => $item,
-                        'ID_ELEMENT' => $link['UF_ID_ELEMENT'],
+                        'ID_ELEMENT' => $elementName['NAME'],
                     ];
                 }
             }
