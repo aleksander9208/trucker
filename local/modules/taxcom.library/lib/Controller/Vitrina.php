@@ -384,10 +384,10 @@ class Vitrina extends BaseController
 //                }
             }
 
-            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/file.zip");
+            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/file_". $id .".zip");
             $packarc->Pack($arPackFiles);
 
-            return ['URL' => "/upload/tmp/file.zip"];
+            return ['URL' => "/upload/tmp/file_". $id .".zip"];
         } catch (\Exception $e) {
             $this->addError(new Error($e->getMessage(), $e->getCode()));
 
@@ -475,10 +475,10 @@ class Vitrina extends BaseController
 //                }
             }
 
-            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/file.zip");
+            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/file_". $fields['ID'] .".zip");
             $packarc->Pack($arPackFiles);
 
-            return ['URL' => "/upload/tmp/file.zip"];
+            return ['URL' => "/upload/tmp/file_". $fields['ID'] .".zip"];
         } catch (\Exception $e) {
             $this->addError(new Error($e->getMessage(), $e->getCode()));
 
