@@ -453,7 +453,7 @@ class Vitrina extends BaseController
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
             foreach ($fileLink as $key => $file) {
                 $name = $file['ID'] ?: 'Файл ' .$key;
-                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/archive/'. $fileLink['ID_ELEMENT'] . '/' . $name .'.pdf');
+                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/archive/'. $file['ID_ELEMENT'] . '/' . $name .'.pdf');
 
                 $client->download(
                     $file['NAME'],
@@ -463,10 +463,10 @@ class Vitrina extends BaseController
                 $arPackFiles[] = $isFile->getPath();
             }
 
-            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/file_archive.zip");
+            $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/archive/file_archive.zip");
             $packarc->Pack($arPackFiles);
 
-            return ['URL' => "/upload/tmp/file_archive.zip"];
+            return ['URL' => "/upload/tmp/archive/file_archive.zip"];
         } catch (\Exception $e) {
             $this->addError(new Error($e->getMessage(), $e->getCode()));
 
