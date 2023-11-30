@@ -143,7 +143,7 @@ class HLBlock
         $elements = $entity_data_class::getList([
             "select" => ["UF_ID_ELEMENT", "UF_ID_GROUP", "UF_LINK"],
             "filter" => [
-                "!UF_ID_GROUP" => 'automatic_checks',
+                "!UF_ID_GROUP" => ['automatic_checks', 'accounting'],
                 "UF_LINK" => '',
             ]
         ])->fetchAll();
@@ -157,7 +157,7 @@ class HLBlock
         $elementsFor = $entity_data_class_for::getList([
             "select" => ["UF_ID_ELEMENT", "UF_ID_GROUP", "UF_LINK"],
             "filter" => [
-                "!UF_ID_GROUP" => 'automatic_checks',
+                "!UF_ID_GROUP" => ['automatic_checks', 'accounting'],
                 "UF_LINK" => '',
             ]
         ])->fetchAll();

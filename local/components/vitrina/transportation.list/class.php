@@ -952,8 +952,8 @@ class TransportationList extends CBitrixComponent
                 $good++;
             }
 
-            if ($item['STATUS_SHIPPING_VALUE'] === 'false' ||
-                $item['STATUS_SHIPPING_VALUE'] === 'in_progress'
+            if ($item['CHECKLIST_CARRIER_VALUE'] !== '1' &&
+                $item['CHECKLIST_FORWARDER_VALUE'] !== '1'
             ) {
                 $error++;
             }
