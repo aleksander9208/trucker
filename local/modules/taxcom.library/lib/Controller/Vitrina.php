@@ -379,6 +379,9 @@ class Vitrina extends BaseController
             }
 
             $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/file_". $id .".zip");
+            $packarc->SetOptions(Array(
+                "REMOVE_PATH" => Application::getDocumentRoot() . "/upload/tmp/". $id . "/",
+            ));
             $packarc->Pack($arPackFiles);
 
             return ['URL' => "/upload/tmp/file_". $id .".zip"];
@@ -464,6 +467,9 @@ class Vitrina extends BaseController
             }
 
             $packarc = CBXArchive::GetArchive(Application::getDocumentRoot() . "/upload/tmp/archive/file_archive.zip");
+            $packarc->SetOptions(Array(
+                "REMOVE_PATH" => Application::getDocumentRoot() . "/upload/tmp/archive/",
+            ));
             $packarc->Pack($arPackFiles);
 
             return ['URL' => "/upload/tmp/archive/file_archive.zip"];
