@@ -54,6 +54,8 @@ $(document).ready(function () {
 
         /** Скрываем блоки */
         hideBlock();
+        /** Эмитируем клик */
+        $('.subnav-title #checklist_carrier a')[0].click();
 
         BX.ajax({
             url: '/api/v1/vhs/vitrina/' + id,
@@ -200,6 +202,42 @@ $(document).ready(function () {
         let id = [];
 
         $('#vitrina_grid_table .main-grid-row-checked').each(function( index ) {
+            id.push($(this).attr('data-id'));
+        });
+
+        if(id.length === 0) {
+            $('.vitrina_error').html('Выберите перевозки для скачивания').delay(5000).slideUp(300);
+        }
+
+        BX.ajax({
+            url: '/api/v1/vhs/archive',
+            method: 'POST',
+            data: {
+                fields: {
+                    ID: id,
+                }
+            },
+            timeout: 2000,
+            dataType: 'json',
+            onsuccess: function (response) {
+                if (response.status === 'success') {
+                    window.location.href = response.data.URL;
+                }
+
+                if (response.status === 'error') {
+                    $('#error').html(response.errors[0].message);
+                }
+            },
+        });
+    });
+
+    /**
+     * Скачиваем архив выбранных документов для топа
+     */
+    $(document).on('click', '#file_filter_download_top', function () {
+        let id = [];
+
+        $('.top_company_list .main-grid-row-checked').each(function( index ) {
             id.push($(this).attr('data-id'));
         });
 
@@ -1123,7 +1161,7 @@ $(document).ready(function () {
         }
         /** Стоимость перевозки соответствует рыночным ценам */
         if(carriage.AUTOMATIC_PRICES_STATUS === 'passed') {
-            $('#prices_link .status-info_confirmation_title').html('Стоимость перевозки соответствует рыночной цены');
+            $('#prices_link .status-info_confirmation_title').html('Стоимость перевозки соответствует рыночной цене');
             $('#prices_link').show().removeClass().addClass('status-info_confirmation');
             $('#prices_file').show();
         } else if(carriage.AUTOMATIC_PRICES_STATUS === 'in_progress') {
@@ -1133,7 +1171,7 @@ $(document).ready(function () {
         } else if(carriage.AUTOMATIC_PRICES_STATUS === 'failed') {
             const price = carriage.AUTO_PRICES.split("/");
             if (price[0] !== '') {
-                $('#prices_link .status-info_confirmation_title').html('Стоимость перевозки ниже '+ price[0] +'% от рыночной цены');
+                $('#prices_link .status-info_confirmation_title').html('Стоимость перевозки ниже '+ price[0] +'% от рыночной цене');
             } else {
                 $('#prices_link .status-info_confirmation_title').html('Стоимость перевозки не соответствует рыночным ценам');
             }
@@ -1166,7 +1204,7 @@ $(document).ready(function () {
         }
         /** Стоимость перевозки соответствует рыночным ценам */
         if(carriage.AUTOMATIC_PRICES_STATUS_FOR === 'passed') {
-            $('#prices_link_for .status-info_confirmation_title').html('Стоимость перевозки соответствует рыночной цены');
+            $('#prices_link_for .status-info_confirmation_title').html('Стоимость перевозки соответствует рыночной цене');
             $('#prices_link_for').show().removeClass().addClass('status-info_confirmation');
             $('#prices_file_for').show();
         } else if(carriage.AUTOMATIC_PRICES_STATUS_FOR === 'in_progress') {
@@ -1178,7 +1216,7 @@ $(document).ready(function () {
             const priceFor = price[1] ? price[1] : price[0];
 
             if (priceFor) {
-                $('#prices_link_for .status-info_confirmation_title').html('Стоимость перевозки ниже '+ priceFor +'% от рыночной цены');
+                $('#prices_link_for .status-info_confirmation_title').html('Стоимость перевозки ниже '+ priceFor +'% от рыночной цене');
             } else {
                 $('#prices_link_for .status-info_confirmation_title').html('Стоимость перевозки не соответствует рыночным ценам');
             }

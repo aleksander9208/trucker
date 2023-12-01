@@ -208,12 +208,13 @@ if ($request->get('top') === 'forwarders') {
 <!--                </select>-->
 <!--            </div>-->
         </div>
-        <div class="filter_file-download" id="file_filter_download">
+        <div class="filter_file-download" id="file_filter_download_top">
             <span uk-icon="icon: download"></span>
             <span>Скачать документы</span>
         </div>
     </div>
 
+    <div class="vitrina_error"></div>
     <div class="top_company_list">
         <div class="company_list_title">
             <div class="company_title_info">

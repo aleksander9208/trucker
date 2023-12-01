@@ -369,8 +369,8 @@ class Vitrina extends BaseController
             $client = new HttpClient();
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
             foreach ($fileLink as $key => $file) {
-                $name = $file['ID'] ?: 'Файл ' .$key;
-                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/'. $elementName['NAME'] . '/' . $name .'.pdf');
+                $name = $file['ID'] ?: 'Файл ' . $key .'.pdf';
+                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/'. $elementName['NAME'] . '/' . $name);
 
                 $client->download(
                     $file['NAME'],
@@ -458,8 +458,8 @@ class Vitrina extends BaseController
             $client = new HttpClient();
             $client->setHeader('Authorization', 'Token QwYT6BDYarKxkCRpWmb3I0t1mLRZHUWxS2IVTLwS97Ul1pRi9pOQ8H7xhMwUsdyH');
             foreach ($fileLink as $key => $file) {
-                $name = $file['ID'] ?: 'Файл ' .$key;
-                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/archive/'. $file['ID_ELEMENT'] . '/' . $name .'.pdf');
+                $name = $file['ID'] ?: 'Файл ' . $key . '.pdf';
+                $isFile = new IO\File(Application::getDocumentRoot() . '/upload/tmp/archive/'. $file['ID_ELEMENT'] . '/' . $name);
 
                 $client->download(
                     $file['NAME'],
@@ -506,20 +506,12 @@ class Vitrina extends BaseController
                 }
             }
 
-//            if($client->getContentType() === 'application/pdf' ||
-//                $client->getContentType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-//                $client->getContentType() === 'image/jpeg' ||
-//                $client->getContentType() === 'application/octet-stream'
-//            ) {
-                $client->download(
-                    $fields['LINK'],
-                    Application::getDocumentRoot() . '/upload/file/'. $fields['NAME']
-                );
+            $client->download(
+                $fields['LINK'],
+                Application::getDocumentRoot() . '/upload/file/'. $fields['NAME']
+            );
 
-                $url = '/upload/file/'. $fields['NAME'];
-//            } else {
-//                $url = $client->getResult();
-//            }
+            $url = '/upload/file/'. $fields['NAME'];
 
             return ['URL' => $url];
         } catch (\Exception $e) {
@@ -527,28 +519,6 @@ class Vitrina extends BaseController
 
             return null;
         }
-    }
-
-    /**
-     * Удаляем директорию
-     *
-     * @param $dir
-     * @return void
-     */
-    protected static function dirDel($dir): void
-    {
-        $d = opendir($dir);
-        while (($entry = readdir($d)) !== false) {
-            if ($entry != "." && $entry != "..") {
-                if (is_dir($dir . "/" . $entry)) {
-                    self::dirDel($dir . "/" . $entry);
-                } else {
-                    unlink($dir . "/" . $entry);
-                }
-            }
-        }
-        closedir($d);
-        rmdir($dir);
     }
 
     /**

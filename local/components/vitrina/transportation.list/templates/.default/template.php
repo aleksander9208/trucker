@@ -278,7 +278,7 @@ if ($request->get('year')) {
                 </ul>
 
                 <ul class="subnav-content uk-switcher uk-margin">
-                    <li id="checklist_forwarder">
+                    <li id="checklist_carrier">
                         <div class="detail-content">
 
                             <?php foreach ($arResult['INFO_BAR_DOC'] as $docGroup) { ?>
@@ -306,7 +306,7 @@ if ($request->get('year')) {
 
                         </div>
                     </li>
-                    <li id="checklist_carrier">
+                    <li id="checklist_forwarder">
                         <div class="detail-content">
 
                             <?php foreach ($arResult['INFO_BAR_DOC_FOR'] as $docGroup) { ?>
