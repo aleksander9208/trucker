@@ -196,6 +196,8 @@ form.form_auth {
     border-radius: 4px;
     height: 34px;
     padding: 0 11px;
+    width: 100%;
+    background: #fff;
 }
 
 .filter-search input:focus-visible {

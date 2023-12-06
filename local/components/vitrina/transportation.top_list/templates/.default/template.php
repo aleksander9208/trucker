@@ -43,6 +43,12 @@ if ($request->get('top') === 'forwarders') {
     $titleStatistics = 'Экспедитор';
 }
 
+$linkSearch = '/top/?top=' . $request->get('top');
+
+if ($request->get('FIND')) {
+    $linkSearch = '/top/?top=' . $request->get('top') . '&FIND=' . $request->get('FIND');
+}
+
 ?>
 <div class="uk-container uk-container-large">
 
@@ -97,20 +103,10 @@ if ($request->get('top') === 'forwarders') {
 <!--                </div>-->
             </div>
         </form>
-
-        <?php
-//        $APPLICATION->IncludeComponent(
-//            'bitrix:main.ui.filter',
-//            '',
-//        [
-//            'FILTER_ID' => $arResult["GRID_CODE"],
-//            'GRID_ID' => $arResult["GRID_CODE"],
-//            'FILTER' => [],
-//            'ENABLE_LIVE_SEARCH' => false,
-//            'ENABLE_LABEL' => false,
-//            'VALUE_REQUIRED_MODE' => false
-//        ]);
-        ?>
+        <form action="" method="get" class="filter-search">
+            <input type="hidden" value="<?= $request->get('top') ?>" name="top">
+            <input type="text" value="<?= $request->get('FIND') ?>" name="FIND" placeholder="Поиск по организации или ИНН">
+        </form>
     </div>
 
     <form action="/" method="get" class="statistics">

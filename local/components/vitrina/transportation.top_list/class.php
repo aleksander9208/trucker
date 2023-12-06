@@ -92,27 +92,34 @@ class TransportationTopList extends CBitrixComponent
             'ID',
             'CARGO_OWNER_VALUE' => 'CARGO_OWNER.VALUE',
             'CARGO_OWNER_INN_VALUE' => 'CARGO_OWNER_INN.VALUE',
+            'FORWARDER_VALUE' => 'FORWARDER.VALUE',
+            'FORWARDER_INN_VALUE' => 'FORWARDER_INN.VALUE',
+            'CARRIER_VALUE' => 'CARRIER.VALUE',
+            'CARRIER_INN_VALUE' => 'CARRIER_INN.VALUE',
         ];
 
         if ($request->get('top') === 'forwarders') {
             $filter = ['!FORWARDER.VALUE' => '',];
-            $select = [
-                'ID',
-                'FORWARDER_VALUE' => 'FORWARDER.VALUE',
-                'FORWARDER_INN_VALUE' => 'FORWARDER_INN.VALUE',
-            ];
         }
 
         if ($request->get('top') === 'carriers') {
             $filter = ['!CARRIER.VALUE' => '',];
-            $select = [
-                'ID',
-                'CARRIER_VALUE' => 'CARRIER.VALUE',
-                'CARRIER_INN_VALUE' => 'CARRIER_INN.VALUE',
-            ];
         }
 
         $filter['!STATUS_SHIPPING.VALUE'] = 'archived';
+
+        if ($request->get('FIND') !== null) {
+            $filter[] = [
+                'LOGIC' => "OR",
+                'NAME' => '%' . $request->get('FIND') . '%',
+                'CARGO_OWNER_VALUE' => '%' . $request->get('FIND') . '%',
+                'CARGO_OWNER_INN_VALUE' => '%' . $request->get('FIND') . '%',
+                'FORWARDER_VALUE' => '%' . $request->get('FIND') . '%',
+                'FORWARDER_INN_VALUE' => '%' . $request->get('FIND') . '%',
+                'CARRIER_VALUE' => '%' . $request->get('FIND') . '%',
+                'CARRIER_INN_VALUE' => '%' . $request->get('FIND') . '%',
+            ];
+        }
 
         $vitrinaTop = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
             'filter' => $filter,
@@ -134,21 +141,6 @@ class TransportationTopList extends CBitrixComponent
             $navParams = $gridOptions->GetNavParams();
             $nav = new PageNavigation($gridCode);
             $nav->allowAllRecords(false)->setPageSize(10)->initFromUri();
-//
-//            $filterOption = new Bitrix\Main\UI\Filter\Options($this->arResult["GRID_CODE"]);
-//            $filterData = $filterOption->getFilter([]);
-//
-//            $this->arResult["FILTER"] = [];
-//
-//            if ($filterData["FILTER_APPLIED"]) {
-//                $this->arResult["FILTER"][] = [
-//                    'LOGIC' => "OR",
-//                    'NAME' => '%' . $filterData["FIND"] . '%',
-//                    'CARGO_OWNER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
-//                    'FORWARDER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
-//                    'CARRIER_INN_VALUE' => '%' . $filterData["FIND"] . '%',
-//                ];
-//            }
 
             $filterItemTop = $filterCompany = ['CARGO_OWNER.VALUE' => $item['CARGO_OWNER_VALUE'], '!STATUS_SHIPPING.VALUE' => 'archived'];
             $topCompanyName = $item['CARGO_OWNER_VALUE'];
