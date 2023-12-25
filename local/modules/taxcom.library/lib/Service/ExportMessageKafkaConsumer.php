@@ -48,11 +48,11 @@ class ExportMessageKafkaConsumer
 
         $topic = $rk->newTopic(self::TOPIC, $topicConf);
 
-        for ($partition = 0; $partition <= 4; $partition++) {
-            $topic->consumeStart($partition, RD_KAFKA_OFFSET_STORED);
+//        for ($partition = 0; $partition <= 4; $partition++) {
+            $topic->consumeStart(0, RD_KAFKA_OFFSET_STORED);
 
             while(true) {
-                $msg = $topic->consume($partition, 1000);
+                $msg = $topic->consume(0, 1000);
 
                 if($msg->err) {
                     var_dump($msg->errstr() );
@@ -71,6 +71,6 @@ class ExportMessageKafkaConsumer
                     break;
                 }
             }
-        }
+//        }
     }
 }
