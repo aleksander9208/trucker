@@ -97,8 +97,12 @@ class Vitrina
 
         $error = $good = $geo = $price = $doc = 0;
         foreach ($vitrina->fetchAll() as $item) {
-            if ($item['CHECKLIST_CARRIER_VALUE'] === '1' &&
-                $item['CHECKLIST_FORWARDER_VALUE'] === '1'
+            if (($item['CHECKLIST_CARRIER_VALUE'] === '1' &&
+                $item['CHECKLIST_FORWARDER_VALUE'] === '1')  ||
+                ($item['CHECKLIST_CARRIER_VALUE'] === '1' &&
+                    $item['CHECKLIST_FORWARDER_VALUE'] === '') ||
+                ($item['CHECKLIST_CARRIER_VALUE'] === '' &&
+                    $item['CHECKLIST_FORWARDER_VALUE'] === '1')
             ) {
                 $good++;
             }

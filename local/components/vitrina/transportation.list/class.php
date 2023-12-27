@@ -167,6 +167,7 @@ class TransportationList extends CBitrixComponent
         $nav->setRecordCount($vitrina->getCount());
 
         foreach ($vitrina->fetchAll() as $item) {
+            $statusCarrier = $statusFor = '';
             $deviation = HLBlock::getPrice($item['ID']);
             $date = explode('-', $item['DATE_SHIPMENT_VALUE']);
 
@@ -178,7 +179,7 @@ class TransportationList extends CBitrixComponent
                 $statusCarrier = '<span class="transit-good"></span>';
             } elseif($item['CHECKLIST_CARRIER_VALUE'] === '0') {
                 $statusCarrier = '<span class="transit-error"></span>';
-            } else {
+            } elseif($item['CHECKLIST_CARRIER_VALUE'] === '2') {
                 $statusCarrier = '<span class="transit-progress"></span>';
             }
 
@@ -186,7 +187,7 @@ class TransportationList extends CBitrixComponent
                 $statusFor = '<span class="transit-good"></span>';
             } elseif ($item['CHECKLIST_FORWARDER_VALUE'] === '0') {
                 $statusFor = '<span class="transit-error"></span>';
-            } else {
+            } elseif ($item['CHECKLIST_FORWARDER_VALUE'] === '2') {
                 $statusFor = '<span class="transit-progress"></span>';
             }
 
