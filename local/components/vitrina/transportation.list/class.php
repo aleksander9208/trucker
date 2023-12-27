@@ -313,8 +313,24 @@ class TransportationList extends CBitrixComponent
                 $this->arResult["FILTER"]['ACTIVE'] = 'Y';
                 break;
             case 'good':
-                $this->arResult["FILTER"]['CHECKLIST_CARRIER_VALUE'] = '1';
-                $this->arResult["FILTER"]['CHECKLIST_FORWARDER_VALUE'] = '1';
+                $this->arResult["FILTER"][] = [
+                    'LOGIC' => 'OR',
+                    [
+                        'LOGIC' => 'AND',
+                        'CHECKLIST_CARRIER_VALUE' => '1',
+                        'CHECKLIST_FORWARDER_VALUE' => '1',
+                    ],
+                    [
+                        'LOGIC' => 'AND',
+                        'CHECKLIST_CARRIER_VALUE' => '1',
+                        'CHECKLIST_FORWARDER_VALUE' => '',
+                    ],
+                    [
+                        'LOGIC' => 'AND',
+                        'CHECKLIST_CARRIER_VALUE' => '',
+                        'CHECKLIST_FORWARDER_VALUE' => '1',
+                    ]
+                ];
                 break;
             case 'error':
                 $this->arResult["FILTER"][] = [

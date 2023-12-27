@@ -254,6 +254,7 @@ class TransportationTopList extends CBitrixComponent
             $vitrinaList = [];
 
             foreach ($vitrina->fetchAll() as $shipping) {
+                $statusCarrier = $statusFor = '';
                 $deviation = HLBlock::getPrice($shipping['ID']);
                 $date = explode('-', $shipping['DATE_SHIPMENT_VALUE']);
 
@@ -265,7 +266,7 @@ class TransportationTopList extends CBitrixComponent
                     $statusCarrier = '<span class="transit-good"></span>';
                 } elseif($shipping['CHECKLIST_CARRIER_VALUE'] === '0') {
                     $statusCarrier = '<span class="transit-error"></span>';
-                } else {
+                } elseif ($item['CHECKLIST_CARRIER_VALUE'] === '2') {
                     $statusCarrier = '<span class="transit-progress"></span>';
                 }
 
@@ -273,7 +274,7 @@ class TransportationTopList extends CBitrixComponent
                     $statusFor = '<span class="transit-good"></span>';
                 } elseif ($shipping['CHECKLIST_FORWARDER_VALUE'] === '0') {
                     $statusFor = '<span class="transit-error"></span>';
-                } else {
+                } elseif ($item['CHECKLIST_FORWARDER_VALUE'] === '2') {
                     $statusFor = '<span class="transit-progress"></span>';
                 }
 
@@ -308,79 +309,5 @@ class TransportationTopList extends CBitrixComponent
         });
 
         $this->arResult["ROWS"] = $top;
-    }
-
-    /**
-     * Расчет статистики
-     *
-     * @return void
-     * @throws LoaderException
-     */
-    protected function getPercent(): void
-    {
-        $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
-            'filter' => ['!STATUS_SHIPPING.VALUE' => 'archived'],
-            'select' => [
-                'ID',
-                'NAME',
-                'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING.VALUE',
-                'CHECKLIST_CARRIER_VALUE' => 'CHECKLIST_CARRIER.VALUE',
-                'CHECKLIST_FORWARDER_VALUE' => 'CHECKLIST_FORWARDER.VALUE',
-                'AUTOMATIC_PRICES_STATUS_VALUE' => 'AUTOMATIC_PRICES_STATUS.VALUE',
-                'AUTOMATIC_GEO_MONITORING_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_STATUS.VALUE',
-                'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'AUTOMATIC_PRICES_FOR_STATUS.VALUE',
-                'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE',
-            ],
-            "order" => ['ID' => 'ASC'],
-            "count_total" => true,
-        ]);
-
-        $this->arResult['COUNT'] = $vitrina->getCount();
-
-        $error = $good = $geo = $price = $doc = 0;
-        foreach ($vitrina->fetchAll() as $item) {
-            if ($item['CHECKLIST_CARRIER_VALUE'] === '1' &&
-                $item['CHECKLIST_FORWARDER_VALUE'] === '1'
-            ) {
-                $good++;
-            }
-
-            if ($item['CHECKLIST_CARRIER_VALUE'] !== '1' &&
-                $item['CHECKLIST_FORWARDER_VALUE'] !== '1'
-            ) {
-                $error++;
-            }
-
-            if (HLBlock::isDocument($item['ID'])) {
-                $doc++;
-            }
-
-            if ($item['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'] === 'in_progress' ||
-                $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'in_progress'
-            ) {
-                $geo++;
-            }
-
-            if ($item['AUTOMATIC_PRICES_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_PRICES_STATUS_VALUE'] === 'in_progress' ||
-                $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'in_progress'
-            ) {
-                $price++;
-            }
-        }
-
-        $this->arResult['COUNT_ERROR'] = $error;
-        $this->arResult['COUNT_GOOD'] = $good;
-        $this->arResult['COUNT_ERROR_DOC'] = $doc;
-        $this->arResult['COUNT_ERROR_GEO'] = $geo;
-        $this->arResult['COUNT_ERROR_PRICE'] = $price;
-
-        if ($this->arResult['COUNT'] > 0) {
-            $this->arResult['COUNT_GOOD_PERCENT'] =  round($this->arResult['COUNT_GOOD']/$this->arResult['COUNT'] * 100, 2);
-            $this->arResult['COUNT_ERROR_PERCENT'] = round($this->arResult['COUNT_ERROR']/$this->arResult['COUNT'] * 100, 2);
-        }
     }
 }
