@@ -61,7 +61,7 @@ body {
 	height: 150px;
 	text-decoration: none;
 	width: 470px;
-	background: url('/local/templates/fns/images/logo_text.png') no-repeat;
+	/*background: url('/local/templates/fns/images/logo_text.png') no-repeat;*/
 	background-size: 100%;
 	margin-top: 5%;
 }

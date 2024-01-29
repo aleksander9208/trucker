@@ -38,7 +38,7 @@ $request = Context::getCurrent()->getRequest();
     <div class="uk-container uk-container-large">
         <div class="header">
             <a href="/" class="header_logo">
-                <img src="/local/templates/fns/images/logo_text.png" alt="">
+<!--                <img src="/local/templates/fns/images/logo_text.png" alt="">-->
             </a>
 
             <div class="">
