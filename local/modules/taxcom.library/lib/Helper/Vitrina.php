@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Taxcom\Library\Helper;
 
+use Bitrix\Main\Data\Cache;
 use Taxcom\Library\HLBlock\HLBlock;
 
 /**
@@ -76,73 +77,90 @@ class Vitrina
      */
     public static function getPercent(): array
     {
-        $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
-            'filter' => ['!STATUS_SHIPPING.VALUE' => 'archived'],
-            'select' => [
-                'ID',
-                'NAME',
-                'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING.VALUE',
-                'CHECKLIST_CARRIER_VALUE' => 'CHECKLIST_CARRIER.VALUE',
-                'CHECKLIST_FORWARDER_VALUE' => 'CHECKLIST_FORWARDER.VALUE',
-                'AUTOMATIC_PRICES_STATUS_VALUE' => 'AUTOMATIC_PRICES_STATUS.VALUE',
-                'AUTOMATIC_GEO_MONITORING_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_STATUS.VALUE',
-                'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'AUTOMATIC_PRICES_FOR_STATUS.VALUE',
-                'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE',
-            ],
-            "order" => ['ID' => 'ASC'],
-            "count_total" => true,
-        ]);
+        $cache = Cache::createInstance(); // Служба кеширования
 
-        $result['COUNT'] = $vitrina->getCount();
+        if ($cache->initCache(86400, 'percent_statistics', 'percent'))
+        {
+            $result = $cache->getVars();
+            $cache->output();
+        } elseif ($cache->startDataCache()) {
+            $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
+                'filter' => ['!STATUS_SHIPPING.VALUE' => 'archived'],
+                'select' => [
+                    'ID',
+                    'NAME',
+                    'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING.VALUE',
+                    'CHECKLIST_CARRIER_VALUE' => 'CHECKLIST_CARRIER.VALUE',
+                    'CHECKLIST_FORWARDER_VALUE' => 'CHECKLIST_FORWARDER.VALUE',
+                    'AUTOMATIC_PRICES_STATUS_VALUE' => 'AUTOMATIC_PRICES_STATUS.VALUE',
+                    'AUTOMATIC_GEO_MONITORING_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_STATUS.VALUE',
+                    'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'AUTOMATIC_PRICES_FOR_STATUS.VALUE',
+                    'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE',
+                ],
+                "order" => ['ID' => 'ASC'],
+                "count_total" => true,
+            ]);
 
-        $error = $good = $geo = $price = $doc = 0;
-        foreach ($vitrina->fetchAll() as $item) {
-            if (($item['CHECKLIST_CARRIER_VALUE'] === '1' &&
-                    $item['CHECKLIST_FORWARDER_VALUE'] === '1') ||
-                ($item['CHECKLIST_CARRIER_VALUE'] === '1' &&
-                    $item['CHECKLIST_FORWARDER_VALUE'] == '') ||
-                ($item['CHECKLIST_CARRIER_VALUE'] === '' &&
-                    $item['CHECKLIST_FORWARDER_VALUE'] == '1')
-            ) {
-                $good++;
+            $result['COUNT'] = $vitrina->getCount();
+
+            $error = $good = $geo = $price = $doc = 0;
+            foreach ($vitrina->fetchAll() as $item) {
+                if (($item['CHECKLIST_CARRIER_VALUE'] === '1' &&
+                        $item['CHECKLIST_FORWARDER_VALUE'] === '1') ||
+                    ($item['CHECKLIST_CARRIER_VALUE'] === '1' &&
+                        $item['CHECKLIST_FORWARDER_VALUE'] == '') ||
+                    ($item['CHECKLIST_CARRIER_VALUE'] === '' &&
+                        $item['CHECKLIST_FORWARDER_VALUE'] == '1')
+                ) {
+                    $good++;
+                }
+
+                if ($item['CHECKLIST_CARRIER_VALUE'] !== '1' &&
+                    $item['CHECKLIST_FORWARDER_VALUE'] !== '1'
+                ) {
+                    $error++;
+                }
+
+                if (HLBlock::isDocument((int) $item['ID'])) {
+                    $doc++;
+                }
+
+                if ($item['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'] === 'failed' ||
+                    $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'failed' ||
+                    $item['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'] === 'in_progress' ||
+                    $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'in_progress'
+                ) {
+                    $geo++;
+                }
+
+                if ($item['AUTOMATIC_PRICES_STATUS_VALUE'] === 'failed' ||
+                    $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'failed' ||
+                    $item['AUTOMATIC_PRICES_STATUS_VALUE'] === 'in_progress' ||
+                    $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'in_progress'
+                ) {
+                    $price++;
+                }
             }
 
-            if ($item['CHECKLIST_CARRIER_VALUE'] !== '1' &&
-                $item['CHECKLIST_FORWARDER_VALUE'] !== '1'
-            ) {
-                $error++;
+            $result['COUNT_ERROR'] = $error;
+            $result['COUNT_GOOD'] = $good;
+            $result['COUNT_ERROR_DOC'] = $doc;
+            $result['COUNT_ERROR_GEO'] = $geo;
+            $result['COUNT_ERROR_PRICE'] = $price;
+
+            if ($result['COUNT'] > 0) {
+                $result['COUNT_GOOD_PERCENT'] =  round($result['COUNT_GOOD']/$result['COUNT'] * 100, 2);
+                $result['COUNT_ERROR_PERCENT'] = round($result['COUNT_ERROR']/$result['COUNT'] * 100, 2);
             }
 
-            if (HLBlock::isDocument((int) $item['ID'])) {
-                $doc++;
+            $result['rand'] = random_int(0, 9999);
+
+            $cacheInvalid = false;
+            if ($cacheInvalid) {
+                $cache->abortDataCache();
             }
 
-            if ($item['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_GEO_MONITORING_STATUS_VALUE'] === 'in_progress' ||
-                $item['AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE'] === 'in_progress'
-            ) {
-                $geo++;
-            }
-
-            if ($item['AUTOMATIC_PRICES_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'failed' ||
-                $item['AUTOMATIC_PRICES_STATUS_VALUE'] === 'in_progress' ||
-                $item['AUTOMATIC_PRICES_FOR_STATUS_VALUE'] === 'in_progress'
-            ) {
-                $price++;
-            }
-        }
-
-        $result['COUNT_ERROR'] = $error;
-        $result['COUNT_GOOD'] = $good;
-        $result['COUNT_ERROR_DOC'] = $doc;
-        $result['COUNT_ERROR_GEO'] = $geo;
-        $result['COUNT_ERROR_PRICE'] = $price;
-
-        if ($result['COUNT'] > 0) {
-            $result['COUNT_GOOD_PERCENT'] =  round($result['COUNT_GOOD']/$result['COUNT'] * 100, 2);
-            $result['COUNT_ERROR_PERCENT'] = round($result['COUNT_ERROR']/$result['COUNT'] * 100, 2);
+            $cache->endDataCache($result);
         }
 
         return $result;
