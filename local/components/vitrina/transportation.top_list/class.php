@@ -1,6 +1,7 @@
 <?php
 
 use Bitrix\Main\Context;
+use Bitrix\Main\Data\Cache;
 use Bitrix\Main\ErrorCollection;
 use Bitrix\Main\Grid\Options;
 use Bitrix\Main\Loader;
@@ -87,7 +88,6 @@ class TransportationTopList extends CBitrixComponent
     {
         $request = Context::getCurrent()->getRequest();
 
-        $filter = ['!CARGO_OWNER.VALUE' => '',];
         $select = [
             'ID',
             'CARGO_OWNER_VALUE' => 'CARGO_OWNER.VALUE',
@@ -97,6 +97,10 @@ class TransportationTopList extends CBitrixComponent
             'CARRIER_VALUE' => 'CARRIER.VALUE',
             'CARRIER_INN_VALUE' => 'CARRIER_INN.VALUE',
         ];
+
+        if ($request->get('top') === 'cargo') {
+            $filter = ['!CARGO_OWNER.VALUE' => '',];
+        }
 
         if ($request->get('top') === 'forwarders') {
             $filter = ['!FORWARDER.VALUE' => '',];
@@ -121,192 +125,208 @@ class TransportationTopList extends CBitrixComponent
             ];
         }
 
-        $vitrinaTop = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
-            'filter' => $filter,
-            'select' =>  $select,
-            "order" => ['ID' => 'ASC'],
-            "count_total" => true,
-        ])->fetchAll();
+        $cache = Cache::createInstance();
 
-        $top = [];
-        foreach ($vitrinaTop as $item) {
-            $gridCode = 'vitrina_grid_' . $item['ID'];
+        if ($cache->initCache(86400, 'top_statistics_' . $request->get('top'), 'statistics'))
+        {
+            $top = $cache->getVars();
+            $cache->output();
+        } elseif ($cache->startDataCache()) {
 
-            $gridOptions = new Options($gridCode);
-            $sort = $gridOptions->GetSorting([
-                'sort' => ["ID" => "DESC"],
-                'vars' => ["by" => "by", "order" => "order"]
-            ]);
-
-            $navParams = $gridOptions->GetNavParams();
-            $nav = new PageNavigation($gridCode);
-            $nav->allowAllRecords(false)->setPageSize(10)->initFromUri();
-
-            $filterItemTop = $filterCompany = ['CARGO_OWNER.VALUE' => $item['CARGO_OWNER_VALUE'], '!STATUS_SHIPPING.VALUE' => 'archived'];
-            $topCompanyName = $item['CARGO_OWNER_VALUE'];
-            $topCompanyInn = $item['CARGO_OWNER_INN_VALUE'];
-
-            if ($request->get('top') === 'forwarders') {
-                $filterItemTop = $filterCompany = ['FORWARDER.VALUE' => $item['FORWARDER_VALUE'], '!STATUS_SHIPPING.VALUE' => 'archived'];
-                $topCompanyName = $item['FORWARDER_VALUE'];
-                $topCompanyInn = $item['FORWARDER_INN_VALUE'];
+            $cacheInvalid = false;
+            if ($cacheInvalid) {
+                $cache->abortDataCache();
             }
 
-            if ($request->get('top') === 'carriers') {
-                $filterItemTop = $filterCompany = ['CARRIER.VALUE' => $item['CARRIER_VALUE'], '!STATUS_SHIPPING.VALUE' => 'archived'];
-                $topCompanyName = $item['CARRIER_VALUE'];
-                $topCompanyInn = $item['CARRIER_INN_VALUE'];
-            }
-
-            $filterItemTop[] = [
-                'LOGIC' => "OR",
-                'CONTRACT_EXPEDITION_STATUS.VALUE' => 'failed',
-                'CONTRACT_TRANSPORTATION_STATUS.VALUE' => 'failed',
-                'CONTRACT_ORDER_ONE_TIME_STATUS.VALUE' => 'failed',
-                'DOCUMENTS_EPD_STATUS.VALUE' => 'failed',
-                'DOCUMENTS_EXPEDITOR_STATUS.VALUE' => 'failed',
-                'DOCUMENTS_EXPEDITOR_RECEIPT_STATUS.VALUE' => 'failed',
-                'DOCUMENTS_DRIVER_APPROVALS_STATUS.VALUE' => 'failed',
-                'DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS.VALUE' => 'failed',
-                'AUTOMATIC_PRICES_STATUS.VALUE' => 'failed',
-                'AUTOMATIC_GEO_MONITORING_STATUS.VALUE' => 'failed',
-                'DONKEY_STS_STATUS.VALUE' => 'failed',
-                'DONKEY_RENT_AGREEMENT_STATUS.VALUE' => 'failed',
-                'TRAILER_STS_STATUS.VALUE' => 'failed',
-                'TRAILER_RENT_AGREEMENT_STATUS.VALUE' => 'failed',
-                'TRAILER_SECONDARY_STS_STATUS.VALUE' => 'failed',
-                'TRAILER_SECONDARY_RENT_AGREEMENT_STATUS.VALUE' => 'failed',
-                'TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS.VALUE' => 'failed',
-                'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS.VALUE' => 'failed',
-                'TRAILER_SECONDARY_FREE_USAGE_STATUS.VALUE' => 'failed',
-                'TRUCK_STS_STATUS.VALUE' => 'failed',
-                'TRUCK_RENT_AGREEMENT_STATUS.VALUE' => 'failed',
-                'TRUCK_AGREEMENT_LEASING_COMPANY_STATUS.VALUE' => 'failed',
-                'TRUCK_MARRIAGE_CERTIFICATE_STATUS.VALUE' => 'failed',
-                'TRUCK_FREE_USAGE_STATUS.VALUE' => 'failed',
-                'CONTRACT_EXPEDITION_FOR_STATUS.VALUE' => 'failed',
-                'CONTRACT_TRANSPORTATION_FOR_STATUS.VALUE' => 'failed',
-                'CONTRACT_ORDER_ONE_TIME_FOR_STATUS.VALUE' => 'failed',
-                'DOCUMENTS_EPD_FOR_STATUS.VALUE' => 'failed',
-                'DOCUMENTS_EXPEDITOR_FOR_STATUS.VALUE' => 'failed',
-                'DOCUMENTS_EXPEDITOR_RECEIPT_FOR_STATUS.VALUE' => 'failed',
-                'DOCUMENTS_DRIVER_APPROVALS_FOR_STATUS.VALUE' => 'failed',
-                'DOCUMENTS_APPLICATION_TRANSPORT_FOR_STATUS.VALUE' => 'failed',
-                'AUTOMATIC_PRICES_FOR_STATUS.VALUE' => 'failed',
-                'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE' => 'failed',
-                'DONKEY_STS_FOR_STATUS.VALUE' => 'failed',
-                'DONKEY_RENT_FOR_STATUS.VALUE' => 'failed',
-                'TRAILER_STS_FOR_STATUS.VALUE' => 'failed',
-                'TRAILER_RENT_AGREEMENT_FOR_STATUS.VALUE' => 'failed',
-                'TRAILER_SECONDARY_STS_FOR_STATUS.VALUE' => 'failed',
-                'TRAILER_SECONDARY_RENT_AGREEMENT_FOR_STATUS.VALUE' => 'failed',
-                'TRAILER_SECONDARY_LEASING_COMPANY_FOR_STATUS.VALUE' => 'failed',
-                'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FOR_STATUS.VALUE' => 'failed',
-                'TRAILER_SECONDARY_FREE_USAGE_FOR_STATUS.VALUE' => 'failed',
-                'TRUCK_STS_FOR_STATUS.VALUE' => 'failed',
-                'TRUCK_RENT_AGREEMENT_FOR_STATUS.VALUE' => 'failed',
-                'TRUCK_AGREEMENT_LEASING_COMPANY_FOR_STATUS.VALUE' => 'failed',
-                'TRUCK_MARRIAGE_CERTIFICATE_FOR_STATUS.VALUE' => 'failed',
-                'TRUCK_FREE_USAGE_FOR_STATUS.VALUE' => 'failed',
-                'DONKEY_LEASING_COMPANY_FOR_STATUS.VALUE' => 'failed',
-                'DONKEY_MARRIAGE_CERTIFICATE_FOR_STATUS.VALUE' => 'failed',
-                'DONKEY_FREE_USAGE_FOR_STATUS.VALUE' => 'failed',
-                'TRAILER_LEASING_COMPANY_FOR_STATUS.VALUE' => 'failed',
-                'TRAILER_MARRIAGE_CERTIFICATE_FOR_STATUS.VALUE' => 'failed',
-                'TRAILER_FREE_USAGE_FOR_STATUS.VALUE' => 'failed',
-                'DONKEY_LEASING_COMPANY_STATUS.VALUE' => 'failed',
-                'DONKEY_MARRIAGE_CERTIFICATE_STATUS.VALUE' => 'failed',
-                'DONKEY_FREE_USAGE_STATUS.VALUE' => 'failed',
-                'TRAILER_LEASING_COMPANY_STATUS.VALUE' => 'failed',
-                'TRAILER_MARRIAGE_CERTIFICATE_STATUS.VALUE' => 'failed',
-                'TRAILER_FREE_USAGE_STATUS.VALUE' => 'failed',
-                '!STATUS_SHIPPING.VALUE' => 'archived',
-            ];
-
-            $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
-                'filter' => $filterItemTop,
-                'select' => [
-                    'ID',
-                    'NAME',
-                    'DATE_SHIPMENT_VALUE' => 'DATE_SHIPMENT.VALUE',
-                    'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING.VALUE',
-                    'CARRIER_VALUE' => 'CARRIER.VALUE',
-                    'CARRIER_INN_VALUE' => 'CARRIER_INN.VALUE',
-                    'CARGO_OWNER_VALUE' => 'CARGO_OWNER.VALUE',
-                    'CARGO_OWNER_INN_VALUE' => 'CARGO_OWNER_INN.VALUE',
-                    'FORWARDER_VALUE' => 'FORWARDER.VALUE',
-                    'FORWARDER_INN_VALUE' => 'FORWARDER_INN.VALUE',
-                    'CHECKLIST_CARRIER_VALUE' => 'CHECKLIST_CARRIER.VALUE',
-                    'CHECKLIST_FORWARDER_VALUE' => 'CHECKLIST_FORWARDER.VALUE',
-                    'AUTOMATIC_PRICES_STATUS_VALUE' => 'AUTOMATIC_PRICES_STATUS.VALUE',
-                    'AUTOMATIC_GEO_MONITORING_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_STATUS.VALUE',
-                    'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'AUTOMATIC_PRICES_FOR_STATUS.VALUE',
-                    'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE',
-                ],
-                "offset" => $nav->getOffset(),
-                "limit" => $nav->getLimit(),
-                "order" => ['DATE_SHIPMENT.VALUE' => 'DESC'],
+            $vitrinaTop = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
+                'filter' => $filter,
+                'select' =>  $select,
+                "order" => ['ID' => 'ASC'],
                 "count_total" => true,
-            ]);
+            ])->fetchAll();
 
-            $nav->setRecordCount($vitrina->getCount());
+            $top = [];
+            foreach ($vitrinaTop as $item) {
+                $gridCode = 'vitrina_grid_' . $item['ID'];
 
-            $vitrinaList = [];
+                $gridOptions = new Options($gridCode);
+                $sort = $gridOptions->GetSorting([
+                    'sort' => ["ID" => "DESC"],
+                    'vars' => ["by" => "by", "order" => "order"]
+                ]);
 
-            foreach ($vitrina->fetchAll() as $shipping) {
-                $statusCarrier = $statusFor = '';
-                $deviation = HLBlock::getPrice($shipping['ID']);
-                $date = explode('-', $shipping['DATE_SHIPMENT_VALUE']);
+                $navParams = $gridOptions->GetNavParams();
+                $nav = new PageNavigation($gridCode);
+                $nav->allowAllRecords(false)->setPageSize(10)->initFromUri();
 
-                if($deviation !== '') {
-                    $deviation = '<div class="icon-deviation_down"><span uk-icon="icon: arrow-down"></span>' . HLBlock::getPrice($shipping['ID']) . '</div>';
+                $filterItemTop = $filterCompany = ['CARGO_OWNER.VALUE' => $item['CARGO_OWNER_VALUE'], '!STATUS_SHIPPING.VALUE' => 'archived'];
+                $topCompanyName = $item['CARGO_OWNER_VALUE'];
+                $topCompanyInn = $item['CARGO_OWNER_INN_VALUE'];
+
+                if ($request->get('top') === 'forwarders') {
+                    $filterItemTop = $filterCompany = ['FORWARDER.VALUE' => $item['FORWARDER_VALUE'], '!STATUS_SHIPPING.VALUE' => 'archived'];
+                    $topCompanyName = $item['FORWARDER_VALUE'];
+                    $topCompanyInn = $item['FORWARDER_INN_VALUE'];
                 }
 
-                if ($shipping['CHECKLIST_CARRIER_VALUE'] === '1') {
-                    $statusCarrier = '<span class="transit-good"></span>';
-                } elseif($shipping['CHECKLIST_CARRIER_VALUE'] === '0') {
-                    $statusCarrier = '<span class="transit-error"></span>';
-                } elseif ($item['CHECKLIST_CARRIER_VALUE'] === '2') {
-                    $statusCarrier = '<span class="transit-progress"></span>';
+                if ($request->get('top') === 'carriers') {
+                    $filterItemTop = $filterCompany = ['CARRIER.VALUE' => $item['CARRIER_VALUE'], '!STATUS_SHIPPING.VALUE' => 'archived'];
+                    $topCompanyName = $item['CARRIER_VALUE'];
+                    $topCompanyInn = $item['CARRIER_INN_VALUE'];
                 }
 
-                if ($shipping['CHECKLIST_FORWARDER_VALUE'] === '1') {
-                    $statusFor = '<span class="transit-good"></span>';
-                } elseif ($shipping['CHECKLIST_FORWARDER_VALUE'] === '0') {
-                    $statusFor = '<span class="transit-error"></span>';
-                } elseif ($item['CHECKLIST_FORWARDER_VALUE'] === '2') {
-                    $statusFor = '<span class="transit-progress"></span>';
-                }
+                $filterItemTop[] = [
+                    'LOGIC' => "OR",
+                    'CONTRACT_EXPEDITION_STATUS.VALUE' => 'failed',
+                    'CONTRACT_TRANSPORTATION_STATUS.VALUE' => 'failed',
+                    'CONTRACT_ORDER_ONE_TIME_STATUS.VALUE' => 'failed',
+                    'DOCUMENTS_EPD_STATUS.VALUE' => 'failed',
+                    'DOCUMENTS_EXPEDITOR_STATUS.VALUE' => 'failed',
+                    'DOCUMENTS_EXPEDITOR_RECEIPT_STATUS.VALUE' => 'failed',
+                    'DOCUMENTS_DRIVER_APPROVALS_STATUS.VALUE' => 'failed',
+                    'DOCUMENTS_APPLICATION_TRANSPORTATION_STATUS.VALUE' => 'failed',
+                    'AUTOMATIC_PRICES_STATUS.VALUE' => 'failed',
+                    'AUTOMATIC_GEO_MONITORING_STATUS.VALUE' => 'failed',
+                    'DONKEY_STS_STATUS.VALUE' => 'failed',
+                    'DONKEY_RENT_AGREEMENT_STATUS.VALUE' => 'failed',
+                    'TRAILER_STS_STATUS.VALUE' => 'failed',
+                    'TRAILER_RENT_AGREEMENT_STATUS.VALUE' => 'failed',
+                    'TRAILER_SECONDARY_STS_STATUS.VALUE' => 'failed',
+                    'TRAILER_SECONDARY_RENT_AGREEMENT_STATUS.VALUE' => 'failed',
+                    'TRAILER_SECONDARY_AGREEMENT_LEASING_COMPANY_STATUS.VALUE' => 'failed',
+                    'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_STATUS.VALUE' => 'failed',
+                    'TRAILER_SECONDARY_FREE_USAGE_STATUS.VALUE' => 'failed',
+                    'TRUCK_STS_STATUS.VALUE' => 'failed',
+                    'TRUCK_RENT_AGREEMENT_STATUS.VALUE' => 'failed',
+                    'TRUCK_AGREEMENT_LEASING_COMPANY_STATUS.VALUE' => 'failed',
+                    'TRUCK_MARRIAGE_CERTIFICATE_STATUS.VALUE' => 'failed',
+                    'TRUCK_FREE_USAGE_STATUS.VALUE' => 'failed',
+                    'CONTRACT_EXPEDITION_FOR_STATUS.VALUE' => 'failed',
+                    'CONTRACT_TRANSPORTATION_FOR_STATUS.VALUE' => 'failed',
+                    'CONTRACT_ORDER_ONE_TIME_FOR_STATUS.VALUE' => 'failed',
+                    'DOCUMENTS_EPD_FOR_STATUS.VALUE' => 'failed',
+                    'DOCUMENTS_EXPEDITOR_FOR_STATUS.VALUE' => 'failed',
+                    'DOCUMENTS_EXPEDITOR_RECEIPT_FOR_STATUS.VALUE' => 'failed',
+                    'DOCUMENTS_DRIVER_APPROVALS_FOR_STATUS.VALUE' => 'failed',
+                    'DOCUMENTS_APPLICATION_TRANSPORT_FOR_STATUS.VALUE' => 'failed',
+                    'AUTOMATIC_PRICES_FOR_STATUS.VALUE' => 'failed',
+                    'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE' => 'failed',
+                    'DONKEY_STS_FOR_STATUS.VALUE' => 'failed',
+                    'DONKEY_RENT_FOR_STATUS.VALUE' => 'failed',
+                    'TRAILER_STS_FOR_STATUS.VALUE' => 'failed',
+                    'TRAILER_RENT_AGREEMENT_FOR_STATUS.VALUE' => 'failed',
+                    'TRAILER_SECONDARY_STS_FOR_STATUS.VALUE' => 'failed',
+                    'TRAILER_SECONDARY_RENT_AGREEMENT_FOR_STATUS.VALUE' => 'failed',
+                    'TRAILER_SECONDARY_LEASING_COMPANY_FOR_STATUS.VALUE' => 'failed',
+                    'TRAILER_SECONDARY_MARRIAGE_CERTIFICATE_FOR_STATUS.VALUE' => 'failed',
+                    'TRAILER_SECONDARY_FREE_USAGE_FOR_STATUS.VALUE' => 'failed',
+                    'TRUCK_STS_FOR_STATUS.VALUE' => 'failed',
+                    'TRUCK_RENT_AGREEMENT_FOR_STATUS.VALUE' => 'failed',
+                    'TRUCK_AGREEMENT_LEASING_COMPANY_FOR_STATUS.VALUE' => 'failed',
+                    'TRUCK_MARRIAGE_CERTIFICATE_FOR_STATUS.VALUE' => 'failed',
+                    'TRUCK_FREE_USAGE_FOR_STATUS.VALUE' => 'failed',
+                    'DONKEY_LEASING_COMPANY_FOR_STATUS.VALUE' => 'failed',
+                    'DONKEY_MARRIAGE_CERTIFICATE_FOR_STATUS.VALUE' => 'failed',
+                    'DONKEY_FREE_USAGE_FOR_STATUS.VALUE' => 'failed',
+                    'TRAILER_LEASING_COMPANY_FOR_STATUS.VALUE' => 'failed',
+                    'TRAILER_MARRIAGE_CERTIFICATE_FOR_STATUS.VALUE' => 'failed',
+                    'TRAILER_FREE_USAGE_FOR_STATUS.VALUE' => 'failed',
+                    'DONKEY_LEASING_COMPANY_STATUS.VALUE' => 'failed',
+                    'DONKEY_MARRIAGE_CERTIFICATE_STATUS.VALUE' => 'failed',
+                    'DONKEY_FREE_USAGE_STATUS.VALUE' => 'failed',
+                    'TRAILER_LEASING_COMPANY_STATUS.VALUE' => 'failed',
+                    'TRAILER_MARRIAGE_CERTIFICATE_STATUS.VALUE' => 'failed',
+                    'TRAILER_FREE_USAGE_STATUS.VALUE' => 'failed',
+                    '!STATUS_SHIPPING.VALUE' => 'archived',
+                ];
 
-                $vitrinaList[] = [
-                    'data' => [
-                        "ID" => $shipping['ID'],
-                        "ID_TRANSPORTATION" => '<a href="#info-bar" class="info_bar-content" uk-toggle>' . $shipping['NAME'] . '</a>',
-                        "DATE_SHIPMENT"  => $date[2] . '.' . $date[1] . '.' . $date[0],
-                        "CARGO_OWNER" => $shipping['CARGO_OWNER_VALUE'] . '<span>' . $shipping['CARGO_OWNER_INN_VALUE'] . '</span>',
-                        "FORWARDER" => $shipping['FORWARDER_VALUE'] . '<span>' . $shipping['FORWARDER_INN_VALUE'] . '</span>',
-                        "CARRIER" => $shipping['CARRIER_VALUE'] . '<span>' . $shipping['CARRIER_INN_VALUE'] . '</span>',
-                        "DEVIATION_FROM_PRICE" => $deviation,
-                        "CHECKLIST_CARRIER" => $statusCarrier,
-                        "CHECKLIST_FORWARDER" => $statusFor,
+                $vitrina = \Bitrix\Iblock\Elements\ElementVitrinaApiTable::getList([
+                    'filter' => $filterItemTop,
+                    'select' => [
+                        'ID',
+                        'NAME',
+                        'DATE_SHIPMENT_VALUE' => 'DATE_SHIPMENT.VALUE',
+                        'STATUS_SHIPPING_VALUE' => 'STATUS_SHIPPING.VALUE',
+                        'CARRIER_VALUE' => 'CARRIER.VALUE',
+                        'CARRIER_INN_VALUE' => 'CARRIER_INN.VALUE',
+                        'CARGO_OWNER_VALUE' => 'CARGO_OWNER.VALUE',
+                        'CARGO_OWNER_INN_VALUE' => 'CARGO_OWNER_INN.VALUE',
+                        'FORWARDER_VALUE' => 'FORWARDER.VALUE',
+                        'FORWARDER_INN_VALUE' => 'FORWARDER_INN.VALUE',
+                        'CHECKLIST_CARRIER_VALUE' => 'CHECKLIST_CARRIER.VALUE',
+                        'CHECKLIST_FORWARDER_VALUE' => 'CHECKLIST_FORWARDER.VALUE',
+                        'AUTOMATIC_PRICES_STATUS_VALUE' => 'AUTOMATIC_PRICES_STATUS.VALUE',
+                        'AUTOMATIC_GEO_MONITORING_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_STATUS.VALUE',
+                        'AUTOMATIC_PRICES_FOR_STATUS_VALUE' => 'AUTOMATIC_PRICES_FOR_STATUS.VALUE',
+                        'AUTOMATIC_GEO_MONITORING_FOR_STATUS_VALUE' => 'AUTOMATIC_GEO_MONITORING_FOR_STATUS.VALUE',
                     ],
+                    "offset" => $nav->getOffset(),
+                    "limit" => $nav->getLimit(),
+                    "order" => ['DATE_SHIPMENT.VALUE' => 'DESC'],
+                    "count_total" => true,
+                ]);
+
+                $nav->setRecordCount($vitrina->getCount());
+
+                $vitrinaList = [];
+
+                foreach ($vitrina->fetchAll() as $shipping) {
+                    $statusCarrier = $statusFor = '';
+                    $deviation = HLBlock::getPrice($shipping['ID']);
+                    $date = explode('-', $shipping['DATE_SHIPMENT_VALUE']);
+
+                    if($deviation !== '') {
+                        $deviation = '<div class="icon-deviation_down"><span uk-icon="icon: arrow-down"></span>' . HLBlock::getPrice($shipping['ID']) . '</div>';
+                    }
+
+                    if ($shipping['CHECKLIST_CARRIER_VALUE'] === '1') {
+                        $statusCarrier = '<span class="transit-good"></span>';
+                    } elseif($shipping['CHECKLIST_CARRIER_VALUE'] === '0') {
+                        $statusCarrier = '<span class="transit-error"></span>';
+                    } elseif ($item['CHECKLIST_CARRIER_VALUE'] === '2') {
+                        $statusCarrier = '<span class="transit-progress"></span>';
+                    }
+
+                    if ($shipping['CHECKLIST_FORWARDER_VALUE'] === '1') {
+                        $statusFor = '<span class="transit-good"></span>';
+                    } elseif ($shipping['CHECKLIST_FORWARDER_VALUE'] === '0') {
+                        $statusFor = '<span class="transit-error"></span>';
+                    } elseif ($item['CHECKLIST_FORWARDER_VALUE'] === '2') {
+                        $statusFor = '<span class="transit-progress"></span>';
+                    }
+
+                    $vitrinaList[] = [
+                        'data' => [
+                            "ID" => $shipping['ID'],
+                            "ID_TRANSPORTATION" => '<a href="#info-bar" class="info_bar-content" uk-toggle>' . $shipping['NAME'] . '</a>',
+                            "DATE_SHIPMENT"  => $date[2] . '.' . $date[1] . '.' . $date[0],
+                            "CARGO_OWNER" => $shipping['CARGO_OWNER_VALUE'] . '<span>' . $shipping['CARGO_OWNER_INN_VALUE'] . '</span>',
+                            "FORWARDER" => $shipping['FORWARDER_VALUE'] . '<span>' . $shipping['FORWARDER_INN_VALUE'] . '</span>',
+                            "CARRIER" => $shipping['CARRIER_VALUE'] . '<span>' . $shipping['CARRIER_INN_VALUE'] . '</span>',
+                            "DEVIATION_FROM_PRICE" => $deviation,
+                            "CHECKLIST_CARRIER" => $statusCarrier,
+                            "CHECKLIST_FORWARDER" => $statusFor,
+                        ],
+                    ];
+                }
+
+                $top[$topCompanyInn] = [
+                    'NAME' => $topCompanyName,
+                    'INN' => $topCompanyInn,
+                    'GRID_CODE' => $gridCode,
+                    'SUM_COUNT' => Vitrina::getCountElement($filterCompany),
+                    'COUNT' => $vitrina->getCount(),
+                    'SHIPPING' => $vitrinaList,
+                    'NAV' => $nav,
                 ];
             }
 
-            $top[$topCompanyInn] = [
-                'NAME' => $topCompanyName,
-                'INN' => $topCompanyInn,
-                'GRID_CODE' => $gridCode,
-                'SUM_COUNT' => Vitrina::getCountElement($filterCompany),
-                'COUNT' => $vitrina->getCount(),
-                'SHIPPING' => $vitrinaList,
-                'NAV' => $nav,
-            ];
-        }
+            usort($top, function($a,$b){
+                return ($b['COUNT']-$a['COUNT']);
+            });
 
-        usort($top, function($a,$b){
-            return ($b['COUNT']-$a['COUNT']);
-        });
+            $cache->endDataCache($top);
+        }
 
         $this->arResult["ROWS"] = $top;
     }

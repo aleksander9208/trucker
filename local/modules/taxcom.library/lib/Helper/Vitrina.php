@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Taxcom\Library\Helper;
 
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Data\Cache;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
 use Taxcom\Library\HLBlock\HLBlock;
 
 /**
@@ -72,12 +75,14 @@ class Vitrina
     /**
      * Расчет статистики
      *
-     * @return void
-     * @throws LoaderException
+     * @return array
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
      */
     public static function getPercent(): array
     {
-        $cache = Cache::createInstance(); // Служба кеширования
+        $cache = Cache::createInstance();
 
         if ($cache->initCache(86400, 'percent_statistics', 'percent'))
         {
